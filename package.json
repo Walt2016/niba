@@ -1,0 +1,26 @@
+{
+  "name": "mysvg",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Walt2016/mysvg.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Walt2016/mysvg/issues"
+  },
+  "homepage": "https://github.com/Walt2016/mysvg#readme",
+  "devDependencies": {
+    "css-loader": "^3.2.0",
+    "ts-loader": "^6.2.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}
