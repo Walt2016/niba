@@ -58,6 +58,7 @@ var shape = function (tag, options) {
             sd.setAttribute(hyphenate(key), options[key])
         }
     }
+    
     return sd
 }
 
@@ -86,14 +87,14 @@ var defaultOptions = function (tag, options) {
                 x: 200,
                 y: 20,
                 fontSize: 20,
-                text: ' 柱状图'
+                text: 'SVG'
             }
             break;
         case 'rect':
             _default = {
                 // x="20" y="20" rx="20" ry="20"
-                x:cx,
-                y:cy,
+                x: cx,
+                y: cy,
                 width: 100,
                 height: 30,
                 fill: 'rgb(0,0,255)',
@@ -107,7 +108,7 @@ var defaultOptions = function (tag, options) {
                 x1: 0,
                 y1: cy, //380,
                 x2: width, //620,
-                y2: cy,//380,
+                y2: cy, //380,
                 stroke: 'black',
                 strokeWidth: 1.5
             };
@@ -117,6 +118,13 @@ var defaultOptions = function (tag, options) {
                 d: "M1 20 L20 1 L40 20 Z",
                 style: "stroke: black; stroke-width: 1"
             };
+            break;
+        case 'polygon':
+            _default = {
+                points: '220,100 300,210 170,250 123,234',
+                stroke: 'black',
+                strokeWidth: 1.5
+            }
             break;
 
     }
@@ -221,7 +229,7 @@ var draw = function (svgDomArr, options) {
                 t = shape(t, options)
                 break;
             case 'object':
-                t = shape(t.shape, Object.assign({},options,t))
+                t = shape(t.shape, Object.assign({}, options, t))
                 break;
             default:
                 if (_type(t).test(/svg/i)) {
