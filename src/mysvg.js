@@ -1,12 +1,39 @@
+//类型判断
+const _type = function (o) {
+    if (o === null) return 'null';
+    if (o === undefined) return 'undefined'; //兼容ie8
+    var s = Object.prototype.toString.call(o);
+    var t = s.match(/\[object (.*?)\]/)[1].toLowerCase();
+    return t === 'number' ? isNaN(o) ? 'nan' : !isFinite(o) ? 'infinity' : t : t;
+}
+let wrapperOptions = (function () {
+    var width = window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth || 640;
+    var height = window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight || 400;
+    return {
+        width,
+        height,
+        cx: width / 2,
+        cy: height / 2
+    }
+}())
+let words = ['stroke', 'fill', 'width'];
+//连字符
+var hyphenate = function (str) {
+    return str.replace(/\B([A-Z])/g, '-$1').toLowerCase()
+};
 var createSvgDom = function (tag) {
     return document.createElementNS('http://www.w3.org/2000/svg', tag)
 }
 var svgWrappper = function (svgDom) {
     var svg = createSvgDom("svg")
-    var options = {
-        width: 640,
-        height: 400
-    }
+    var options = Object.assign(wrapperOptions, {
+        fill: 'red'
+    })
+    console.log(options, document.body)
     for (var key in options) {
         svg.setAttribute(key, options[key])
     }
@@ -19,13 +46,10 @@ var svgWrappper = function (svgDom) {
     }
     return svg
 }
-//连字符
-var hyphenate = function (str) {
-    return str.replace(/\B([A-Z])/g, '-$1').toLowerCase()
-};
 
 //图形
 var shape = function (tag, options) {
+    options = defaultOptions(tag, options)
     var sd = createSvgDom(tag)
     for (var key in options) {
         if (key == 'text') {
@@ -37,6 +61,82 @@ var shape = function (tag, options) {
     return sd
 }
 
+//默认参数
+var defaultOptions = function (tag, options) {
+    let _default = {}
+    let {
+        width,
+        height,
+        cx,
+        cy
+    } = wrapperOptions
+    switch (tag) {
+        case 'circle':
+            _default = {
+                cx,
+                cy,
+                r: 40,
+                stroke: 'black',
+                strokeWidth: 2,
+                fill: 'red'
+            }
+            break;
+        case 'text':
+            _default = {
+                x: 200,
+                y: 20,
+                fontSize: 20,
+                text: ' 柱状图'
+            }
+            break;
+        case 'rect':
+            _default = {
+                // x="20" y="20" rx="20" ry="20"
+                x:cx,
+                y:cy,
+                width: 100,
+                height: 30,
+                fill: 'rgb(0,0,255)',
+                strokeWidth: 2,
+                stroke: 'rgb(0, 0, 0)'
+                // style: 'fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)'
+            }
+            break;
+        case 'line':
+            _default = {
+                x1: 0,
+                y1: cy, //380,
+                x2: width, //620,
+                y2: cy,//380,
+                stroke: 'black',
+                strokeWidth: 1.5
+            };
+            break;
+        case 'path':
+            _default = {
+                d: "M1 20 L20 1 L40 20 Z",
+                style: "stroke: black; stroke-width: 1"
+            };
+            break;
+
+    }
+    //同义词
+    var synonym = {
+        color: 'fill',
+        linecolor: 'stroke',
+        linewidth: 'strokeWidth'
+    }
+
+    //同义词
+    Object.keys(options).forEach(t => {
+        let key = synonym[t.toLowerCase()]
+        if (key) {
+            options[key] = options[t]
+        }
+    })
+
+    return Object.assign(_default, options)
+}
 
 //原型
 var circle = shape("circle", {
@@ -104,22 +204,41 @@ var path2 = shape("path", {
 })
 
 
-//画图
-var draw = function (svgDom, options) {
-    var svg = svgWrappper()
-    document.body.appendChild(svg);
-    if (!Array.isArray(svgDom)) {
-        svgDom = [svgDom]
-    }
-    var options = options || {}
 
-    svgDom.forEach(function (t, index) {
-        if (options.delay) {
+//画图
+var draw = function (svgDomArr, options) {
+    var wrapper = svgWrappper()
+    document.body.appendChild(wrapper);
+    if (!Array.isArray(svgDomArr)) {
+        svgDomArr = [svgDomArr]
+    }
+    // var options = options || {}
+
+    svgDomArr.forEach(function (t, index) {
+
+        switch (_type(t)) {
+            case 'string':
+                t = shape(t, options)
+                break;
+            case 'object':
+                t = shape(t.shape, Object.assign({},options,t))
+                break;
+            default:
+                if (_type(t).test(/svg/i)) {
+                    console.log("is svg element")
+                }
+                break;
+        }
+        // if (_type(t) === 'string') {
+        //     t = shape(t, options)
+        // }else if()
+        console.log(_type(t))
+        if (options && options.delay) {
             setTimeout(function () {
-                svg.appendChild(t)
+                wrapper.appendChild(t)
             }, 1000 * index * options.delay)
         } else {
-            svg.appendChild(t)
+            wrapper.appendChild(t)
         }
     })
 };
