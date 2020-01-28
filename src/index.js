@@ -1,3 +1,5 @@
+import {draw,circle} from './mysvg'
+
 function component() {
     var element = document.createElement('div');
 
@@ -8,3 +10,7 @@ function component() {
 }
 
 document.body.appendChild(component());
+
+console.log(circle)
+draw(circle)
+// document.body.appendChild()
