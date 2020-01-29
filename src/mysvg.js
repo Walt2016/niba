@@ -121,7 +121,7 @@ var defaultOptions = function (tag, options) {
             _default = {
                 points: points.join(" "),
                 stroke: 'black',
-                strokeWidth: 1.5,
+                strokeWidth: 1,
                 style: 'fill:white;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
             }
             break;

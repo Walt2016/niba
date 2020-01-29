@@ -88,8 +88,11 @@ var link = function (opt) {
 };
 
 //连线
-var line = function (arr, closePath) {
-    ctx.fillStyle = "white"
+var line = function (arr, closePath, options) {
+    let {
+        color
+    } = options
+    if (color) ctx.fillStyle = color //"white"
     ctx.strokeStyle = "#000";
     ctx.beginPath();
     _forEach(arr, function (t, i) {
@@ -102,7 +105,7 @@ var line = function (arr, closePath) {
     if (closePath)
         ctx.closePath();
     ctx.stroke()
-    ctx.fill()
+    if (color) ctx.fill()
 };
 
 
@@ -223,14 +226,17 @@ var polygon = function (options) {
         o,
         r,
         n,
-        sAngle
+        sAngle,
+        color
     } = options
     // var n = n || 4
     var ps = cutpoints(o, r, n, {
         sAngle: sAngle
     })
     ps = neighborSwap(ps)
-    line(ps, true)
+    line(ps, true, {
+        color
+    })
 }
 //打点
 //默认参数
@@ -258,7 +264,8 @@ var defaultOptions = function (tag, options) {
                 o: center,
                 r: 100,
                 n: 5,
-                sAngle: 0
+                sAngle: 0,
+                color: 'blue'
             }
             break;
     }
