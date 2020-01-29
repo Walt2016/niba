@@ -1,14 +1,27 @@
 import {
-    _forEach
+    _forEach,
+    _type,
+    neighborSwap
 } from './utils'
 import {
     cutpoints
 } from './points'
+import {
+    wrapperOptions,
+    center
+} from './settings'
 var canvas = document.createElement('canvas')
 var ctx = canvas.getContext("2d")
 
-let width = 300;
-let height = 400;
+let {
+    width,
+    height
+} = wrapperOptions
+
+canvas.width = width
+canvas.height = height
+
+document.body.appendChild(canvas)
 
 
 var clear = function () {
@@ -76,6 +89,7 @@ var link = function (opt) {
 
 //连线
 var line = function (arr, closePath) {
+    ctx.fillStyle = "white"
     ctx.strokeStyle = "#000";
     ctx.beginPath();
     _forEach(arr, function (t, i) {
@@ -88,6 +102,7 @@ var line = function (arr, closePath) {
     if (closePath)
         ctx.closePath();
     ctx.stroke()
+    ctx.fill()
 };
 
 
@@ -110,13 +125,7 @@ var ray = function (o, arr) {
     }
     ctx.stroke()
 };
-//圆形
-var circle = function (o, r) {
-    ctx.strokeStyle = "#000";
-    ctx.beginPath();
-    ctx.arc.apply(ctx, o.concat([r, 0, 2 * Math.PI]))
-    ctx.stroke()
-}
+
 //弧线
 var arc = function (o, arr) {
     var len = arr.length
@@ -137,15 +146,7 @@ var rect = function (o, r) {
     ctx.rect.apply(ctx, [o[0] - r / 2, o[1] - r / 2].concat([r, r]))
     ctx.stroke()
 }
-//规则多边形
-var regularPloygon = function (o, r, n, sAngle) {
-    var n = n || 4
-    var ps = cutpoints(o, r, n, {
-        sAngle: sAngle
-    })
-    line(ps, true)
-}
-//打点
+
 var point = function (arr, showLabel) {
     var _this = this;
     ctx.fillStyle = "#0000ff";
@@ -166,12 +167,6 @@ var point = function (arr, showLabel) {
         _point(arr)
     }
 }
-//文字
-var text = function (text, p) {
-    ctx.fillStyle = "#000";
-    ctx.font = "8px Verdana";
-    ctx.fillText(text, p[0], p[1]);
-}
 
 // var canvas = _.createEle("canvas");
 // canvas.width = this.width = options.width || 300;
@@ -190,3 +185,148 @@ var text = function (text, p) {
 // this.righttop = [this.width - paddingRight, 0 + paddingTop];
 
 // var ctx = this.ctx = canvas.getContext("2d")
+//圆形
+var circle = function (options) {
+    let {
+        o,
+        r,
+        color,
+        lineColor
+    } = options || {
+        o: center,
+        r: 100
+    }
+    ctx.strokeStyle = lineColor // ||"#000";
+    ctx.fillStyle = color //|'red'
+    ctx.beginPath();
+    ctx.arc.apply(ctx, o.concat([r, 0, 2 * Math.PI]))
+    ctx.stroke()
+    ctx.fill()
+    // ctx.endP
+}
+
+//文字
+var text = function (options) {
+    let {
+        text,
+        x,
+        y
+    } = options
+    ctx.fillStyle = "#000";
+    ctx.font = "20px Verdana";
+    ctx.fillText(text, x, y);
+}
+
+//规则多边形
+var polygon = function (options) {
+    let {
+        o,
+        r,
+        n,
+        sAngle
+    } = options
+    // var n = n || 4
+    var ps = cutpoints(o, r, n, {
+        sAngle: sAngle
+    })
+    ps = neighborSwap(ps)
+    line(ps, true)
+}
+//打点
+//默认参数
+var defaultOptions = function (tag, options) {
+    let _default = {}
+    switch (tag) {
+        case 'circle':
+            _default = {
+                o: center,
+                r: 100,
+                color: 'red',
+                lineColor: 'black'
+            }
+            break;
+        case 'text':
+            _default = {
+                x: 200,
+                y: 20,
+                fontSize: 20,
+                text: 'Canvas'
+            }
+            break;
+        case 'polygon':
+            _default = {
+                o: center,
+                r: 100,
+                n: 5,
+                sAngle: 0
+            }
+            break;
+    }
+    //同义词
+    var synonym = {
+        color: 'fillStyle',
+        linecolor: 'strokeStyle',
+        // linewidth: 'strokeWidth'
+    }
+
+    //同义词
+    Object.keys(options).forEach(t => {
+        let key = synonym[t.toLowerCase()]
+        if (key) {
+            options[key] = options[t]
+        }
+    })
+
+    return Object.assign(_default, options)
+
+}
+
+
+//图形
+var shape = function (tag, options) {
+    options = defaultOptions(tag, options)
+    switch (tag) {
+        case "circle":
+            circle(options);
+            break;
+        case 'text':
+            text(options);
+            break;
+        case 'polygon':
+            polygon(options);
+            break;
+
+    }
+
+}
+
+var draw = function (arr, options) {
+
+    arr.forEach(t => {
+
+        switch (_type(t)) {
+            case 'string':
+                t = shape(t, options)
+                break;
+            case 'object':
+                t = shape(t.shape, Object.assign({}, options, t))
+                break;
+            default:
+                if (_type(t).test(/svg/i)) {
+                    console.log("is svg element")
+                }
+                break;
+        }
+
+
+
+
+    })
+
+
+}
+
+export {
+    draw,
+    shape
+}

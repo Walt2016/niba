@@ -49,7 +49,6 @@ var shape = function (tag, options) {
             sd.setAttribute(hyphenate(key), options[key])
         }
     }
-
     return sd
 }
 
@@ -120,9 +119,6 @@ var defaultOptions = function (tag, options) {
 
             // points
             _default = {
-                // points: '220,100 300,210 170,250 123,234',
-                // points: '100,10 40,198 190,78 10,78 160,198',
-
                 points: points.join(" "),
                 stroke: 'black',
                 strokeWidth: 1.5,

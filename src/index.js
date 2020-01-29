@@ -2,6 +2,7 @@ import {
     draw,
     shape
 } from './mysvg'
+import {draw as drawCanvas ,circle} from './mycanvas'
 
 // function component() {
 //     var element = document.createElement('div');
@@ -34,48 +35,67 @@ import {
 //     color:'pink'
 // })
 
+// circle(null,100)
+
+let pic=[{
+    shape: 'text',
+    text: '美国队长'
+}, {
+    shape: 'circle',
+    color: 'red',
+    r: 200
+}, {
+    shape: 'circle',
+    color: 'white',
+    r: 150
+}, {
+    shape: 'circle',
+    color: 'red',
+    r: 100
+},
+// {
+//     shape: 'circle',
+//     color: 'blue',
+//     r: 50
+// },
+// {
+//     shape: 'rect',
+//     width: 100,
+//     height: 200,
+// }, 
+// {
+//     shape: 'polygon',
+//     r: 100,
+//     n: 10,
+//     style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
+// },
+, {
+    shape: 'polygon',
+    r: 50,
+    n: 10,
+    // color:'blur',
+    // style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
+}
+]
+
+// [{
+//     shape:'circle',
+//     r:200,
+//     color:'red'
+// },{
+//     shape:'circle',
+
+//     r:100,
+//     color:'blue'
+// }]
+
+drawCanvas(pic,{
+
+})
 
 
-draw([{
-        shape: 'text',
-        text: '美国队长'
-    }, {
-        shape: 'circle',
-        color: 'red',
-        r: 200
-    }, {
-        shape: 'circle',
-        color: 'white',
-        r: 150
-    }, {
-        shape: 'circle',
-        color: 'red',
-        r: 100
-    },
-    // {
-    //     shape: 'circle',
-    //     color: 'blue',
-    //     r: 50
-    // },
-    // {
-    //     shape: 'rect',
-    //     width: 100,
-    //     height: 200,
-    // }, 
-    // {
-    //     shape: 'polygon',
-    //     r: 100,
-    //     n: 10,
-    //     style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
-    // },
-    , {
-        shape: 'polygon',
-        r: 50,
-        n: 10,
-        // color:'blur',
-        // style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
-    }
-], {
+
+draw(pic, {
     color: 'pink',
     delay: 0
 })
