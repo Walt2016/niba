@@ -1,6 +1,6 @@
 import {
     draw,
-    circle
+    shape
 } from './mysvg'
 
 // function component() {
@@ -11,7 +11,7 @@ import {
 
 // document.body.appendChild(component());
 
-console.log(circle)
+// console.log(circle)
 // draw('circle', {
 //     color: 'blue',
 //     lineColor: 'red',
@@ -52,20 +52,31 @@ draw([{
         color: 'red',
         r: 100
     },
-    {
-        shape: 'circle',
-        color: 'blue',
-        r: 50
-    },
-    {
-        shape: 'rect',
-        width: 100,
-        height: 200,
-    }, {
+    // {
+    //     shape: 'circle',
+    //     color: 'blue',
+    //     r: 50
+    // },
+    // {
+    //     shape: 'rect',
+    //     width: 100,
+    //     height: 200,
+    // }, 
+    // {
+    //     shape: 'polygon',
+    //     r: 100,
+    //     n: 10,
+    //     style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
+    // },
+    , {
         shape: 'polygon',
-        style: 'fill:#cccccc;stroke:#000000;stroke-width:1'
+        r: 50,
+        n: 10,
+        // color:'blur',
+        // style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
     }
 ], {
-    color: 'pink'
+    color: 'pink',
+    delay: 0
 })
 // document.body.appendChild()
