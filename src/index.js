@@ -74,8 +74,8 @@ let pic = [{
     , {
         shape: 'polygon',
         r: 50,
-        n: 5,
-        color: 'green',
+        n: 20,
+        color: 'purple',
         // style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
     }
 ]

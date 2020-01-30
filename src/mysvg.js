@@ -1,13 +1,17 @@
+import config from './config'
+import {
+    _type,
+
+} from './utils'
 import {
     cutpoints
 } from './points'
 import {
-    _type,
     shuffle,
     neighborSwap,
-    intervalSort
-} from './utils'
-import config from './config'
+    intervalSort,
+    misplacedSort
+} from './arrayUtils'
 
 let {
     wrapperOptions,
@@ -118,7 +122,8 @@ var defaultOptions = function (tag, options) {
             let points = cutpoints(center, r, n)
             // points = shuffle(points)
             // points = neighborSwap(points, 2)
-            points = intervalSort(points,2)
+            // points = intervalSort(points,2)
+            misplacedSort(points)
 
             // points
             _default = {

@@ -1,11 +1,18 @@
+import config from './config'
 import {
     _type,
-    neighborSwap
+
 } from './utils'
 import {
     cutpoints
 } from './points'
-import config from './config'
+import {
+    shuffle,
+    neighborSwap,
+    intervalSort,
+    misplacedSort
+} from './arrayUtils'
+
 let {
     wrapperOptions,
     center
