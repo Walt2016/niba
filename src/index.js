@@ -41,7 +41,8 @@ import {
 
 let pic = [{
         shape: 'text',
-        text: '美国队长'
+        text: '美国队长',
+        y:30
     }, {
         shape: 'circle',
         color: 'red',
@@ -71,11 +72,17 @@ let pic = [{
     //     n: 10,
     //     style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
     // },
+
+    // shuffle,
+    // neighborSwap,
+    // intervalSort,
+    // misplacedSort,
     , {
         shape: 'polygon',
         r: 50,
-        n: 20,
+        n: 5,
         color: 'purple',
+        sort:'paritySort'
         // style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
     }
 ]

@@ -1,17 +1,11 @@
 import config from './config'
 import {
     _type,
-
 } from './utils'
 import {
     cutpoints
 } from './points'
-import {
-    shuffle,
-    neighborSwap,
-    intervalSort,
-    misplacedSort
-} from './arrayUtils'
+import sort from './sort'
 
 let {
     wrapperOptions,
@@ -234,11 +228,15 @@ var polygon = function (options) {
         color
     } = options
     // var n = n || 4
-    var ps = cutpoints(o, r, n, {
+    var points = cutpoints(o, r, n, {
         sAngle: sAngle
     })
-    ps = neighborSwap(ps)
-    line(ps, true, {
+    if (options.sort &&
+        sort[options.sort]) {
+        points = sort[options.sort](points)
+    }
+
+    line(points, true, {
         color
     })
 }
@@ -257,7 +255,7 @@ var defaultOptions = function (tag, options) {
             break;
         case 'text':
             _default = {
-                x: 200,
+                x: center[0],
                 y: 20,
                 fontSize: 20,
                 text: 'Canvas'
@@ -273,13 +271,20 @@ var defaultOptions = function (tag, options) {
             }
             break;
     }
+
+    _synonym(options)
+
+
+    return Object.assign(_default, options)
+
+}
+var _synonym = function (options) {
     //同义词
     var synonym = {
         color: 'fillStyle',
         linecolor: 'strokeStyle',
         // linewidth: 'strokeWidth'
     }
-
     //同义词
     Object.keys(options).forEach(t => {
         let key = synonym[t.toLowerCase()]
@@ -287,11 +292,7 @@ var defaultOptions = function (tag, options) {
             options[key] = options[t]
         }
     })
-
-    return Object.assign(_default, options)
-
 }
-
 
 //图形
 var shape = function (tag, options) {

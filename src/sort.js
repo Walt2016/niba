@@ -98,6 +98,34 @@ function chunk(arr, num) {
 
 // console.log(intervalSort([0, 1, 2, 3, 4]))
 
+//奇偶数排序oddEvenSort
+function paritySort(arr) {
+    let seq = arr.map((t, i) => {
+        return i
+    })
+    // seq = seq.sort((a, b) => {
+    //     if (a % 2 === 0 && b % 2 === 1) {
+    //         return 1;
+    //     }
+    //     return 0;
+    // })
+
+    seq=seq.sort((a, b) => {
+        if (a % 2 === 0) {
+            if (b % 2 !== 0) {
+                return -1;
+            }
+            return 0;
+        } else{
+            return 1
+        }
+    })
+    console.log(seq)
+
+    return seq.map(t => {
+        return arr[t]
+    })
+}
 
 
 
@@ -145,9 +173,10 @@ var bubleSort = function (arr) {
 }
 
 
-export {
+export default {
     shuffle,
     neighborSwap,
     intervalSort,
     misplacedSort,
+    paritySort
 }

@@ -1,17 +1,12 @@
 import config from './config'
 import {
     _type,
-
+    kebab
 } from './utils'
 import {
     cutpoints
 } from './points'
-import {
-    shuffle,
-    neighborSwap,
-    intervalSort,
-    misplacedSort
-} from './arrayUtils'
+import sort from './sort'
 
 let {
     wrapperOptions,
@@ -47,6 +42,7 @@ var svgWrappper = function (svgDom) {
 //图形
 var shape = function (tag, options) {
     options = defaultOptions(tag, options)
+    console.log(options)
     var sd = createSvgDom(tag)
     for (var key in options) {
         if (key == 'text') {
@@ -80,7 +76,7 @@ var defaultOptions = function (tag, options) {
             break;
         case 'text':
             _default = {
-                x: 200,
+                x: cx,
                 y: 20,
                 fontSize: 20,
                 text: 'SVG'
@@ -120,21 +116,36 @@ var defaultOptions = function (tag, options) {
             let r = options.r || 100
             let n = options.n || 5
             let points = cutpoints(center, r, n)
-            // points = shuffle(points)
-            // points = neighborSwap(points, 2)
-            // points = intervalSort(points,2)
-            misplacedSort(points)
+
+
+            if (options.sort &&
+                sort[options.sort]) {
+                points = sort[options.sort](points)
+            }
+
+
 
             // points
             _default = {
                 points: points.join(" "),
                 stroke: 'black',
-                strokeWidth: 1,
-                style: 'fill:white;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
+                strokeWidth: 1
+                // style: 'fill:white;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
             }
             break;
 
     }
+
+    _synonym(options)
+    //style
+    _style(options)
+
+    return Object.assign(_default, options)
+}
+
+//同义词转化
+var _synonym = function (options) {
+
     //同义词
     var synonym = {
         color: 'fill',
@@ -150,74 +161,16 @@ var defaultOptions = function (tag, options) {
         }
     })
 
-    return Object.assign(_default, options)
 }
 
-// //原型
-// var circle = shape("circle", {
-//     cx: 100,
-//     cy: 50,
-//     r: 40,
-//     stroke: 'black',
-//     strokeWidth: 2,
-//     fill: 'red'
-// })
-// // <text x="200" y="20" font-size="20">SVG 华东地区手机12个月的数据 柱状图</text>
-
-// //文字
-// var text = shape("text", {
-//     x: 200,
-//     y: 20,
-//     fontSize: 20,
-//     text: ' 柱状图'
-// })
-
-// //矩形
-// var rect = shape("rect", {
-//     width: 100,
-//     height: 30,
-//     fill: 'rgb(0,0,255)',
-//     strokeWidth: 12,
-//     stroke: 'rgb(0, 0, 0)'
-//     // style: 'fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)'
-// })
-
-// //线条
-// //  <line x1="20" y1="380" x2="620" y2="380" stroke="black" stroke-width="1.5" />
-// var line = shape("line", {
-//     x1: 20,
-//     y1: 380,
-//     x2: 620,
-//     y2: 380,
-//     stroke: 'black',
-//     strokeWidth: 1.5
-// })
-
-// //线条
-// //  <line x1="20" y1="380" x2="20" y2="1" style="stroke: black; stroke-width: 1.5" />
-
-// var line2 = shape("line", {
-//     x1: 20,
-//     y1: 380,
-//     x2: 20,
-//     y2: 1,
-//     stroke: 'black',
-//     strokeWidth: 1.5
-// })
-
-// //路径
-// // <path d="M1 20 L20 1 L40 20 Z" style="stroke: black; stroke-width: 1" />
-// // <path d="M600 360 L620 380 L600 400 Z" style="stroke: black; stroke-width: 1" />
-// var path = shape("path", {
-//     d: "M1 20 L20 1 L40 20 Z",
-//     style: "stroke: black; stroke-width: 1"
-// })
-// //路径
-// var path2 = shape("path", {
-//     d: "M600 360 L620 380 L600 400 Z",
-//     style: "stroke: black; stroke-width: 1"
-// })
-
+//样式转化
+var _style = function (options) {
+    options.style = options.style || ['fill', 'stroke', 'strokeWidth', 'fillRule'].filter(t => {
+        return Object.hasOwnProperty.call(options, t)
+    }).map(t => {
+        return kebab(t) + ':' + options[t]
+    }).join(";")
+}
 
 
 //画图
