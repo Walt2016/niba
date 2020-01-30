@@ -1,5 +1,4 @@
 import {
-    _forEach,
     _type,
     neighborSwap
 } from './utils'
@@ -95,7 +94,7 @@ var line = function (arr, closePath, options) {
     if (color) ctx.fillStyle = color //"white"
     ctx.strokeStyle = "#000";
     ctx.beginPath();
-    _forEach(arr, function (t, i) {
+    arr.forEach((t, i) => {
         if (i === 0) {
             ctx.moveTo.apply(ctx, t)
         }
@@ -116,12 +115,13 @@ var ray = function (o, arr) {
     ctx.beginPath();
     if (_.type(o[0]) === "array") { //二维数组  多中心
         var n = o.length;
-        _.forEach(arr, function (t, i) {
+        arr.forEach((t, i) => {
             ctx.moveTo.apply(ctx, o[i % n])
             ctx.lineTo.apply(ctx, t)
         })
+
     } else {
-        _.forEach(arr, function (t, i) {
+        arr.forEach((t, i) => {
             ctx.moveTo.apply(ctx, o)
             ctx.lineTo.apply(ctx, t)
         })
@@ -134,11 +134,10 @@ var arc = function (o, arr) {
     var len = arr.length
     ctx.strokeStyle = "#000";
     ctx.beginPath();
-    _.forEach(arr, function (t, i) {
+    arr.forEach((t, i) => {
         var t1 = i + 1 < len ? arr[i + 1] : arr[0];
         var r = dis(t, t1, o)
         ctx.arcTo.apply(ctx, t.concat(t1).concat([r]))
-
     })
     ctx.stroke()
 }
@@ -195,17 +194,13 @@ var circle = function (options) {
         r,
         color,
         lineColor
-    } = options || {
-        o: center,
-        r: 100
-    }
-    ctx.strokeStyle = lineColor // ||"#000";
-    ctx.fillStyle = color //|'red'
+    } = options
+    ctx.strokeStyle = lineColor
+    ctx.fillStyle = color
     ctx.beginPath();
     ctx.arc.apply(ctx, o.concat([r, 0, 2 * Math.PI]))
     ctx.stroke()
     ctx.fill()
-    // ctx.endP
 }
 
 //文字
@@ -213,9 +208,10 @@ var text = function (options) {
     let {
         text,
         x,
-        y
+        y,
+        color
     } = options
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = color
     ctx.font = "20px Verdana";
     ctx.fillText(text, x, y);
 }

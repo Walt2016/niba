@@ -91,17 +91,16 @@ function downGo(fieldData, index) {
 }
 
 
-//兼容IE ，nodeList.forEach
-var _forEach = function (arr, callback) {
-    if (!arr) return;
-    for (var i = 0; i < arr.length; i++) {
-        callback(arr[i], i)
-    }
-};
+// //兼容IE ，nodeList.forEach
+// var _forEach = function (arr, callback) {
+//     if (!arr) return;
+//     for (var i = 0; i < arr.length; i++) {
+//         callback(arr[i], i)
+//     }
+// };
 
 export {
     _type,
     shuffle,
-    neighborSwap,
-    _forEach
+    neighborSwap
 }

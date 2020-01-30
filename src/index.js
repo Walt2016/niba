@@ -1,8 +1,11 @@
 import {
-    draw,
+    draw as drawSvg,
     shape
 } from './mysvg'
-import {draw as drawCanvas ,circle} from './mycanvas'
+import {
+    draw as drawCanvas,
+    circle
+} from './mycanvas'
 
 // function component() {
 //     var element = document.createElement('div');
@@ -37,46 +40,51 @@ import {draw as drawCanvas ,circle} from './mycanvas'
 
 // circle(null,100)
 
-let pic=[{
-    shape: 'text',
-    text: '美国队长'
-}, {
-    shape: 'circle',
-    color: 'red',
-    r: 200
-}, {
-    shape: 'circle',
-    color: 'white',
-    r: 150
-}, {
-    shape: 'circle',
-    color: 'red',
-    r: 100
-},
-// {
-//     shape: 'circle',
-//     color: 'blue',
-//     r: 50
-// },
-// {
-//     shape: 'rect',
-//     width: 100,
-//     height: 200,
-// }, 
-// {
-//     shape: 'polygon',
-//     r: 100,
-//     n: 10,
-//     style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
-// },
-, {
-    shape: 'polygon',
-    r: 50,
-    n: 5,
-    color:'green',
-    // style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
-}
+let pic = [{
+        shape: 'text',
+        text: '美国队长'
+    }, {
+        shape: 'circle',
+        color: 'red',
+        r: 200
+    }, {
+        shape: 'circle',
+        color: 'white',
+        r: 150
+    }, {
+        shape: 'circle',
+        color: 'red',
+        r: 100
+    },
+    // {
+    //     shape: 'circle',
+    //     color: 'blue',
+    //     r: 50
+    // },
+    // {
+    //     shape: 'rect',
+    //     width: 100,
+    //     height: 200,
+    // }, 
+    // {
+    //     shape: 'polygon',
+    //     r: 100,
+    //     n: 10,
+    //     style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
+    // },
+    , {
+        shape: 'polygon',
+        r: 50,
+        n: 5,
+        color: 'green',
+        // style: 'fill:#cccccc;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
+    }
 ]
+
+let opt = {
+    color: 'pink',
+    delay: 0
+}
 
 // [{
 //     shape:'circle',
@@ -89,14 +97,6 @@ let pic=[{
 //     color:'blue'
 // }]
 
-drawCanvas(pic,{
-
-})
-
-
-
-draw(pic, {
-    color: 'pink',
-    delay: 0
-})
+drawCanvas(pic, opt)
+drawSvg(pic, opt)
 // document.body.appendChild()
