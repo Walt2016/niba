@@ -18,7 +18,8 @@ let wrapperOptions = (function () {
 let center = [wrapperOptions.cx, wrapperOptions.cy];
 let words = ['stroke', 'fill', 'width'];
 
-export {
+export default {
     wrapperOptions,
-    center
+    center,
+    words
 }

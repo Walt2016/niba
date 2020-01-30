@@ -3,8 +3,7 @@ import {
     shape
 } from './mysvg'
 import {
-    draw as drawCanvas,
-    circle
+    draw as drawCanvas
 } from './mycanvas'
 
 // function component() {

@@ -4,13 +4,15 @@ import {
 import {
     _type,
     shuffle,
-    neighborSwap
+    neighborSwap,
+    intervalSort
 } from './utils'
-import {
+import config from './config'
+
+let {
     wrapperOptions,
     center
-} from './settings'
-
+} = config
 
 //连字符
 var hyphenate = function (str) {
@@ -115,7 +117,8 @@ var defaultOptions = function (tag, options) {
             let n = options.n || 5
             let points = cutpoints(center, r, n)
             // points = shuffle(points)
-            points = neighborSwap(points)
+            // points = neighborSwap(points, 2)
+            points = intervalSort(points,2)
 
             // points
             _default = {

@@ -5,10 +5,11 @@ import {
 import {
     cutpoints
 } from './points'
-import {
+import config from './config'
+let {
     wrapperOptions,
     center
-} from './settings'
+} = config
 var canvas = document.createElement('canvas')
 var ctx = canvas.getContext("2d")
 
