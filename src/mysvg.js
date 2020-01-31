@@ -55,14 +55,14 @@ var polygon = function (options) {
         sort[options.sort]) {
         points = sort[options.sort](points)
     }
-    options.points= points.join(" ")
+    options.points = points.join(" ")
 }
 
 //图形
 var shape = function (tag, options) {
     options = defaultOptions(tag, options)
     console.log(options)
-    if('polygon'===tag){
+    if ('polygon' === tag) {
         polygon(options);
     }
     var sd = createSvgDom(tag)
@@ -179,37 +179,65 @@ var _style = function (options) {
     }).join(";")
 }
 
+var wrapper = svgWrappper()
+document.body.appendChild(wrapper);
 
 //画图
-var draw = function (svgDomArr, options) {
-    var wrapper = svgWrappper()
-    document.body.appendChild(wrapper);
-    if (!Array.isArray(svgDomArr)) {
-        svgDomArr = [svgDomArr]
+var draw = function (arr, options) {
+
+    if (!Array.isArray(arr)) {
+        arr = [arr]
     }
-    svgDomArr.forEach(function (t, index) {
-        switch (_type(t)) {
-            case 'string':
-                t = shape(t, options)
-                break;
-            case 'object':
-                t = shape(t.shape, Object.assign({}, options, t))
-                break;
-            default:
-                if (_type(t).test(/svg/i)) {
-                    console.log("is svg element")
-                }
-                break;
-        }
-        console.log(_type(t))
-        if (options && options.delay) {
-            setTimeout(function () {
+    var _draw = function (done) {
+        arr.forEach(function (t, index) {
+            switch (_type(t)) {
+                case 'string':
+                    t = shape(t, options)
+                    break;
+                case 'object':
+                    t = shape(t.shape, Object.assign({}, options, t))
+                    break;
+                default:
+                    if (_type(t).test(/svg/i)) {
+                        console.log("is svg element")
+                    }
+                    break;
+            }
+            console.log(_type(t))
+            if (options && options.delay) {
+                setTimeout(function () {
+                    wrapper.appendChild(t)
+
+                    if (options.loop == true && (index == arr.length - 1)) {
+                        // while (wrapper.firstChild) {
+                        //     wrapper.removeChild(wrapper.firstChild);
+                        // }
+                        done()
+                    }
+                }, index * options.delay)
+            } else {
                 wrapper.appendChild(t)
-            }, 1000 * index * options.delay)
-        } else {
-            wrapper.appendChild(t)
-        }
-    })
+            }
+        })
+
+    }
+
+
+    if (options && options.loop) {
+        setInterval(() => {
+
+            _draw(() => {
+                setTimeout(() => {
+                    while (wrapper.firstChild) {
+                        wrapper.removeChild(wrapper.firstChild);
+                    }
+                }, options.delay)
+            })
+
+        }, arr.length * options.delay)
+    } else {
+        _draw()
+    }
 };
 
 

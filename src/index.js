@@ -3,7 +3,8 @@ import {
     shape
 } from './mysvg'
 import {
-    draw as drawCanvas
+    draw as drawCanvas,
+    lattice
 } from './mycanvas'
 
 // function component() {
@@ -22,7 +23,8 @@ let pic = [{
     }, {
         shape: 'circle',
         color: 'red',
-        r: 200
+        r: 200,
+        // filter:'gray' 
     }, {
         shape: 'circle',
         color: 'white',
@@ -42,13 +44,22 @@ let pic = [{
         n: 5,
         color: 'white',
         sort: 'paritySort'
-    }
+    },
+    {
+        filter:'gray'  //
+    } ,
+    // {
+    //     filter:'reverse'  
+    // } 
 ]
 
 let opt = {
     color: 'pink',
-    delay: 0
+    // delay: 1000,
+    // loop:false
 }
 
 drawCanvas(pic, opt)
-drawSvg(pic, opt)
+// drawSvg(pic, opt)
+
+// lattice()
