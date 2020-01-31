@@ -46,8 +46,11 @@ let pic = [{
         sort: 'paritySort'
     },
     {
-        filter:'gray'  //
-    } ,
+        shape:'lattice'
+    }
+    // {
+    //     filter: 'gray' //
+    // },
     // {
     //     filter:'reverse'  
     // } 

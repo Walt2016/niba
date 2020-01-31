@@ -49,18 +49,17 @@ function gray(canvas) {
 
 
 /**
-	 * deep clone image data of canvas
-	 * 
-	 * @param context
-	 * @param src
-	 * @returns
-	 */
-	var copyImageData= function(context, src)
-	{
-	    var dst = context.createImageData(src.width, src.height);
-	    dst.data.set(src.data);
-	    return dst;
-	}
+ * deep clone image data of canvas
+ * 
+ * @param context
+ * @param src
+ * @returns
+ */
+var copyImageData = function (context, src) {
+    var dst = context.createImageData(src.width, src.height);
+    dst.data.set(src.data);
+    return dst;
+}
 /**
  * after pixel value - before pixel value + 128
  * 浮雕效果
@@ -98,8 +97,70 @@ var relief = function (canvas) { //context, canvasData
     }
 }
 
+
+
+/**
+ * convolution - keneral size 5*5 - blur effect filter(模糊效果)
+ * 
+ */
+var blur = function (canvas) {
+    let ctx = canvas.getContext("2d")
+    let cols = canvas.width;
+    let rows = canvas.height;
+    let imgData = ctx.getImageData(0, 0, cols, rows)
+    let data = imgData.data
+    console.log("Canvas Filter - blur process");
+    var tempCanvasData = copyImageData(ctx, imgData);
+    var sumred = 0.0,
+        sumgreen = 0.0,
+        sumblue = 0.0;
+    for (var x = 0; x < tempCanvasData.width; x++) {
+        for (var y = 0; y < tempCanvasData.height; y++) {
+
+            // Index of the pixel in the array    
+            var idx = (x + y * tempCanvasData.width) * 4;
+            for (var subCol = -2; subCol <= 2; subCol++) {
+                var colOff = subCol + x;
+                if (colOff < 0 || colOff >= tempCanvasData.width) {
+                    colOff = 0;
+                }
+                for (var subRow = -2; subRow <= 2; subRow++) {
+                    var rowOff = subRow + y;
+                    if (rowOff < 0 || rowOff >= tempCanvasData.height) {
+                        rowOff = 0;
+                    }
+                    var idx2 = (colOff + rowOff * tempCanvasData.width) * 4;
+                    var r = tempCanvasData.data[idx2 + 0];
+                    var g = tempCanvasData.data[idx2 + 1];
+                    var b = tempCanvasData.data[idx2 + 2];
+                    sumred += r;
+                    sumgreen += g;
+                    sumblue += b;
+                }
+            }
+
+            // calculate new RGB value
+            var nr = (sumred / 25.0);
+            var ng = (sumgreen / 25.0);
+            var nb = (sumblue / 25.0);
+
+            // clear previous for next pixel point
+            sumred = 0.0;
+            sumgreen = 0.0;
+            sumblue = 0.0;
+
+            // assign new pixel value    
+            imgData.data[idx + 0] = nr; // Red channel    
+            imgData.data[idx + 1] = ng; // Green channel    
+            imgData.data[idx + 2] = nb; // Blue channel    
+            imgData.data[idx + 3] = 255; // Alpha channel    
+        }
+    }
+}
+
 export default {
     reverse,
     gray,
-    relief
+    relief,
+    blur
 }

@@ -7,6 +7,13 @@ import {
 } from './points'
 import sort from './sort'
 import filter from './filter'
+import {
+    lattice
+} from './lattice'
+import {
+    hsla,
+    colorCircle
+} from './color'
 
 let {
     wrapperOptions,
@@ -302,18 +309,21 @@ var shape = function (tag, options) {
             polygon(options);
             break;
         case 'lattice':
-            lattice()
-            // let points = lattice()
-            // console.log(points)
-            // clear()
-            // points.forEach(t => {
-            //     let opt = Object.assign(options, {
-            //         o: t,
-            //         shape: 'circle',
-            //         r: 2
-            //     })
-            //     circle(opt)
-            // })
+            // lattice()
+            let points = lattice(canvas)
+            console.log(points)
+            clear()
+           let colors= colorCircle(points.length)
+            points.forEach((t, i) => {
+                let opt = Object.assign(options, {
+                    o: t,
+                    shape: 'circle',
+                    r: 2,
+                    color: colors[i] // hsla()
+                })
+                if (i % 100 == 0)
+                    circle(opt)
+            })
             // draw(opt)
             break;
     }
@@ -322,61 +332,25 @@ var shape = function (tag, options) {
 
 
 //滤镜
-function doFilter(t){
-    filter[t]&&filter[t](canvas)
+function doFilter(t) {
+    filter[t] && filter[t](canvas)
 }
 
-function lattice() {
-    // cols = txt.length * 16
-    // canvas.width = cols;
-    // canvas.height = rows;
-    // ctx.clearRect(0,0,cols,rows);
-    // ctx.font = "16px SimSun";
-    // ctx.fillStyle = "#000";
-    // ctx.fillText(txt, 0, 14);
-    let cols = canvas.width;
-    let rows = canvas.height;
-    var imgData = ctx.getImageData(0, 0, cols, rows)
-    let data = imgData.data
-    console.log(data)
-    var len = imgData.data.length;
-    var res = [];
-    for (var i = 0; i < len; i += 4) {
-        data[i] = 255 - data[i];
-        data[i + 1] = 255 - data[i + 1];
-        data[i + 2] = 255 - data[i + 2];
-        data[i + 3] = 255;
-    }
-    ctx.putImageData(imgData, 0, 0);
-
-    // for (var i = 1; i <= rows; i++) {
-    //     for (var j = 1; j <= cols; j++) {
-    //         var pos = ((i - 1) * cols + (j)) * 4 - 1;
-    //         if (data.data[pos] > 0) {
-    //             // res += `<span class="black" style="left: ${j*10}px;top: ${i*10}px"></span>`
-    //             // res.push([j * 10, i * 10])
-    //             res.push([j , i ])
-    //         }
-    //     }
-    // }
-    // return res
-    // wrap.innerHTML = res;
-}
 
 var draw = function (arr, options) {
     arr.forEach(t => {
         switch (_type(t)) {
             case 'string':
-               shape(t, options)
+                shape(t, options)
                 break;
             case 'object':
                 //画图
-                if(t.shape){
+                if (t.shape) {
                     shape(t.shape, Object.assign({}, options, t))
                 }
-                
+
                 //滤镜
-                if(t.filter){
+                if (t.filter) {
                     doFilter(t.filter)
                 }
                 break;
