@@ -227,9 +227,8 @@ var polygon = function (options) {
         sAngle,
         color
     } = options
-    // var n = n || 4
     var points = cutpoints(o, r, n, {
-        sAngle: sAngle
+        sAngle
     })
     if (options.sort &&
         sort[options.sort]) {
@@ -273,10 +272,7 @@ var defaultOptions = function (tag, options) {
     }
 
     _synonym(options)
-
-
     return Object.assign(_default, options)
-
 }
 var _synonym = function (options) {
     //同义词
@@ -307,15 +303,11 @@ var shape = function (tag, options) {
         case 'polygon':
             polygon(options);
             break;
-
     }
-
 }
 
 var draw = function (arr, options) {
-
     arr.forEach(t => {
-
         switch (_type(t)) {
             case 'string':
                 t = shape(t, options)
@@ -329,13 +321,7 @@ var draw = function (arr, options) {
                 }
                 break;
         }
-
-
-
-
     })
-
-
 }
 
 export {

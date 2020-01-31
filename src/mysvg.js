@@ -39,10 +39,32 @@ var svgWrappper = function (svgDom) {
     return svg
 }
 
+//多边形
+var polygon = function (options) {
+    let {
+        o,
+        r,
+        n,
+        sAngle,
+        color
+    } = options
+    var points = cutpoints(o, r, n, {
+        sAngle
+    })
+    if (options.sort &&
+        sort[options.sort]) {
+        points = sort[options.sort](points)
+    }
+    options.points= points.join(" ")
+}
+
 //图形
 var shape = function (tag, options) {
     options = defaultOptions(tag, options)
     console.log(options)
+    if('polygon'===tag){
+        polygon(options);
+    }
     var sd = createSvgDom(tag)
     for (var key in options) {
         if (key == 'text') {
@@ -112,28 +134,16 @@ var defaultOptions = function (tag, options) {
             };
             break;
         case 'polygon':
-            options = options || {}
-            let r = options.r || 100
-            let n = options.n || 5
-            let points = cutpoints(center, r, n)
-
-
-            if (options.sort &&
-                sort[options.sort]) {
-                points = sort[options.sort](points)
-            }
-
-
-
-            // points
             _default = {
-                points: points.join(" "),
+                o: center,
+                r: 100,
+                n: 5,
+                sAngle: 0,
                 stroke: 'black',
                 strokeWidth: 1
                 // style: 'fill:white;stroke:#000000;stroke-width:1;fill-rule:nonzero;'
             }
             break;
-
     }
 
     _synonym(options)
@@ -145,14 +155,12 @@ var defaultOptions = function (tag, options) {
 
 //同义词转化
 var _synonym = function (options) {
-
     //同义词
     var synonym = {
         color: 'fill',
         linecolor: 'stroke',
         linewidth: 'strokeWidth'
     }
-
     //同义词
     Object.keys(options).forEach(t => {
         let key = synonym[t.toLowerCase()]
@@ -160,7 +168,6 @@ var _synonym = function (options) {
             options[key] = options[t]
         }
     })
-
 }
 
 //样式转化
