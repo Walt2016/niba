@@ -148,8 +148,8 @@ var alpha = function (color, a) {
     return rgbaWrapper(color);
 }
 
- //web安全色   
- var webSafeColor= function (color) {
+//web安全色   
+var webSafeColor = function (color) {
     if (!color) {
         //216个安全色
         var arr = ['00', '33', '66', '99', 'CC', 'FF'],
@@ -174,14 +174,14 @@ var alpha = function (color, a) {
     return hex(rgbaWrapper(color));
 }
 
-var _isUndefined=function(t){
-    return t===undefined
+var _isUndefined = function (t) {
+    return t === undefined
 }
-var _cos=function(t){
-    return Math.cos(t)
+var _cos = function (t) {
+    return Math.cos(t * Math.PI / 180)
 }
 //色相环
-var colorCircle= function (len, alpha) {
+var colorCircle = function (len, alpha) {
     var a = 0,
         step = 360 / len,
         arr = [],

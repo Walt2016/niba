@@ -46,7 +46,7 @@ let pic = [{
         sort: 'paritySort'
     },
     {
-        shape:'lattice'
+        filter:'lattice'
     }
     // {
     //     filter: 'gray' //
@@ -62,7 +62,15 @@ let opt = {
     // loop:false
 }
 
-drawCanvas(pic, opt)
+// drawCanvas(pic, opt)
 // drawSvg(pic, opt)
 
 // lattice()
+
+let pic2=[{
+    shape:'polygon',
+    r:100,
+    color:'blue'
+}]
+
+drawCanvas(pic2)

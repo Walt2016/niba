@@ -148,13 +148,7 @@ var arc = function (o, arr) {
     })
     ctx.stroke()
 }
-//正方形，矩形
-var rect = function (o, r) {
-    ctx.strokeStyle = "#000";
-    ctx.beginPath();
-    ctx.rect.apply(ctx, [o[0] - r / 2, o[1] - r / 2].concat([r, r]))
-    ctx.stroke()
-}
+
 
 var point = function (arr, showLabel) {
     var _this = this;
@@ -193,17 +187,31 @@ var point = function (arr, showLabel) {
 // this.rightbottom = [this.width - paddingRight, this.height - paddingBottom];
 // this.righttop = [this.width - paddingRight, 0 + paddingTop];
 
-// var ctx = this.ctx = canvas.getContext("2d")
+//正方形，矩形
+var rect = function (options) {
+    let {
+        o,
+        r,
+        strokeStyle,
+        fillStyle
+    } = options
+    ctx.strokeStyle = strokeStyle;
+    ctx.fillStyle = fillStyle
+    ctx.beginPath();
+    ctx.rect.apply(ctx, [o[0] - r / 2, o[1] - r / 2].concat([r, r]))
+    ctx.stroke()
+    ctx.fill()
+}
 //圆形
 var circle = function (options) {
     let {
         o,
         r,
-        color,
-        lineColor
+        fillStyle,
+        strokeStyle
     } = options
-    ctx.strokeStyle = lineColor
-    ctx.fillStyle = color
+    ctx.strokeStyle = strokeStyle
+    ctx.fillStyle = fillStyle
     ctx.beginPath();
     ctx.arc.apply(ctx, o.concat([r, 0, 2 * Math.PI]))
     ctx.stroke()
@@ -216,9 +224,9 @@ var text = function (options) {
         text,
         x,
         y,
-        color
+        fillStyle
     } = options
-    ctx.fillStyle = color
+    ctx.fillStyle = fillStyle
     ctx.font = "20px Verdana";
     ctx.fillText(text, x, y);
 }
@@ -244,7 +252,7 @@ var polygon = function (options) {
         color
     })
 }
-//打点
+
 //默认参数
 var defaultOptions = function (tag, options) {
     let _default = {}
@@ -271,13 +279,23 @@ var defaultOptions = function (tag, options) {
                 r: 100,
                 n: 5,
                 sAngle: 0,
-                color: 'blue'
+                color: 'blue',
+                lineColor:'black'
+            }
+            break;
+        case 'rect':
+            _default = {
+                o: center,
+                r: 100,
+                sAngle: 0,
+                color: 'blue',
+                lineColor:'black'
             }
             break;
     }
 
-    _synonym(options)
-    return Object.assign(_default, options)
+    // (options)
+    return _synonym(Object.assign(_default, options))
 }
 var _synonym = function (options) {
     //同义词
@@ -293,6 +311,7 @@ var _synonym = function (options) {
             options[key] = options[t]
         }
     })
+    return options
 }
 
 //图形
@@ -308,35 +327,39 @@ var shape = function (tag, options) {
         case 'polygon':
             polygon(options);
             break;
+        case 'rect':
+            rect(options);
+            break;
         case 'lattice':
-            // lattice()
-            let points = lattice(canvas)
-            console.log(points)
-            clear()
-           let colors= colorCircle(points.length)
-            points.forEach((t, i) => {
-                let opt = Object.assign(options, {
-                    o: t,
-                    shape: 'circle',
-                    r: 2,
-                    color: colors[i] // hsla()
-                })
-                if (i % 100 == 0)
-                    circle(opt)
-            })
-            // draw(opt)
+            doFilter('lattice')
             break;
     }
 }
 
-
-
 //滤镜
-function doFilter(t) {
-    filter[t] && filter[t](canvas)
+function doFilter(t, options) {
+    if (t === 'lattice') {
+        let points = lattice(canvas)
+        console.log(points)
+        clear()
+        let colors = colorCircle(points.length)
+        points.forEach((t, i) => {
+            let opt = Object.assign(options, {
+                o: t,
+                shape: 'circle',
+                r: 2,
+                color: colors[i] // hsla()
+            })
+            if (i % 100 == 0)
+                circle(opt)
+        })
+    } else {
+        filter[t] && filter[t](canvas)
+    }
+
 }
 
-
+//画图
 var draw = function (arr, options) {
     arr.forEach(t => {
         switch (_type(t)) {
@@ -351,7 +374,7 @@ var draw = function (arr, options) {
 
                 //滤镜
                 if (t.filter) {
-                    doFilter(t.filter)
+                    doFilter(t.filter, options)
                 }
                 break;
             default:
@@ -363,8 +386,36 @@ var draw = function (arr, options) {
     })
 }
 
+var animate = function (arr, options, duration) {
+    let index = 0;
+    (function _ani() {
+        if (index++ >= 1000) {
+            return false
+        }
+        clear()
+        draw(arr, options)
+        // switch (act) {
+        //     case "point":
+        //         _this.point.call(_this, arr[index++])
+        //         break;
+        //     case "line":
+        //         _this.line.call(_this, arr.slice(index++, index + 1))
+        //         break;
+        //     case "ray":
+        //         if (cs) {
+        //             _this.ray.call(_this, cs[index % cs.length], arr.slice(index++, index))
+        //         } else {
+        //             _this.ray.call(_this, _this.center, arr.slice(index++, index))
+        //         }
+
+        //         break;
+        // }
+        setTimeout(_ani, duration)
+    })();
+
+}
+
 export {
     draw,
-    shape,
-    lattice
+    shape
 }
