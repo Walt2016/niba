@@ -41,16 +41,17 @@ var svgWrappper = function (svgDom) {
 
 //多边形
 var polygon = function (options) {
-    let {
-        o,
-        r,
-        n,
-        sAngle,
-        color
-    } = options
-    var points = cutpoints(o, r, n, {
-        sAngle
-    })
+    // let {
+    //     o,
+    //     r,
+    //     n,
+    //     sAngle,
+    //     color
+    // } = options
+    // var points = cutpoints(o, r, n, {
+    //     sAngle
+    // })
+    let points = cutpoints(options)
     if (options.sort &&
         sort[options.sort]) {
         points = sort[options.sort](points)

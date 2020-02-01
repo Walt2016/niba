@@ -2,17 +2,25 @@
 //分割点
 // 参数：[x,y],[r1,r2],n
 //半径 r,r1~r2  , [r1,r2,r3]
-//options{o:[xy],r:[r1,r2],n:n,rn:"random"}
+//optionsions{o:[xy],r:[r1,r2],n:n,rn:"random"}
 //regular, direction, sAngle
 //分割圆弧
-var cutpoints = function (o, r, n, opt) {
+var cutpoints = function (options) {
+    let {
+        o,
+        r,
+        n,
+        sAngle = 0,
+        direction,
+        regular = true
+    } = options
     // o = o || center
     var arr = [],
         a;
-    var opt = opt || {};
-    var sAngle = opt.sAngle || 0;
-    var direction = opt.direction;
-    var regular = opt.regular == null ? true : opt.regular;
+    // var options = options || {};
+    // var sAngle = options.sAngle || 0;
+    // var direction = options.direction;
+    // var regular = options.regular == null ? true : options.regular;
 
     var _cut = function (o, r, n, i, regular, direction) {
         if (regular) {

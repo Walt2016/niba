@@ -14,6 +14,7 @@ import {
     hsla,
     colorCircle
 } from './color'
+import fractal from './fractal'
 
 let {
     wrapperOptions,
@@ -115,26 +116,7 @@ var line = function (arr, closePath, options) {
 };
 
 
-//射线
-//一中心p,多中心o [p1,p2]
-var ray = function (o, arr) {
-    ctx.strokeStyle = "#000";
-    ctx.beginPath();
-    if (_.type(o[0]) === "array") { //二维数组  多中心
-        var n = o.length;
-        arr.forEach((t, i) => {
-            ctx.moveTo.apply(ctx, o[i % n])
-            ctx.lineTo.apply(ctx, t)
-        })
 
-    } else {
-        arr.forEach((t, i) => {
-            ctx.moveTo.apply(ctx, o)
-            ctx.lineTo.apply(ctx, t)
-        })
-    }
-    ctx.stroke()
-};
 
 //弧线
 var arc = function (o, arr) {
@@ -187,6 +169,26 @@ var point = function (arr, showLabel) {
 // this.rightbottom = [this.width - paddingRight, this.height - paddingBottom];
 // this.righttop = [this.width - paddingRight, 0 + paddingTop];
 
+
+//射线
+//一中心p,多中心o [p1,p2]
+var ray = function (o, arr) {
+    ctx.strokeStyle = "#000";
+    ctx.beginPath();
+    if (_type(o[0]) === "array") { //二维数组  多中心
+        var n = o.length;
+        arr.forEach((t, i) => {
+            ctx.moveTo.apply(ctx, o[i % n])
+            ctx.lineTo.apply(ctx, t)
+        })
+    } else {
+        arr.forEach((t, i) => {
+            ctx.moveTo.apply(ctx, o)
+            ctx.lineTo.apply(ctx, t)
+        })
+    }
+    ctx.stroke()
+};
 //正方形，矩形
 var rect = function (options) {
     let {
@@ -240,9 +242,10 @@ var polygon = function (options) {
         sAngle,
         color
     } = options
-    var points = cutpoints(o, r, n, {
-        sAngle
-    })
+    // var points = cutpoints(o, r, n, {
+    //     sAngle
+    // })
+    let points = cutpoints(options)
     if (options.sort &&
         sort[options.sort]) {
         points = sort[options.sort](points)
@@ -251,8 +254,23 @@ var polygon = function (options) {
     line(points, true, {
         color
     })
+    return points
 }
-
+//同义词
+var _synonym = function (options) {
+    var synonym = {
+        color: 'fillStyle',
+        linecolor: 'strokeStyle',
+        // linewidth: 'strokeWidth'
+    }
+    Object.keys(options).forEach(t => {
+        let key = synonym[t.toLowerCase()]
+        if (key) {
+            options[key] = options[t]
+        }
+    })
+    return options
+}
 //默认参数
 var defaultOptions = function (tag, options) {
     let _default = {}
@@ -279,8 +297,8 @@ var defaultOptions = function (tag, options) {
                 r: 100,
                 n: 5,
                 sAngle: 0,
-                color: 'blue',
-                lineColor:'black'
+                // color: 'blue',
+                lineColor: 'black'
             }
             break;
         case 'rect':
@@ -289,30 +307,14 @@ var defaultOptions = function (tag, options) {
                 r: 100,
                 sAngle: 0,
                 color: 'blue',
-                lineColor:'black'
+                lineColor: 'black'
             }
             break;
     }
 
-    // (options)
     return _synonym(Object.assign(_default, options))
 }
-var _synonym = function (options) {
-    //同义词
-    var synonym = {
-        color: 'fillStyle',
-        linecolor: 'strokeStyle',
-        // linewidth: 'strokeWidth'
-    }
-    //同义词
-    Object.keys(options).forEach(t => {
-        let key = synonym[t.toLowerCase()]
-        if (key) {
-            options[key] = options[t]
-        }
-    })
-    return options
-}
+
 
 //图形
 var shape = function (tag, options) {
@@ -325,7 +327,7 @@ var shape = function (tag, options) {
             text(options);
             break;
         case 'polygon':
-            polygon(options);
+          return   polygon(options);
             break;
         case 'rect':
             rect(options);
@@ -356,11 +358,21 @@ function doFilter(t, options) {
     } else {
         filter[t] && filter[t](canvas)
     }
+}
 
+var doFractal=function(options){
+    // options = defaultOptions(options.shape, options)
+    fractal[options.fractal](options, function(options){
+      return  shape(options.shape,options)
+    })
 }
 
 //画图
 var draw = function (arr, options) {
+    // let {fractal as fr}=options
+    // if (options.fractal) {
+    //     return fractal[options.fractalptions](options, shape)
+    // }
     arr.forEach(t => {
         switch (_type(t)) {
             case 'string':
@@ -375,6 +387,11 @@ var draw = function (arr, options) {
                 //滤镜
                 if (t.filter) {
                     doFilter(t.filter, options)
+                }
+                if(t.fractal){
+
+                    doFractal(t)
+
                 }
                 break;
             default:
@@ -414,6 +431,7 @@ var animate = function (arr, options, duration) {
     })();
 
 }
+
 
 export {
     draw,
