@@ -181,7 +181,7 @@ var _cos = function (t) {
     return Math.cos(t * Math.PI / 180)
 }
 //色相环
-var colorCircle = function (len, alpha) {
+var circle = function (len, alpha) {
     var a = 0,
         step = 360 / len,
         arr = [],
@@ -195,7 +195,7 @@ var colorCircle = function (len, alpha) {
     }
     return arr;
 }
-export {
+export default {
     rgb,
     hex,
     dark,
@@ -204,7 +204,7 @@ export {
     hsl,
     alpha,
     webSafeColor,
-    colorCircle
+    circle
 }
 
 // var Color = function (color, alpha) {

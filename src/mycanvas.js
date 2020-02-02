@@ -10,10 +10,8 @@ import filter from './filter'
 import {
     lattice
 } from './lattice'
-import {
-    hsla,
-    colorCircle
-} from './color'
+import color from './color'
+//colorCircle
 import fractal from './fractal'
 
 let {
@@ -94,26 +92,6 @@ var link = function (opt) {
 
 };
 
-//连线
-var line = function (arr, closePath, options) {
-    let {
-        color
-    } = options
-    if (color) ctx.fillStyle = color //"white"
-    ctx.strokeStyle = "#000";
-    ctx.beginPath();
-    arr.forEach((t, i) => {
-        if (i === 0) {
-            ctx.moveTo.apply(ctx, t)
-        }
-        ctx.lineTo.apply(ctx, t)
-    })
-    var closePath = closePath == null ? false : closePath
-    if (closePath)
-        ctx.closePath();
-    ctx.stroke()
-    if (color) ctx.fill()
-};
 
 
 
@@ -168,6 +146,34 @@ var point = function (arr, showLabel) {
 // this.leftbottom = [0 + paddingLeft, this.height - paddingBottom];
 // this.rightbottom = [this.width - paddingRight, this.height - paddingBottom];
 // this.righttop = [this.width - paddingRight, 0 + paddingTop];
+//连线
+var line = function (options) { //points, closePath, options
+    let {
+        points,
+        fillStyle,
+        strokeStyle = "#000",
+        closePath = true,
+        colors,
+        index = 0
+    } = options
+    if (colors)
+        strokeStyle = colors[index]
+    if (fillStyle) ctx.fillStyle = fillStyle //"white"
+    ctx.strokeStyle = strokeStyle;
+    ctx.beginPath();
+    points.forEach((t, i) => {
+        if (i === 0) {
+            ctx.moveTo.apply(ctx, t)
+        }
+        ctx.lineTo.apply(ctx, t)
+    })
+    if (closePath)
+        ctx.closePath();
+    ctx.stroke()
+    if (fillStyle) ctx.fill()
+
+    return options
+};
 
 
 //射线
@@ -194,15 +200,18 @@ var rect = function (options) {
     let {
         o,
         r,
-        strokeStyle,
+        strokeStyle = '#000',
         fillStyle
     } = options
     ctx.strokeStyle = strokeStyle;
-    ctx.fillStyle = fillStyle
+    if (fillStyle)
+        ctx.fillStyle = fillStyle
     ctx.beginPath();
     ctx.rect.apply(ctx, [o[0] - r / 2, o[1] - r / 2].concat([r, r]))
     ctx.stroke()
-    ctx.fill()
+    if (fillStyle)
+        ctx.fill()
+    return options
 }
 //圆形
 var circle = function (options) {
@@ -210,14 +219,17 @@ var circle = function (options) {
         o,
         r,
         fillStyle,
-        strokeStyle
+        strokeStyle = '#000'
     } = options
     ctx.strokeStyle = strokeStyle
-    ctx.fillStyle = fillStyle
+    if (fillStyle)
+        ctx.fillStyle = fillStyle
     ctx.beginPath();
     ctx.arc.apply(ctx, o.concat([r, 0, 2 * Math.PI]))
     ctx.stroke()
-    ctx.fill()
+    if (fillStyle)
+        ctx.fill()
+    return options
 }
 
 //文字
@@ -231,30 +243,19 @@ var text = function (options) {
     ctx.fillStyle = fillStyle
     ctx.font = "20px Verdana";
     ctx.fillText(text, x, y);
+    return options
 }
 
 //规则多边形
 var polygon = function (options) {
-    let {
-        o,
-        r,
-        n,
-        sAngle,
-        color
-    } = options
-    // var points = cutpoints(o, r, n, {
-    //     sAngle
-    // })
     let points = cutpoints(options)
     if (options.sort &&
         sort[options.sort]) {
         points = sort[options.sort](points)
     }
-
-    line(points, true, {
-        color
-    })
-    return points
+    return line(Object.assign(options, {
+        points
+    }))
 }
 //同义词
 var _synonym = function (options) {
@@ -321,21 +322,22 @@ var shape = function (tag, options) {
     options = defaultOptions(tag, options)
     switch (tag) {
         case "circle":
-            circle(options);
+            options = circle(options);
             break;
         case 'text':
-            text(options);
+            options = text(options);
             break;
         case 'polygon':
-          return   polygon(options);
+            options = polygon(options);
             break;
         case 'rect':
-            rect(options);
+            options = rect(options);
             break;
         case 'lattice':
             doFilter('lattice')
             break;
     }
+    return options
 }
 
 //滤镜
@@ -344,7 +346,7 @@ function doFilter(t, options) {
         let points = lattice(canvas)
         console.log(points)
         clear()
-        let colors = colorCircle(points.length)
+        let colors = color.circle(points.length)
         points.forEach((t, i) => {
             let opt = Object.assign(options, {
                 o: t,
@@ -360,39 +362,50 @@ function doFilter(t, options) {
     }
 }
 
-var doFractal=function(options){
-    // options = defaultOptions(options.shape, options)
-    fractal[options.fractal](options, function(options){
-      return  shape(options.shape,options)
+//分形调用
+var doFractal = function (t, options) {
+    let {
+        level = 3,
+            n = 5
+    } = options
+    let len = fractal.stat(level, n)
+    console.log(len)
+    let colors = color.circle(len)
+    options.colors = colors
+    // options.index = 0
+    let index=0
+    fractal[t](options, function (options) {
+        // options.index++
+        index++
+        Object.assign(options,{index})
+        return shape(options.shape, options)
     })
 }
 
 //画图
 var draw = function (arr, options) {
-    // let {fractal as fr}=options
-    // if (options.fractal) {
-    //     return fractal[options.fractalptions](options, shape)
-    // }
     arr.forEach(t => {
         switch (_type(t)) {
             case 'string':
                 shape(t, options)
                 break;
             case 'object':
-                //画图
-                if (t.shape) {
-                    shape(t.shape, Object.assign({}, options, t))
+
+                //分形
+                if (t.fractal) {
+                    doFractal(t.fractal, Object.assign({}, options, t))
+                } else {
+                    //画图
+                    if (t.shape) {
+                        shape(t.shape, Object.assign({}, options, t))
+                    }
                 }
 
                 //滤镜
                 if (t.filter) {
-                    doFilter(t.filter, options)
+                    doFilter(t.filter, Object.assign({}, options, t))
                 }
-                if(t.fractal){
 
-                    doFractal(t)
-
-                }
                 break;
             default:
                 if (_type(t).test(/svg/i)) {

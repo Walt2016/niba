@@ -69,11 +69,19 @@ let opt = {
 
 let pic2=[{
     shape:'polygon',
-    n:9,
-    r:100,
-    // color:'blue',
+    n:4,
+    r:50,
+    // fractal:{
+    //     name:'branch',
+    //     level:4,
+    //     step:{
+    //         r:'*0.9'
+    //     }
+    // }
+    color:'rgba(255,255,255,0.2)',
+    lineColor:'$circle',
     fractal:'branch',
-    level:4,
+    level:5,
     step:{
         r:0.9
     }

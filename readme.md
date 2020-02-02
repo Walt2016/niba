@@ -5,3 +5,4 @@ day 2 cutpoints ; canvas basic
 day 3 array sort; svg style
 day 4 canvas filter ;lattice ;color
 day 5 canvas fractal-branch
+day 5 canvas fractal-color
