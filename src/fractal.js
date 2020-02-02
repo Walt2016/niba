@@ -7,7 +7,13 @@ var branch = function (options, callback) {
     options.level = level
     var _branch = function (options) {
         let {
-            level
+            level,
+            r,
+            n,
+            step = {
+                r: 1,
+                n: 0
+            }
         } = options
         if (level-- <= 0) {
             return
@@ -20,7 +26,9 @@ var branch = function (options, callback) {
                 _branch(
                     Object.assign(options, {
                         o: t,
-                        level
+                        level,
+                        r: r * step.r,
+                        n: n + step.n
                     })
                 )
             })

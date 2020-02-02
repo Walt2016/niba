@@ -69,22 +69,17 @@ let opt = {
 
 let pic2=[{
     shape:'polygon',
-    n:4,
-    r:50,
-    // fractal:{
-    //     name:'branch',
-    //     level:4,
-    //     step:{
-    //         r:'*0.9'
-    //     }
-    // }
+    n:3,
+    r:100,
     color:'rgba(255,255,255,0.2)',
     lineColor:'$circle',
     fractal:'branch',
-    level:5,
+    level:6,
     step:{
-        r:0.9
-    }
+        r:0.5,
+        n:1
+    },
+    sAngle:45
 }]
 
 drawCanvas(pic2)
