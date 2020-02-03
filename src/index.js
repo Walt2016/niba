@@ -68,13 +68,13 @@ let opt = {
 // lattice()
 
 let pic2=[{
-    shape:'polygon',
-    n:3,
+    shape:'ray', //polygon
+    n:5,
     r:100,
     color:'rgba(255,255,255,0.2)',
     lineColor:'$circle',
     fractal:'branch',
-    level:6,
+    level:5,
     step:{
         r:0.5,
         n:1

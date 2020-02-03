@@ -1,3 +1,5 @@
+import sort from './sort'
+
 //顶点 vertices
 //分割点
 // 参数：[x,y],[r1,r2],n
@@ -15,7 +17,7 @@ var cutpoints = function (options) {
         regular = true
     } = options
     // o = o || center
-    var arr = [],
+    var points = [],
         a;
     // var options = options || {};
     // var sAngle = options.sAngle || 0;
@@ -38,7 +40,7 @@ var cutpoints = function (options) {
                 a = 2 * Math.PI * Math.random()
             }
         }
-        arr[i] = [o[0] + r * Math.cos(a), o[1] + r * Math.sin(a)]
+        points[i] = [o[0] + r * Math.cos(a), o[1] + r * Math.sin(a)]
     }
 
     if (Array.isArray(r)) {
@@ -61,7 +63,13 @@ var cutpoints = function (options) {
         }
     }
 
-    return arr
+    // return arr
+
+    if (options.sort &&
+        sort[options.sort]) {
+        points = sort[options.sort](points)
+    }
+    return  points
 }
 
 //距离 distance

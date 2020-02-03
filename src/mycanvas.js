@@ -178,22 +178,40 @@ var line = function (options) { //points, closePath, options
 
 //射线
 //一中心p,多中心o [p1,p2]
-var ray = function (o, arr) {
-    ctx.strokeStyle = "#000";
+var ray = function (options) {
+    let {
+        o,
+        // points,
+        
+        
+        strokeStyle = "#000",
+        colors,
+        index=0
+    } = options
+    let points = cutpoints(options)
+    options.points=points
+
+    if(colors){
+        ctx.strokeStyle =colors[index]
+    }else{
+        ctx.strokeStyle = strokeStyle;
+    }
+    
     ctx.beginPath();
-    if (_type(o[0]) === "array") { //二维数组  多中心
+    if (Array.isArray(o[0])) { //二维数组  多中心
         var n = o.length;
-        arr.forEach((t, i) => {
+        points.forEach((t, i) => {
             ctx.moveTo.apply(ctx, o[i % n])
             ctx.lineTo.apply(ctx, t)
         })
     } else {
-        arr.forEach((t, i) => {
+        points.forEach((t, i) => {
             ctx.moveTo.apply(ctx, o)
             ctx.lineTo.apply(ctx, t)
         })
     }
     ctx.stroke()
+    return options
 };
 //正方形，矩形
 var rect = function (options) {
@@ -249,10 +267,6 @@ var text = function (options) {
 //规则多边形
 var polygon = function (options) {
     let points = cutpoints(options)
-    if (options.sort &&
-        sort[options.sort]) {
-        points = sort[options.sort](points)
-    }
     return line(Object.assign(options, {
         points
     }))
@@ -311,6 +325,16 @@ var defaultOptions = function (tag, options) {
                 lineColor: 'black'
             }
             break;
+        case 'ray':
+            _default = {
+                o: center,
+                r: 100,
+                n: 5,
+                sAngle: 0,
+                // color: 'blue',
+                lineColor: 'black'
+            }
+            break;
     }
 
     return _synonym(Object.assign(_default, options))
@@ -330,6 +354,9 @@ var shape = function (tag, options) {
         case 'polygon':
             options = polygon(options);
             break;
+        case 'ray':
+            options = ray(options);
+            break;
         case 'rect':
             options = rect(options);
             break;
@@ -337,6 +364,7 @@ var shape = function (tag, options) {
             doFilter('lattice')
             break;
     }
+    // console.log(options)
     return options
 }
 
@@ -373,11 +401,13 @@ var doFractal = function (t, options) {
     let colors = color.circle(len)
     options.colors = colors
     // options.index = 0
-    let index=0
+    let index = 0
     fractal[t](options, function (options) {
         // options.index++
         index++
-        Object.assign(options,{index})
+        Object.assign(options, {
+            index
+        })
         return shape(options.shape, options)
     })
 }
