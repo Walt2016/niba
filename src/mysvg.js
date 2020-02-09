@@ -37,6 +37,13 @@ var svgWrappper = function (svgDom) {
     return svg
 }
 
+var wrapper;
+var setup=function(){
+    wrapper = svgWrappper()
+    document.body.appendChild(wrapper);
+}
+
+
 //多边形
 var polygon = function (options) {
     let points = cutpoints(options)
@@ -164,8 +171,7 @@ var _style = function (options) {
     }).join(";")
 }
 
-var wrapper = svgWrappper()
-document.body.appendChild(wrapper);
+
 
 //画图
 var draw = function (arr, options) {
@@ -227,6 +233,7 @@ var draw = function (arr, options) {
 
 
 export {
+    setup,
     draw,
     shape
 }

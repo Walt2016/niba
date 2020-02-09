@@ -17,15 +17,21 @@ let {
     wrapperOptions,
     center
 } = config
-var canvas = document.createElement('canvas')
-var ctx = canvas.getContext("2d")
+
 let {
     width,
     height
 } = wrapperOptions
-canvas.width = width
-canvas.height = height
-document.body.appendChild(canvas)
+
+let canvas, ctx;
+
+var setup = function () {
+    canvas = document.createElement('canvas')
+    ctx = canvas.getContext("2d")
+    canvas.width = width
+    canvas.height = height
+    document.body.appendChild(canvas)
+}
 
 
 var clear = function () {
@@ -499,6 +505,7 @@ var animate = function (arr, options, duration) {
 
 
 export {
+    setup,
     draw,
     shape
 }

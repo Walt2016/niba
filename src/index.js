@@ -1,8 +1,10 @@
 import {
+    setup as setupSvg,
     draw as drawSvg,
     shape
 } from './mysvg'
 import {
+    setup as setupCanvas,
     draw as drawCanvas,
     lattice
 } from './mycanvas'
@@ -82,4 +84,5 @@ let pic2=[{
     sAngle:45
 }]
 
+setupCanvas()
 drawCanvas(pic2)
