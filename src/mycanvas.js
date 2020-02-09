@@ -3,15 +3,14 @@ import {
     _type,
 } from './utils'
 import {
-    cutpoints
+    cutpoints,
+    dis
 } from './points'
-import sort from './sort'
 import filter from './filter'
 import {
     lattice
 } from './lattice'
 import color from './color'
-//colorCircle
 import fractal from './fractal'
 
 let {
@@ -96,18 +95,6 @@ var link = function (opt) {
 
 
 
-//弧线
-var arc = function (o, arr) {
-    var len = arr.length
-    ctx.strokeStyle = "#000";
-    ctx.beginPath();
-    arr.forEach((t, i) => {
-        var t1 = i + 1 < len ? arr[i + 1] : arr[0];
-        var r = dis(t, t1, o)
-        ctx.arcTo.apply(ctx, t.concat(t1).concat([r]))
-    })
-    ctx.stroke()
-}
 
 
 var point = function (arr, showLabel) {
@@ -146,6 +133,28 @@ var point = function (arr, showLabel) {
 // this.leftbottom = [0 + paddingLeft, this.height - paddingBottom];
 // this.rightbottom = [this.width - paddingRight, this.height - paddingBottom];
 // this.righttop = [this.width - paddingRight, 0 + paddingTop];
+
+//弧线
+var arc = function (opitons) {
+    let {
+        o,
+        strokeStyle = "#000"
+    } = opitons //points
+    let points = cutpoints(opitons)
+    let len = points.length
+    ctx.strokeStyle = strokeStyle;
+    ctx.beginPath();
+    points.forEach((t, i) => {
+        let t1 = i + 1 < len ? points[i + 1] : points[0];
+        let r = dis(t, t1, o)
+        ctx.arcTo.apply(ctx, t.concat(t1).concat([r]))
+    })
+    ctx.stroke()
+    return Object.assign(opitons, {
+        points
+    })
+}
+
 //连线
 var line = function (options) { //points, closePath, options
     let {
@@ -181,22 +190,19 @@ var line = function (options) { //points, closePath, options
 var ray = function (options) {
     let {
         o,
-        // points,
-        
-        
         strokeStyle = "#000",
         colors,
-        index=0
+        index = 0
     } = options
     let points = cutpoints(options)
-    options.points=points
+    // options.points = points
 
-    if(colors){
-        ctx.strokeStyle =colors[index]
-    }else{
+    if (colors) {
+        ctx.strokeStyle = colors[index]
+    } else {
         ctx.strokeStyle = strokeStyle;
     }
-    
+
     ctx.beginPath();
     if (Array.isArray(o[0])) { //二维数组  多中心
         var n = o.length;
@@ -211,7 +217,10 @@ var ray = function (options) {
         })
     }
     ctx.stroke()
-    return options
+    // return options
+    return Object.assign(opitons, {
+        points
+    })
 };
 //正方形，矩形
 var rect = function (options) {
@@ -335,6 +344,16 @@ var defaultOptions = function (tag, options) {
                 lineColor: 'black'
             }
             break;
+        case 'arc':
+            _default = {
+                o: center,
+                r: 100,
+                n: 5,
+                sAngle: 0,
+                // color: 'blue',
+                lineColor: 'black'
+            }
+            break;
     }
 
     return _synonym(Object.assign(_default, options))
@@ -356,6 +375,9 @@ var shape = function (tag, options) {
             break;
         case 'ray':
             options = ray(options);
+            break;
+        case 'arc':
+            options = arc(options);
             break;
         case 'rect':
             options = rect(options);

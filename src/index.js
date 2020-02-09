@@ -68,8 +68,8 @@ let opt = {
 // lattice()
 
 let pic2=[{
-    shape:'ray', //polygon
-    n:5,
+    shape:'arc', //polygon ray
+    n:3,
     r:100,
     color:'rgba(255,255,255,0.2)',
     lineColor:'$circle',
