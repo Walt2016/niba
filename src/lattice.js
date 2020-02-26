@@ -2,7 +2,7 @@
 
 function dotsInner({
     n
-}) { //n=3,a=10
+}) { 
     let points = []
     for (let i = -1 * n; i < n; i++) {
         for (let j = -1 * n; j < n; j++) {
@@ -12,16 +12,19 @@ function dotsInner({
     return points
 }
 
-function lattice(canvas,{n = 3, a = 10} ) {
-    let {
-        width,
-        height
-    } = canvas
+//图形点阵
+function lattice({
+    width,
+    height
+}, {
+    n = 3,
+    r = 10
+}) {
     let cx = width / 2,
         cy = height / 2;
     return dotsInner({
         n
-    }).map(t => [t[0] * a + cx, t[1] * a + cy])
+    }).map(t => [t[0] * r + cx, t[1] * r + cy])
 }
 
 

@@ -475,39 +475,68 @@ var draw = function (arr, options) {
     })
 }
 
-var animate = function (arr, options, duration) {
-    let index = 0;
-    (function _ani() {
-        if (index++ >= 1000) {
-            return false
-        }
-        clear()
-        draw(arr, options)
-        // switch (act) {
-        //     case "point":
-        //         _this.point.call(_this, arr[index++])
-        //         break;
-        //     case "line":
-        //         _this.line.call(_this, arr.slice(index++, index + 1))
-        //         break;
-        //     case "ray":
-        //         if (cs) {
-        //             _this.ray.call(_this, cs[index % cs.length], arr.slice(index++, index))
-        //         } else {
-        //             _this.ray.call(_this, _this.center, arr.slice(index++, index))
-        //         }
 
-        //         break;
-        // }
-        setTimeout(_ani, duration)
-    })();
+let anime = (figures, options) => {
+    setInterval(() => {
+        clear()
+        figures = figures.map(t => {
+            let {
+                sign = 1
+            } = t
+            let {
+                prop,
+                range,
+                speed,
+                act
+            } = Object.assign({}, t.anime, options)
+            if (t[prop] > range[1]) {
+                t.sign = -1
+            } else if (t[prop] < range[0]) {
+                t.sign = 1
+            }
+            t[prop] = t[prop] + sign * speed
+            return t
+        })
+
+        draw(figures)
+    }, 17);
 
 }
+
+// var animate = function (arr, options, duration) {
+//     let index = 0;
+//     (function _ani() {
+//         if (index++ >= 1000) {
+//             return false
+//         }
+//         clear()
+//         draw(arr, options)
+//         // switch (act) {
+//         //     case "point":
+//         //         _this.point.call(_this, arr[index++])
+//         //         break;
+//         //     case "line":
+//         //         _this.line.call(_this, arr.slice(index++, index + 1))
+//         //         break;
+//         //     case "ray":
+//         //         if (cs) {
+//         //             _this.ray.call(_this, cs[index % cs.length], arr.slice(index++, index))
+//         //         } else {
+//         //             _this.ray.call(_this, _this.center, arr.slice(index++, index))
+//         //         }
+
+//         //         break;
+//         // }
+//         setTimeout(_ani, duration)
+//     })();
+
+// }
 
 
 export {
     setup,
     draw,
     shape,
-    clear
+    clear,
+    anime
 }

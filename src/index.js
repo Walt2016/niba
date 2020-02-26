@@ -7,7 +7,8 @@ import {
     setup as setupCanvas,
     draw as drawCanvas,
     lattice,
-    clear
+    clear,
+    anime
 } from './mycanvas'
 
 // function component() {
@@ -99,40 +100,79 @@ setupCanvas()
 //     clear()
 // },1000)
 
-let aminte1=()=>{
-    let sign = 1
-    setInterval(function () {
-        pic3 = pic3.map(t => {
-            if (t.a > 50) {
-                sign = -1
-            } else if (t.a < 10) {
-                sign = 1
-            }
-    
-            t.a = t.a + sign * 0.1
-            return t
-        })
-        clear()
-        drawCanvas(pic3)
-    }, 17);
-}
+// let aminte1=()=>{
+//     let sign = 1
+//     setInterval(function () {
+//         pic3 = pic3.map(t => {
+//             if (t.a > 50) {
+//                 sign = -1
+//             } else if (t.a < 10) {
+//                 sign = 1
+//             }
 
-let aminte2=()=>{
-    let sign = 1
-    setInterval(function () {
-        pic3 = pic3.map(t => {
-            if (t.n > 50) {
-                sign = -1
-            } else if (t.n < 1) {
-                sign = 1
-            }
-    
-            t.n = t.n + sign * 1
-            return t
-        })
-        clear()
-        drawCanvas(pic3)
-    }, 17);
-}
+//             t.a = t.a + sign * 0.1
+//             return t
+//         })
+//         clear()
+//         drawCanvas(pic3)
+//     }, 17);
+// }
 
-aminte2()
+// let aminte2=()=>{
+//     let sign = 1
+//     setInterval(function () {
+//         pic3 = pic3.map(t => {
+//             if (t.n > 50) {
+//                 sign = -1
+//             } else if (t.n < 1) {
+//                 sign = 1
+//             }
+//             t.n = t.n + sign * 1
+//             return t
+//         })
+//         clear()
+//         drawCanvas(pic3)
+//     }, 17);
+// }
+
+// aminte2()
+
+
+let figures = [{
+    shape: 'dot',
+    n: 10,
+    r: 10,
+    anime: {
+        prop: 'r',
+        range: [1, 50],
+        speed: 0.1,
+        act: 'uniform' //匀速
+    }
+}, {
+    shape: 'polygon',
+    n: 10,
+    r: 100,
+    color: 'red',
+    anime: {
+        prop: 'r', //作用属性
+        range: [1, 100], //取值范围
+        speed: 1, //速度
+        act: 'uniform' //匀速
+    }
+},
+{
+    shape: 'polygon',
+    n: 10,
+    r: 50,
+    color: 'green',
+    anime: {
+        prop: 'n', //作用属性
+        range: [1, 10], //取值范围
+        speed: 0.1, //速度
+        act: 'uniform' //匀速
+    }
+}]
+
+
+anime(figures)
+// drawCanvas(figures)
