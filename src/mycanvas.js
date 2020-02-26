@@ -8,31 +8,40 @@ import {
 } from './points'
 import filter from './filter'
 import {
-    lattice
+    lattice,
+    dots
 } from './lattice'
 import color from './color'
 import fractal from './fractal'
-
 let {
     wrapperOptions,
     center
 } = config
-
 let {
     width,
     height
 } = wrapperOptions
 
 let canvas, ctx;
-
 var setup = function () {
     canvas = document.createElement('canvas')
     ctx = canvas.getContext("2d")
     canvas.width = width
     canvas.height = height
     document.body.appendChild(canvas)
+    // var el = this.el = _.query(options.el)
+    // el.appendChild(canvas)
+    // var padding = options.padding || 0,
+    //     paddingLeft = options.paddingLeft || padding,
+    //     paddingRight = options.paddingRight || padding,
+    //     paddingTop = options.paddingTop || padding,
+    //     paddingBottom = options.paddingBottom || padding;
+    // this.center = [this.width / 2, this.height / 2];
+    // this.lefttop = [0 + paddingLeft, 0 + paddingTop];
+    // this.leftbottom = [0 + paddingLeft, this.height - paddingBottom];
+    // this.rightbottom = [this.width - paddingRight, this.height - paddingBottom];
+    // this.righttop = [this.width - paddingRight, 0 + paddingTop];
 }
-
 
 var clear = function () {
     ctx.clearRect(0, 0, width, height);
@@ -67,8 +76,6 @@ var link = function (opt) {
         ctx.stroke()
     }
 
-
-    // if(_.type())
     var len = arguments.length
     if (len === 3) {
         var p1 = arguments[0],
@@ -98,54 +105,37 @@ var link = function (opt) {
 };
 
 
-
-
-
-
-
-var point = function (arr, showLabel) {
-    var _this = this;
+//打点
+var dot = (options) => {
+    let {
+        points,
+        showLabel
+    } = options
     ctx.fillStyle = "#0000ff";
-
-    var _point = function (t) {
+    let _dot = (t) => {
         ctx.beginPath();
         ctx.arc(t[0], t[1], 3, 0, 2 * Math.PI);
         // ctx.stroke();
         ctx.fill();
         if (showLabel)
-            _this.text(Math.floor(t[0]) + "," + Math.floor(t[1]), [t[0] - 5, t[1] + 10])
+            this.text(Math.floor(t[0]) + "," + Math.floor(t[1]), [t[0] - 5, t[1] + 10])
     }
-    if (_.type(arr[0]) === "array") { //二维数组
-        arr.forEach(function (t) {
-            _point(t)
-        })
+    if (_type(points[0]) === "array") { //二维数组
+        points.forEach(t => _dot(t))
     } else {
-        _point(arr)
+        _dot(points)
     }
+    return options
 }
 
-// var canvas = _.createEle("canvas");
-// canvas.width = this.width = options.width || 300;
-// canvas.height = this.height = options.height || 400;
-// var el = this.el = _.query(options.el)
-// el.appendChild(canvas)
-// var padding = options.padding || 0,
-//     paddingLeft = options.paddingLeft || padding,
-//     paddingRight = options.paddingRight || padding,
-//     paddingTop = options.paddingTop || padding,
-//     paddingBottom = options.paddingBottom || padding;
-// this.center = [this.width / 2, this.height / 2];
-// this.lefttop = [0 + paddingLeft, 0 + paddingTop];
-// this.leftbottom = [0 + paddingLeft, this.height - paddingBottom];
-// this.rightbottom = [this.width - paddingRight, this.height - paddingBottom];
-// this.righttop = [this.width - paddingRight, 0 + paddingTop];
+
 
 //弧线
-var arc = function (opitons) {
+var arc = (opitons) => {
     let {
         o,
         strokeStyle = "#000"
-    } = opitons //points
+    } = opitons
     let points = cutpoints(opitons)
     let len = points.length
     ctx.strokeStyle = strokeStyle;
@@ -162,7 +152,7 @@ var arc = function (opitons) {
 }
 
 //连线
-var line = function (options) { //points, closePath, options
+var line = (options) => {
     let {
         points,
         fillStyle,
@@ -193,7 +183,7 @@ var line = function (options) { //points, closePath, options
 
 //射线
 //一中心p,多中心o [p1,p2]
-var ray = function (options) {
+var ray = (options) => {
     let {
         o,
         strokeStyle = "#000",
@@ -229,7 +219,7 @@ var ray = function (options) {
     })
 };
 //正方形，矩形
-var rect = function (options) {
+var rect = (options) => {
     let {
         o,
         r,
@@ -360,6 +350,13 @@ var defaultOptions = function (tag, options) {
                 lineColor: 'black'
             }
             break;
+        case 'dot':
+            _default = {
+                o: center,
+                r: 50,
+                n: 4
+            }
+            break;
     }
 
     return _synonym(Object.assign(_default, options))
@@ -390,6 +387,10 @@ var shape = function (tag, options) {
             break;
         case 'lattice':
             doFilter('lattice')
+            break;
+        case 'dot':
+            options.points = lattice(canvas, options)
+            options = dot(options)
             break;
     }
     // console.log(options)
@@ -507,5 +508,6 @@ var animate = function (arr, options, duration) {
 export {
     setup,
     draw,
-    shape
+    shape,
+    clear
 }
