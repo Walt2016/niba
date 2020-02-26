@@ -2,7 +2,7 @@
 
 
 
-//数组乱序
+//数组乱序 random
 var shuffle = function (arr, index) {
     if (index === undefined) {
         for (let i = arr.length - 1; i >= 0; i--) {
@@ -72,7 +72,7 @@ function newSeq(arr, index) {
 
 
 //错位排序
-function misplacedSort(arr) {
+function misplaced(arr) {
     for (let i = 0; i < arr.length / 2 + 1; i++) {
         var cur = arr.pop();
         arr.splice(i * 2 + 1, 0, cur)
@@ -99,7 +99,7 @@ function chunk(arr, num) {
 // console.log(intervalSort([0, 1, 2, 3, 4]))
 
 //奇偶数排序oddEvenSort
-function paritySort(arr) {
+function parity(arr) {
     let seq = arr.map((t, i) => {
         return i
     })
@@ -177,6 +177,6 @@ export default {
     shuffle,
     neighborSwap,
     intervalSort,
-    misplacedSort,
-    paritySort
+    misplaced,
+    parity
 }

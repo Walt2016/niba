@@ -6,7 +6,7 @@ import sort from './sort'
 //半径 r,r1~r2  , [r1,r2,r3]
 //optionsions{o:[xy],r:[r1,r2],n:n,rn:"random"}
 //regular, direction, sAngle
-//分割圆弧
+//圆弧分割  Arc segmentation
 var cutpoints = function (options) {
     let {
         o,
@@ -19,9 +19,7 @@ var cutpoints = function (options) {
     // o = o || center
     var points = [],
         a;
-    // var options = options || {};
-    // var sAngle = options.sAngle || 0;
-    // var direction = options.direction;
+
     // var regular = options.regular == null ? true : options.regular;
 
     var _cut = function (o, r, n, i, regular, direction) {

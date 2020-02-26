@@ -8,7 +8,7 @@ import {
 } from './points'
 import filter from './filter'
 import {
-    lattice,
+    latticepoints,
     dots
 } from './lattice'
 import color from './color'
@@ -276,6 +276,14 @@ var polygon = function (options) {
         points
     }))
 }
+
+//点阵
+var lattice=function(options){
+    let points = latticepoints(options)
+    return line(Object.assign(options, {
+        points
+    }))
+}
 //同义词
 var _synonym = function (options) {
     var synonym = {
@@ -350,7 +358,7 @@ var defaultOptions = function (tag, options) {
                 lineColor: 'black'
             }
             break;
-        case 'dot':
+        case 'lattice':
             _default = {
                 o: center,
                 r: 50,
@@ -385,12 +393,12 @@ var shape = function (tag, options) {
         case 'rect':
             options = rect(options);
             break;
+        // case 'lattice':
+        //     doFilter('lattice')
+        //     break;
         case 'lattice':
-            doFilter('lattice')
-            break;
-        case 'dot':
-            options.points = lattice(canvas, options)
-            options = dot(options)
+            
+            options = lattice(options)
             break;
     }
     // console.log(options)
@@ -475,7 +483,7 @@ var draw = function (arr, options) {
     })
 }
 
-
+//动画
 let anime = (figures, options) => {
     setInterval(() => {
         clear()
@@ -485,7 +493,7 @@ let anime = (figures, options) => {
             } = t
             let {
                 prop,
-                range,
+                range=[0,0],
                 speed,
                 act
             } = Object.assign({}, t.anime, options)

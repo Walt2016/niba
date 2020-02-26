@@ -1,30 +1,48 @@
 //dotarray 点阵
+import sort from './sort'
 
-function dotsInner({
-    n
-}) { 
+function _lattice({
+    a,
+    b
+}) {
     let points = []
-    for (let i = -1 * n; i < n; i++) {
-        for (let j = -1 * n; j < n; j++) {
+    for (let i = -1 * a; i < a; i++) {
+        for (let j = -1 * b; j < b; j++) {
             points.push([i, j])
         }
     }
     return points
 }
-
+// {
+//     width,
+//     height
+// },
 //图形点阵
-function lattice({
-    width,
-    height
-}, {
-    n = 3,
-    r = 10
-}) {
-    let cx = width / 2,
-        cy = height / 2;
-    return dotsInner({
-        n
-    }).map(t => [t[0] * r + cx, t[1] * r + cy])
+function latticepoints(options) {
+    let {
+        o = [0, 0],
+            n = 3,
+            r = 10
+    } = options
+    let points = []
+
+    if (Array.isArray(n)) {
+        points = _lattice({
+            a: n[0],
+            b: n[1] || n[0]
+        }).map(t => [t[0] * r + o[0], t[1] * r + o[1]])
+    } else {
+        points = _lattice({
+            a: n,
+            b: n
+        }).map(t => [t[0] * r + o[0], t[1] * r + o[1]])
+    }
+
+    if (options.sort &&
+        sort[options.sort]) {
+        points = sort[options.sort](points)
+    }
+    return points
 }
 
 
@@ -50,7 +68,7 @@ function lattice({
 // }
 
 export {
-    lattice
+    latticepoints
     // ,
     // dots
 }
