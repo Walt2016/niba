@@ -8,4 +8,5 @@ day 5 canvas fractal-branch
 day 6 canvas fractal-color
 day 7 canvas fractal-ray
 
-2020-2-26  anime
+
+2020-2-26 lattice anime
