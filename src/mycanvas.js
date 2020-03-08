@@ -65,6 +65,15 @@ var clear = function () {
     ctx.clearRect(0, 0, width, height);
 };
 
+function fill({
+    color
+}) {
+    ctx.fillStyle = color
+    ctx.rect(0, 0, width, height)
+
+    ctx.fill();
+}
+
 //链接
 //arr, shape
 var link = function (opt) {
@@ -290,20 +299,6 @@ var text = function (options) {
     return options
 }
 
-//context.fillText(text,x,y,maxWidth);
-// var text = (options) => {
-//     let {
-//         o,
-//         text,
-//         x = 10,
-//         y = 10,
-//         maxWidth
-//     } = options
-//     ctx.fillStyle = "#000";
-//     ctx.font = "20px Georgia";
-//     ctx.fillText(text, o.x+x, o.y+y);
-// }
-
 
 //规则多边形
 var polygon = function (options) {
@@ -440,22 +435,63 @@ var shape = function (tag, options) {
     return options
 }
 
+//图形点阵
+function imagePixel(canvas) {
+    let ctx = canvas.getContext("2d")
+    let cols = canvas.width;
+    let rows = canvas.height;
+    // fill({color:"rgb(255,0,0)"})
+    var imgData = ctx.getImageData(0, 0, cols, rows)
+    let data = imgData.data
+    // console.log(data)
+    var len = imgData.data.length;
+    var res = [];
+    let gap=6
+    for (var i = 0; i < rows; i+=gap) {
+        for (var j = 0; j < cols; j+=gap) {
+            var pos = (i * cols + j) * 4;
+            // if (data[pos] > 0) {
+            //     res.push([j, i])
+            // }
+
+            // 判断像素点是不是红色
+            if (data[pos] == 255 && data[pos + 1] == 0 && data[pos + 2] == 0 && data[pos + 3] == 255) {
+                // var dot = new Dot(x, y);
+                // dotList.push(dot);
+
+                res.push([j,i])
+
+                // res.push([i,j])
+            }
+        }
+    }
+    return res
+}
+
 //滤镜
 function doFilter(t, options) {
     if (t === 'lattice') {
-        let points = lattice(canvas)
+        let points = imagePixel(canvas)
         console.log(points)
         clear()
-        let colors = color.circle(points.length)
+        // let colors = color.circle(points.length)
         points.forEach((t, i) => {
             let opt = Object.assign(options, {
                 o: t,
                 shape: 'circle',
                 r: 2,
-                color: colors[i] // hsla()
+                color: '#000'
+                // color: colors[i] // hsla()
             })
-            if (i % 100 == 0)
-                circle(opt)
+            // if (i % 100 == 0) {
+            //     circle(opt)
+            // }
+
+            ctx.beginPath();
+            circle(opt)
+			// ctx.arc(t[0], t[1], 2, 0, 2 * Math.PI);
+			ctx.fill();
+
         })
     } else {
         filter[t] && filter[t](canvas)
@@ -548,36 +584,6 @@ let anime = (figures, options) => {
     }, 17);
 
 }
-
-// var animate = function (arr, options, duration) {
-//     let index = 0;
-//     (function _ani() {
-//         if (index++ >= 1000) {
-//             return false
-//         }
-//         clear()
-//         draw(arr, options)
-//         // switch (act) {
-//         //     case "point":
-//         //         _this.point.call(_this, arr[index++])
-//         //         break;
-//         //     case "line":
-//         //         _this.line.call(_this, arr.slice(index++, index + 1))
-//         //         break;
-//         //     case "ray":
-//         //         if (cs) {
-//         //             _this.ray.call(_this, cs[index % cs.length], arr.slice(index++, index))
-//         //         } else {
-//         //             _this.ray.call(_this, _this.center, arr.slice(index++, index))
-//         //         }
-
-//         //         break;
-//         // }
-//         setTimeout(_ani, duration)
-//     })();
-
-// }
-
 
 export {
     setup,
