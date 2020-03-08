@@ -1,8 +1,8 @@
-import {
-    setup as setupSvg,
-    draw as drawSvg,
-    shape
-} from './mysvg'
+// import {
+//     setup as setupSvg,
+//     draw as drawSvg,
+//     shape
+// } from './mysvg'
 import {
     setup as setupCanvas,
     draw as drawCanvas,
@@ -12,7 +12,12 @@ import {
 } from './mycanvas'
 import {
     figures
-} from './sample/1'
+} from './sample/text'
+
+// import {
+//     figures
+// } from './sample/1'
+
 
 // function component() {
 //     var element = document.createElement('div');
@@ -22,6 +27,10 @@ import {
 
 // document.body.appendChild(component());
 
+// console.log(figures)
 
 setupCanvas()
-anime(figures)
+drawCanvas(figures)
+// anime(figures)
+
+// import a from './sample/a'

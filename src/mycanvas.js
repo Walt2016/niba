@@ -43,6 +43,24 @@ var setup = function () {
     // this.righttop = [this.width - paddingRight, 0 + paddingTop];
 }
 
+// function setup() {
+//     canvas = document.querySelector("#canvas");
+//     ctx = canvas.getContext("2d");
+//     window.addEventListener("resize", resize);
+//     canvas.addEventListener("click", draw);
+//     resize();
+//   }
+
+//   function resize() {
+//     w = canvas.width = window.innerWidth;
+//     h = canvas.height = window.innerHeight;
+//     ctx.fillStyle = "black";
+//     ctx.lineWidth = config.lineWidth;
+//     ctx.lineCap = "round";
+//     ctx.lineJoin = "round";
+//     draw();
+//   }
+
 var clear = function () {
     ctx.clearRect(0, 0, width, height);
 };
@@ -103,6 +121,7 @@ var link = function (opt) {
     }
 
 };
+
 
 
 //打点
@@ -258,16 +277,33 @@ var circle = function (options) {
 //文字
 var text = function (options) {
     let {
+        o,
         text,
-        x,
-        y,
-        fillStyle
+        x = 0,
+        y = 0,
+        fontSize,
+        fillStyle = "#000"
     } = options
     ctx.fillStyle = fillStyle
-    ctx.font = "20px Verdana";
-    ctx.fillText(text, x, y);
+    ctx.font = fontSize || "20px Verdana";
+    ctx.fillText(text, o[0] + x, o[1] + y);
     return options
 }
+
+//context.fillText(text,x,y,maxWidth);
+// var text = (options) => {
+//     let {
+//         o,
+//         text,
+//         x = 10,
+//         y = 10,
+//         maxWidth
+//     } = options
+//     ctx.fillStyle = "#000";
+//     ctx.font = "20px Georgia";
+//     ctx.fillText(text, o.x+x, o.y+y);
+// }
+
 
 //规则多边形
 var polygon = function (options) {
@@ -278,7 +314,7 @@ var polygon = function (options) {
 }
 
 //点阵
-var lattice=function(options){
+var lattice = function (options) {
     let points = latticepoints(options)
     return line(Object.assign(options, {
         points
@@ -313,9 +349,10 @@ var defaultOptions = function (tag, options) {
             break;
         case 'text':
             _default = {
-                x: center[0],
-                y: 20,
-                fontSize: 20,
+                o: center,
+                // x: center[0],
+                // y: 20,
+                // fontSize: 20,
                 text: 'Canvas'
             }
             break;
@@ -365,6 +402,7 @@ var defaultOptions = function (tag, options) {
                 n: 4
             }
             break;
+
     }
 
     return _synonym(Object.assign(_default, options))
@@ -380,6 +418,7 @@ var shape = function (tag, options) {
             break;
         case 'text':
             options = text(options);
+            // console.log(options)
             break;
         case 'polygon':
             options = polygon(options);
@@ -393,11 +432,7 @@ var shape = function (tag, options) {
         case 'rect':
             options = rect(options);
             break;
-        // case 'lattice':
-        //     doFilter('lattice')
-        //     break;
         case 'lattice':
-            
             options = lattice(options)
             break;
     }
@@ -451,7 +486,10 @@ var doFractal = function (t, options) {
 
 //画图
 var draw = function (arr, options) {
+    console.log(arr)
     arr.forEach(t => {
+        console.log(t, options)
+
         switch (_type(t)) {
             case 'string':
                 shape(t, options)
@@ -493,7 +531,7 @@ let anime = (figures, options) => {
             } = t
             let {
                 prop,
-                range=[0,0],
+                range = [0, 0],
                 speed,
                 act
             } = Object.assign({}, t.anime, options)
