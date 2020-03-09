@@ -13,6 +13,11 @@ import {
 } from './lattice'
 import color from './color'
 import fractal from './fractal'
+import {
+    pixel,
+    _pre,
+    _div
+} from './charactergraphics'
 let {
     wrapperOptions,
     center
@@ -295,7 +300,8 @@ var text = function (options) {
     } = options
     ctx.fillStyle = fillStyle
     ctx.font = fontSize || "20px Verdana";
-    ctx.fillText(text, o[0] + x, o[1] + y);
+    // ctx.fillText(text, o[0] + x, o[1] + y);
+    ctx.fillText(text, x, y);
     return options
 }
 
@@ -435,49 +441,20 @@ var shape = function (tag, options) {
     return options
 }
 
-//图形点阵
-function imagePixel(canvas) {
-    let ctx = canvas.getContext("2d")
-    let cols = canvas.width;
-    let rows = canvas.height;
-    // fill({color:"rgb(255,0,0)"})
-    var imgData = ctx.getImageData(0, 0, cols, rows)
-    let data = imgData.data
-    // console.log(data)
-    var len = imgData.data.length;
-    var res = [];
-    let gap=6
-    for (var i = 0; i < rows; i+=gap) {
-        for (var j = 0; j < cols; j+=gap) {
-            var pos = (i * cols + j) * 4;
-            // if (data[pos] > 0) {
-            //     res.push([j, i])
-            // }
-
-            // 判断像素点是不是红色
-            if (data[pos] == 255 && data[pos + 1] == 0 && data[pos + 2] == 0 && data[pos + 3] == 255) {
-                // var dot = new Dot(x, y);
-                // dotList.push(dot);
-
-                res.push([j,i])
-
-                // res.push([i,j])
-            }
-        }
-    }
-    return res
-}
 
 //滤镜
 function doFilter(t, options) {
     if (t === 'lattice') {
-        let points = imagePixel(canvas)
+        let points = pixel({
+            canvas,
+            gap: 6
+        })
         console.log(points)
         clear()
         // let colors = color.circle(points.length)
         points.forEach((t, i) => {
             let opt = Object.assign(options, {
-                o: t,
+                o: [t[0]*3,t[1]*6],// t.map(t=>[t[0]*8,t[1]*2]),
                 shape: 'circle',
                 r: 2,
                 color: '#000'
@@ -489,10 +466,12 @@ function doFilter(t, options) {
 
             ctx.beginPath();
             circle(opt)
-			// ctx.arc(t[0], t[1], 2, 0, 2 * Math.PI);
-			ctx.fill();
+            // ctx.arc(t[0], t[1], 2, 0, 2 * Math.PI);
+            ctx.fill();
 
         })
+        _pre(points)
+        _div(points)
     } else {
         filter[t] && filter[t](canvas)
     }

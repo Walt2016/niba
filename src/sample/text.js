@@ -4,7 +4,9 @@ const figures = [{
     color: 'red',//'#000',
     fontSize: '200px Verdana',
     filter:'lattice',
-    x:-300
+    y:200
+    // x:-300
+    // o:[0,0]
 }]
 
 export {
