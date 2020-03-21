@@ -8,6 +8,24 @@ const _type = function (o) {
     return t === 'number' ? isNaN(o) ? 'nan' : !isFinite(o) ? 'infinity' : t : t;
 }
 
+// 角度转弧度
+function _sin(a = 0) {
+    return Math.sin(a * Math.PI / 180)
+}
+
+function _cos(a = 0) {
+    return Math.cos(a * Math.PI / 180)
+}
+
+// 极坐标
+function _polar(o = [0, 0], r = 0, a = 0) {
+    return [o[0] + r * _cos(a), o[1] + r * _sin(a)]
+}
+// 中点
+function _mid(p1 = [0, 0], p2 = [0, 0]) {
+    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]
+}
+
 
 
 //判断对象是否有属性 ，忽略大小写
@@ -107,6 +125,10 @@ function kebab(ggname) {
 
 export {
     _type,
+    _sin,
+    _cos,
+    _polar,
+    _mid,
 
     splitWords,
     camelCase,

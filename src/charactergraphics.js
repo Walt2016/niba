@@ -69,7 +69,8 @@ function _div(points) {
             // str += " "
             if (points.indexOf([i, j].toString()) >= 0) {
                 // str += "1"
-                str += `<span class="black" style="left: ${j*10}px;top: ${i*10}px"></span>`
+                // str += `<span class="black" style="left: ${j*10}px;top: ${i*10}px"></span>`
+                str += `<span class="black" style="left: ${i*10}px;top: ${j*10}px"></span>`
             }
         }
         str += "\n"

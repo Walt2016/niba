@@ -18,6 +18,12 @@ import {
     _pre,
     _div
 } from './charactergraphics'
+// import Ball from './ball'
+// import stick from './stick'
+import {
+    Ball,
+    Stick
+} from './entity'
 let {
     wrapperOptions,
     center
@@ -75,7 +81,6 @@ function fill({
 }) {
     ctx.fillStyle = color
     ctx.rect(0, 0, width, height)
-
     ctx.fill();
 }
 
@@ -452,9 +457,20 @@ function doFilter(t, options) {
         console.log(points)
         clear()
         // let colors = color.circle(points.length)
+        let balls = []
+        let stricks = []
         points.forEach((t, i) => {
+            // balls.push(new Ball(...[t[0] * 3, t[1] * 6]))
+            balls.push(new Ball({
+                o:[t[0] * 3, t[1] * 6]
+            }))
+            // stricks.push(new Stick({
+            //     o: [t[0] * 3, t[1] * 6]
+            // }))
+
+
             let opt = Object.assign(options, {
-                o: [t[0]*3,t[1]*6],// t.map(t=>[t[0]*8,t[1]*2]),
+                o: [t[0] * 3, t[1] * 6], // t.map(t=>[t[0]*8,t[1]*2]),
                 shape: 'circle',
                 r: 2,
                 color: '#000'
@@ -470,8 +486,10 @@ function doFilter(t, options) {
             ctx.fill();
 
         })
-        _pre(points)
-        _div(points)
+        // _pre(points)
+        // _div(points)
+        animate(balls)
+        // animate(stricks)
     } else {
         filter[t] && filter[t](canvas)
     }
@@ -562,6 +580,20 @@ let anime = (figures, options) => {
         draw(figures)
     }, 17);
 
+}
+
+//光影动画
+function animate(balls) {
+    (function _inner() {
+        ctx.fillStyle = 'rgba(0,0,0, .08)';
+        ctx.fillRect(0, 0, width, height);
+        balls.forEach(t => {
+            t.update();
+            t.draw(ctx);
+            // shape("circle", {r:2,color:"red",o:[t.x,t.y]})
+        })
+        requestAnimationFrame(_inner);
+    })()
 }
 
 export {
