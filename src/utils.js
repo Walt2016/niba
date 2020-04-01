@@ -25,8 +25,59 @@ function _polar(o = [0, 0], r = 0, a = 0) {
 function _mid(p1 = [0, 0], p2 = [0, 0]) {
     return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]
 }
+// 距离
+function _dis(p1 = [0, 0], p2 = [0, 0]) {
+    return Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]))
+}
+// 夹角
+function _atan(p1 = [0, 0], p2 = [0, 0]) {
+    return Math.atan2(p2[1] - p1[1],p2[0] - p1[0]) * 180 / Math.PI
+}
+// // 方向
+// function _dir(p1 = [0, 0], p2 = [0, 0]) {
+//     var x = Math.abs(p1[0] - p2[0]);
+//     var y = Math.abs(p1[1] - p2[1]);
+//     var z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+//     var cos = y / z;
+//     var radina = Math.acos(cos); //用反三角函数求弧度
+//     var angle = Math.floor(180 / (Math.PI / radina)); //将弧度转换成角度
+
+//     if (p2[0] > p1[0] && p2[1] > p1[1]) { //鼠标在第四象限
+//         angle = 180 - angle;
+//     }
+
+//     if (p2[0] == p1[0] && p2[1] > p1[1]) { //鼠标在y轴负方向上
+//         angle = 180;
+//     }
+
+//     if (p2[0] > p1[0] && p2[1] == p1[1]) { //鼠标在x轴正方向上
+//         angle = 90;
+//     }
+
+//     if (p2[0] < p1[0] && p2[1] > p1[1]) { //鼠标在第三象限
+//         angle = 180 + angle;
+//     }
+
+//     if (p2[0] < p1[0] && p2[1] == p1[1]) { //鼠标在x轴负方向
+//         angle = 270;
+//     }
+
+//     if (p2[0] < p1[0] && p2[1] < p1[1]) { //鼠标在第二象限
+//         angle = 360 - angle;
+//     }
 
 
+
+//     return angle;
+// }
+//均分点meanSplit。分割n次，分割成n+1段
+//分割直线
+function split(p1, p2, n) {
+    var ps = [];
+    for (var i = 1; i <= n; i++)
+        ps[ps.length] = this.toV(p).scale(i / (n + 1)).toP(this);
+    return ps;
+}
 
 //判断对象是否有属性 ，忽略大小写
 function hasProp(obj, key, ignoreCase) {
@@ -129,6 +180,8 @@ export {
     _cos,
     _polar,
     _mid,
+    _dis,
+    _atan,
 
     splitWords,
     camelCase,

@@ -7,7 +7,7 @@ import {
 
 // 线段
 import BaseEntity from './BaseEntity'
-class Stick extends BaseEntity {
+export default class Stick extends BaseEntity {
     constructor(options) {
         super(options)
         
@@ -18,16 +18,16 @@ class Stick extends BaseEntity {
         this.calculate()
     }
 
-    update() {
-        // this.move();
-        // this.roll();
-        // this.calculate();
-        // this.roll2();
-        // this.calculate2();
-        this.move2()
-        this.calculate();
+    // update() {
+    //     // this.move();
+    //     // this.roll();
+    //     // this.calculate();
+    //     // this.roll2();
+    //     // this.calculate2();
+    //     this.move2()
+    //     this.calculate();
 
-    }
+    // }
     // 匀速边转边移动
     calculate() {
         let {
@@ -39,6 +39,8 @@ class Stick extends BaseEntity {
         // 两端
         this.p1 = _polar(o, r, a) //[o[0] + r * _cos(a), o[1] + r * _sin(a)]
         this.p2 = _polar(o, r, a + 180) //[o[0] - r * _cos(a), o[1] - r * _sin(a)]
+
+        // this.points=[this.p1,this.p2]
 
     }
     calculate2() {
@@ -61,28 +63,30 @@ class Stick extends BaseEntity {
 
     }
 
-    //移动
-    move() {
-        // this.o = [this.o[0] + this.vx, this.o[1] + this.vy]
-        this.o[0] += this.vx
-        this.o[1] += this.vy
-    }
-    move2() {
-        this.o[0] += Math.cos(this.a) * this.speed;
-        this.o[1] += Math.sin(this.a) * this.speed;
-        this.a += Math.random() * 0.8 - 0.4;
-    }
+    // //移动
+    // move() {
+    //     // this.o = [this.o[0] + this.vx, this.o[1] + this.vy]
+    //     this.o[0] += this.vx
+    //     this.o[1] += this.vy
+    // }
+    // move2() {
+    //     this.o[0] += Math.cos(this.a) * this.speed;
+    //     this.o[1] += Math.sin(this.a) * this.speed;
+    //     this.a += Math.random() * 0.8 - 0.4;
+    // }
 
-    roll2() {
-        this.a2 += this.va2
-    }
+    // roll2() {
+    //     this.a2 += this.va2
+    // }
 
 
     draw(ctx) {
+        let {points}=this
         ctx.strokeStyle = "#0000ff"; // "#000";
         ctx.beginPath();
         ctx.moveTo.apply(ctx, this.p1)
         ctx.lineTo.apply(ctx, this.p2)
+
         ctx.stroke()
         // ctx.endPath()
     }
@@ -90,4 +94,3 @@ class Stick extends BaseEntity {
 
 
 }
-export default Stick

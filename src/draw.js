@@ -2,17 +2,14 @@ import config from './config'
 import {
     _type,
 } from './utils'
-import {
-    arcseg,
-    dis
-} from './points1'
+
 import filter from './filter'
 import {
     latticepoints,
     dots
 } from './lattice'
-import color from './color'
-import fractal from './fractal'
+// import color from './color'
+// import fractal from './fractal'
 import {
     pixel,
     _pre,
@@ -154,181 +151,6 @@ var link = function (opt) {
 
 
 
-//打点
-var dot = (options) => {
-    let {
-        points,
-        showLabel
-    } = options
-    ctx.fillStyle = "#0000ff";
-    let _dot = (t) => {
-        ctx.beginPath();
-        ctx.arc(t[0], t[1], 3, 0, 2 * Math.PI);
-        // ctx.stroke();
-        ctx.fill();
-        if (showLabel)
-            this.text(Math.floor(t[0]) + "," + Math.floor(t[1]), [t[0] - 5, t[1] + 10])
-    }
-    if (_type(points[0]) === "array") { //二维数组
-        points.forEach(t => _dot(t))
-    } else {
-        _dot(points)
-    }
-    return options
-}
-
-
-
-//弧线
-var arc = (opitons) => {
-    let {
-        o,
-        strokeStyle = "#000"
-    } = opitons
-    let points = arcseg(opitons)
-    let len = points.length
-    ctx.strokeStyle = strokeStyle;
-    ctx.beginPath();
-    points.forEach((t, i) => {
-        let t1 = i + 1 < len ? points[i + 1] : points[0];
-        let r = dis(t, t1, o)
-        ctx.arcTo.apply(ctx, t.concat(t1).concat([r]))
-    })
-    ctx.stroke()
-    return Object.assign(opitons, {
-        points
-    })
-}
-
-//连线
-var line = (options) => {
-    let {
-        points,
-        fillStyle,
-        strokeStyle = "#000",
-        closePath = true,
-        colors,
-        index = 0
-    } = options
-    if (colors)
-        strokeStyle = colors[index]
-    if (fillStyle) ctx.fillStyle = fillStyle //"white"
-    ctx.strokeStyle = strokeStyle;
-    ctx.beginPath();
-    points.forEach((t, i) => {
-        if (i === 0) {
-            ctx.moveTo.apply(ctx, t)
-        }
-        ctx.lineTo.apply(ctx, t)
-    })
-    if (closePath)
-        ctx.closePath();
-    ctx.stroke()
-    if (fillStyle) ctx.fill()
-
-    return options
-};
-
-
-//射线
-//一中心p,多中心o [p1,p2]
-var ray = (options) => {
-    let {
-        o,
-        strokeStyle = "#000",
-        colors,
-        index = 0
-    } = options
-    let points = arcseg(options)
-    // options.points = points
-
-    if (colors) {
-        ctx.strokeStyle = colors[index]
-    } else {
-        ctx.strokeStyle = strokeStyle;
-    }
-
-    ctx.beginPath();
-    if (Array.isArray(o[0])) { //二维数组  多中心
-        var n = o.length;
-        points.forEach((t, i) => {
-            ctx.moveTo.apply(ctx, o[i % n])
-            ctx.lineTo.apply(ctx, t)
-        })
-    } else {
-        points.forEach((t, i) => {
-            ctx.moveTo.apply(ctx, o)
-            ctx.lineTo.apply(ctx, t)
-        })
-    }
-    ctx.stroke()
-    // return options
-    return Object.assign(opitons, {
-        points
-    })
-};
-//正方形，矩形
-var rect = (options) => {
-    let {
-        o,
-        r,
-        strokeStyle = '#000',
-        fillStyle
-    } = options
-    ctx.strokeStyle = strokeStyle;
-    if (fillStyle)
-        ctx.fillStyle = fillStyle
-    ctx.beginPath();
-    ctx.rect.apply(ctx, [o[0] - r / 2, o[1] - r / 2].concat([r, r]))
-    ctx.stroke()
-    if (fillStyle)
-        ctx.fill()
-    return options
-}
-//圆形
-var circle = function (options) {
-    let {
-        o,
-        r,
-        fillStyle,
-        strokeStyle = '#000'
-    } = options
-    ctx.strokeStyle = strokeStyle
-    if (fillStyle)
-        ctx.fillStyle = fillStyle
-    ctx.beginPath();
-    ctx.arc.apply(ctx, o.concat([r, 0, 2 * Math.PI]))
-    ctx.stroke()
-    if (fillStyle)
-        ctx.fill()
-    return options
-}
-
-//文字
-var text = function (options) {
-    let {
-        o,
-        text,
-        x = 0,
-        y = 0,
-        fontSize,
-        fillStyle = "#000"
-    } = options
-    ctx.fillStyle = fillStyle
-    ctx.font = fontSize || "20px Verdana";
-    // ctx.fillText(text, o[0] + x, o[1] + y);
-    ctx.fillText(text, x, y);
-    return options
-}
-
-
-//规则多边形
-var polygon = function (options) {
-    let points = arcseg(options)
-    return line(Object.assign(options, {
-        points
-    }))
-}
 
 //点阵
 var lattice = function (options) {
@@ -431,23 +253,23 @@ var shape = function (tag, options) {
     options = defaultOptions(tag, options)
     switch (tag) {
         case "circle":
-            options = circle(options);
+            options = new Circle(options);
             break;
         case 'text':
-            options = text(options);
+            options =new  Text(options);
             // console.log(options)
             break;
         case 'polygon':
-            options = polygon(options);
+            options =new Polygon(options);
             break;
         case 'ray':
-            options = ray(options);
+            options = new Ray(options);
             break;
         case 'arc':
-            options = arc(options);
+            options =new  Arc(options);
             break;
         case 'rect':
-            options = rect(options);
+            options =new  Rect(options);
             break;
         case 'lattice':
             options = lattice(options)
@@ -512,20 +334,20 @@ var doFractal = function (t, options) {
         level = 3,
             n = 5
     } = options
-    let len = fractal.stat(level, n)
-    console.log(len)
-    let colors = color.circle(len)
-    options.colors = colors
-    // options.index = 0
-    let index = 0
-    fractal[t](options, function (options) {
-        // options.index++
-        index++
-        Object.assign(options, {
-            index
-        })
-        return shape(options.shape, options)
-    })
+    // let len = fractal.stat(level, n)
+    // console.log(len)
+    // // let colors = color.circle(len)
+    // // options.colors = colors
+    // // options.index = 0
+    // let index = 0
+    // fractal[t](options, function (options) {
+    //     // options.index++
+    //     index++
+    //     Object.assign(options, {
+    //         index
+    //     })
+    //     return shape(options.shape, options)
+    // })
 }
 
 function figure(options) {
@@ -569,6 +391,7 @@ var draw = function (arr, options) {
     arr.forEach(t => {
         // console.log(t, options)
         if (t instanceof BaseEntity) {
+            t.drawController(ctx)
             t.draw(ctx)
         } else {
 

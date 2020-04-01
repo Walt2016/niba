@@ -1,4 +1,4 @@
-class ColorPoint extends Point {
+export default class ColorPoint extends Point {
     constructor(x, y, color) {
         // this.color = color; // ReferenceError
         super(x, y);

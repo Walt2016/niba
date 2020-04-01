@@ -4,8 +4,8 @@ import {
     kebab
 } from './utils'
 import {
-    cutpoints
-} from './points'
+    arcseg
+} from './points1'
 let {
     wrapperOptions,
     center
@@ -46,7 +46,7 @@ var setup=function(){
 
 //多边形
 var polygon = function (options) {
-    let points = cutpoints(options)
+    let points = arcseg(options)
     options.points = points.join(" ")
 }
 
