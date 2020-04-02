@@ -6,44 +6,39 @@ import {
     _cos,
     _polar
 } from '../utils'
+import PolarSeg from './PolarSeg';
 
 //顶点 vertices
 //分割点
 // 参数：[x,y],[r1,r2],n
 //半径 r,r1~r2  , [r1,r2,r3]
 //optionsions{o:[xy],r:[r1,r2],n:n,rn:"random"}
-//regular, direction, sAngle
+//regular, direction, a1
 //圆弧分割  Arc segmentation
-export default class ArcSeg {
+export default class ArcSeg extends PolarSeg {
     constructor(options) {
-        let {
-            o = [0, 0],
-                r = 100,
-                n = 3,
-                sAngle = 0,
-                eAngle = 360,
-                direction,
-                regular = true
-                
-        } = options
-
-        this.points = this.seg(o, r, n, sAngle, eAngle)
-
-        this.center = o
-
-
-
+        super(options)
+        this.points = this.seg()
     }
 
-    seg(o, r, n, sAngle, eAngle) {
+    seg() {
+        let {
+            o,
+            r,
+            n,
+            a1,
+            a2
+        } = this
         let points = [];
         for (let i = 0; i < n; i++) {
-            // a = i * 2 * Math.PI / n + (sAngle / 2 * Math.PI) //等角
+            // a = i * 2 * Math.PI / n + (a1 / 2 * Math.PI) //等角
             // points[i] = [o[0] + r * Math.cos(a), o[1] + r * Math.sin(a)]
-            let a = sAngle + i * (eAngle - sAngle) / n
+            let a = a1 + i * (a2 - a1) / n
             // points[points.length] = [o[0] + r * _cos(a), o[1] + r * _sin(a)]
-            points[points.length] = _polar(o, r, a)
+            let r2 = r + 0.5 * r * _sin(this.phi)
+            points[i] = _polar(o, r2, a)
         }
+        this.phi++
         return points
     }
 
@@ -68,7 +63,7 @@ export default class ArcSeg {
 //         o = [0, 0],
 //             r = 100,
 //             n = 3,
-//             sAngle = 0,
+//             a1 = 0,
 //             direction,
 //             regular = true
 //     } = options
@@ -80,7 +75,7 @@ export default class ArcSeg {
 //             if (direction === "top") {
 //                 a = 1.25 * Math.PI + 0.5 * Math.PI * i / n
 //             } else {
-//                 a = i * 2 * Math.PI / n + (sAngle / 2 * Math.PI) //等角
+//                 a = i * 2 * Math.PI / n + (a1 / 2 * Math.PI) //等角
 //             }
 //         } else { //随机角
 //             if (direction === "top") {

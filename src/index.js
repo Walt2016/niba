@@ -184,19 +184,59 @@ let cb = new ColorBalls({
     r: 100,
     n: 60
 })
-cb.draw(ctx)
+// cb.draw(ctx)
 
-animate([cb])
-// let branch = new Branch({
-//     // o: [width/3, height-100],
-//     o: [width/2, height/2],
-//     r: 100,
-//     n: 3,
-//     ctx,
-//     shrink:0.5,
-//     level:8,
-//     direction:-45
-// })
+// animate([cb])
+let branch = new Branch({
+    // o: [width/3, height-100],
+    o: [width / 2, height / 2],
+    r: 100,
+    n: 3,
+    ctx,
+    shrink: 0.5,
+    level: 8,
+    direction: -45,
+    shape: 'Polygon'
+})
+
+import UI from './ui'
+
+new UI.Form({
+    el: "#wrapper",
+    fields: [{
+        "key": "o",
+        "label": "center",
+        value: [width / 2, height / 2],
+    }, {
+        "key": "r",
+        "label": "radius",
+        value: 100,
+    }, {
+        "key": "n",
+        "label": "sides",
+        value: 3,
+    },
+    {
+        "key": "level",
+        "label": "level",
+        value: 8,
+    },
+    {
+        "key": "shrink",
+        "label": "shrink",
+        value: 0.5,
+    }],
+    title: "Params",
+    btn: {
+        text: "draw",
+        name: 'submit',
+        click: (e) => {
+            console.log(e)
+            branch.update(e).clear().draw()
+            // branch.draw()
+        }
+    }
+})
 
 
 

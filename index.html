@@ -8,7 +8,138 @@
     <title>Document</title>
     <style>
         body {
-            margin: 0;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            z-index: -1;
+            background: -webkit-radial-gradient(center, rgb(255, 255, 255), rgb(80, 80, 80));
+        }
+
+        #wrapper {
+            /* width: 98%; */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            float: right;
+            margin-right: 15px;
+            overflow-x: hidden;
+            /* position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            z-index: 0; */
+        }
+
+        #wrapper .panel {
+            font-size: 10px;
+            margin-bottom: 40px;
+            /* border: 1px solid #ccc; */
+            width: 500px;
+
+            /* width: 98%; */
+            color: #000;
+            background-color: #f6f4f0;
+            background-color: #d0e69c;
+            background-color: #dcecb5;
+            background-color: #e5eecc;
+            /* margin: 0 0 5px 0; */
+            /* padding: 5px; */
+            border: 1px solid #d4d4d4;
+            background-image: -webkit-linear-gradient(#fff, #e5eecc 100px);
+            background-image: linear-gradient(#fff, #e5eecc 100px);
+        }
+
+        #wrapper .panel.ui {
+            width: 244px;
+            color: #eee;
+            font: 11px 'Lucida Grande', sans-serif;
+            text-shadow: 0 -1px 0 #111;
+            background: #1a1a1a;
+            border-bottom: 1px solid #2c2c2c;
+        }
+
+        #wrapper .panel .panel_header {
+            font-size: 18px;
+            line-height: 40px;
+            height: 40px;
+            /* background-color: #e5eecc; */
+            padding: 0px 10px;
+            border-bottom: 1px solid #d4d4d4;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #wrapper .panel .panel_body {
+            padding: 10px;
+        }
+
+        #wrapper .panel .panel_footer {
+            width: 100%;
+            text-align: center;
+            padding: 4px;
+        }
+
+        #wrapper .panel .panel_footer button {
+            padding: 0px;
+            width: 100px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 18px;
+        }
+
+        .panel .form_item {
+            display: flex;
+            margin-bottom: 4px;
+        }
+
+        .panel .form_item .form_item_label {
+            width: 100px;
+            text-align: center;
+        }
+
+        .panel .form_item .form_item_input {
+            border: 1px solid #ccc;
+            padding: 0 2px;
+            height: 28px;
+            line-height: 28px;
+        }
+
+        .panel .form_item .form_item_textarea {
+            width: 300px;
+            height: 50px
+        }
+
+        .panel .form_item .form_item_btn {
+            /* border: 1px solid #ccc;
+            padding: 0 2px;
+            height: 28px;
+            line-height: 28px; */
+
+            width: 100px;
+            text-align: center;
+
+        }
+
+        .panel table {
+            width: 100%;
+
+            outline: 1px solid #ccc;
+        }
+
+        .panel table th,
+        .panel table td {
+            outline: 1px solid #ccc;
+            padding: 4px;
         }
     </style>
 </head>
@@ -16,6 +147,8 @@
 <body>
 
 </body>
+<div id="wrapper"></div>
 <script src="dist/bundle.js"></script>
+
 
 </html>
