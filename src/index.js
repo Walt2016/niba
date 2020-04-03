@@ -195,7 +195,9 @@ let branch = new Branch({
     ctx,
     shrink: 0.5,
     level: 8,
-    angle: -45,
+    // angle: -45,
+    a1:0,
+    a2:360,
     shape: 'Polygon',
     showController:false
 })
