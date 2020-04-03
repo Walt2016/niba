@@ -116,7 +116,7 @@ export default class Form extends Panel {
                 }, field))
                 formItem.appendChild(textarea)
                 break;
-            case "trueorfalse":
+            case "trueorfalse": case "boolean":
                 let div = this._trueorfalse(Object.assign({
                     class: 'form_item_select',
                     name: key
@@ -177,6 +177,8 @@ export default class Form extends Panel {
                             bizModel[t.key] = JSON.parse(value)
                         } else if (typeof t.value == "number") {
                             bizModel[t.key] = Number(value)
+                        } else if (typeof t.value == "boolean") {
+                            bizModel[t.key] = value=="true"
                         } else {
                             bizModel[t.key] = value
                         }
@@ -291,8 +293,8 @@ export default class Form extends Panel {
         )
     }
 
-    _trueorfalse(options) {
-        let select = this._createEle("select", options);
+    _trueorfalse(field) {
+        let select = this._createEle("select", field);
 
         [{
             label: "true",
@@ -301,7 +303,12 @@ export default class Form extends Panel {
             label: "false",
             value: false
         }].forEach(t => {
+          
             let opt = new Option(t.label, t.value);
+            if(field.value===t.value){
+                opt.selected=true
+            }
+            
             select.options.add(opt);
         })
         return select

@@ -196,7 +196,8 @@ let branch = new Branch({
     shrink: 0.5,
     level: 8,
     angle: -45,
-    shape: 'Polygon'
+    shape: 'Polygon',
+    showController:false
 })
 console.log(branch)
 // console.log(branch.test)
@@ -208,7 +209,7 @@ new UI.Form({
     // input:branch
     fields: branch,
     options:{
-        shape:["Polygon","Ray"]
+        shape:["Polygon","Ray","Arc"]
     },
     
     // [{

@@ -15,14 +15,15 @@ export default class Arc extends BaseEntity {
         let {
             o,
             strokeStyle = "#FF0000",
-            points
+            points,
+            color
         } = this
         let len = points.length
-        ctx.strokeStyle = strokeStyle;
+        ctx.strokeStyle =color|| strokeStyle;
         ctx.beginPath();
         points.forEach((t, i) => {
             let t1 = i + 1 < len ? points[i + 1] : points[0];
-            let r = _dis(t, t1, o)
+            let r = _dis(t, t1) /2 
             ctx.arcTo.apply(ctx, t.concat(t1).concat([r]))
         })
         ctx.stroke()
