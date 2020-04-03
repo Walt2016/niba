@@ -23,8 +23,9 @@ export default class Arc extends BaseEntity {
         ctx.beginPath();
         points.forEach((t, i) => {
             let t1 = i + 1 < len ? points[i + 1] : points[0];
-            let r = _dis(t, t1) /2 
-            ctx.arcTo.apply(ctx, t.concat(t1).concat([r]))
+            let r = _dis(t, t1) 
+            ctx.moveTo.apply(ctx,t)
+            ctx.arcTo.apply(ctx, o.concat(t1).concat([r]))
         })
         ctx.stroke()
     }
