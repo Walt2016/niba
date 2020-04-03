@@ -24,15 +24,29 @@
              this.canvas = canvas
              this.ctx = ctx
 
-             canvas.addEventListener('mousedown', this.mousedown.bind(this), false);
+            //  canvas.addEventListener('mousedown', this.mousedown.bind(this), false);
 
              // 删除图形
-             document.body.onkeydown = this.onkeydown
+             document.body.onkeydown = this.onkeydown.bind(this);
+
+             window.onresize = this.onResize.bind(this);
 
              //添加鼠标移动事件
              //  canvas.addEventListener('mousemove', this.mouseMove.bind(this));
 
          }
+
+         	/*
+	 * On resize window event.
+	 */
+	
+	 onResize() {
+        //  console.log(innerWidth)
+	
+		this.canvas.width = window.innerWidth;
+		this.canvas.height = window.innerHeight;
+	
+	}
 
 
          //  mouseMove(e) {
@@ -121,7 +135,8 @@
          mouseMove(e) {
              let {
                  mouseEnd,
-                 activeShape
+                 activeShape,
+                 canvas
              } = this
              mouseEnd = windowToCanvas(canvas, e.clientX, e.clientY);
              if (activeShape) {

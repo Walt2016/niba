@@ -41,6 +41,23 @@ var setup = function () {
     ctx = canvas.getContext("2d")
     canvas.width = width
     canvas.height = height
+
+
+    // canvas.width = innerWidth;
+    // canvas.height = innerHeight;
+            
+    canvas.style.position = 'absolute';
+    canvas.style.top = 0;
+    canvas.style.bottom = 0;
+    canvas.style.left = 0;
+    canvas.style.right = 0;
+    canvas.style.zIndex = -1;
+    
+    canvas.style.background = '-webkit-radial-gradient(#ffffff, #505050)';
+    canvas.style.background = '-moz-radial-gradient(#ffffff, #505050)';
+    canvas.style.background = '-ms-radial-gradient(#ffffff, #505050)';
+    canvas.style.background = '-o-radial-gradient(#ffffff, #505050)';
+    canvas.style.background = 'radial-gradient(#ffffff, #505050)';
     document.body.appendChild(canvas)
     return {
         ctx,

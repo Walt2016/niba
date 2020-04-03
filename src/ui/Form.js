@@ -1,10 +1,17 @@
 import Panel from "./Panel";
-import {_type} from "../utils"
+import {
+    _type
+} from "../utils"
 
 export default class Form extends Panel {
     constructor(options) {
         super(options)
-        return this._form(options)
+        let el = this._div({
+            id: "wrapper"
+        })
+        el.appendChild(this._form()) //options
+        this._appendTo(null, el)
+        return el
     }
 
     // _wrapper(options) {
@@ -65,11 +72,11 @@ export default class Form extends Panel {
             btn,
             btns = [],
             title
-        } = options
+        } = this
 
         let form = this._panel({
             title,
-            class:'ui',
+            class: 'ui',
             body: fields.map(t => {
                 return this._formItem(t)
             }),
@@ -116,6 +123,14 @@ export default class Form extends Panel {
                 }, field))
                 formItem.appendChild(div)
                 break;
+            case "select":
+                let select = this._select(Object.assign({
+                    class: 'form_item_select',
+                    value,
+                    name: key
+                }, field))
+                formItem.appendChild(select)
+                break
             default:
                 let input = this._input({
                     class: 'form_item_input',
@@ -156,19 +171,19 @@ export default class Form extends Panel {
             let bizModel = {}
             if (fields) {
                 fields.forEach(t => {
-                    let value=this._query("[name='" + t.key + "']", form).value
-                    if(t.value!==undefined){  //判断类型
-                        if(typeof t.value =="object"){
+                    let value = this._query("[name='" + t.key + "']", form).value
+                    if (t.value !== undefined) { //判断类型
+                        if (typeof t.value == "object") {
                             bizModel[t.key] = JSON.parse(value)
-                        }else if(typeof t.value=="number"){
+                        } else if (typeof t.value == "number") {
                             bizModel[t.key] = Number(value)
-                        }else{
+                        } else {
                             bizModel[t.key] = value
                         }
-                    }else{
+                    } else {
                         bizModel[t.key] = value
                     }
-                    
+
                 })
             }
 
@@ -225,21 +240,51 @@ export default class Form extends Panel {
         return btn
     }
 
-
-    _input(options) {
+    _select(field) {
         let {
             value
-        } = options
-        let input = this._createEle("input", Object.assign(options, {
+        } = field
+        // let select = this._createEle("select", Object.assign(field, {
+        //     type: 'text',
+        //     // value: typeof value =="object" ? JSON.stringify(value) : value
+        // }))
+        // let options
+
+
+        let select = this._createEle("select",field);
+
+        // field.options.map(t => {
+        //     return {
+        //         label: t,
+        //         value: t
+        //     }
+        // }).forEach(t => {
+        //     let opt = new Option(t.label, t.value);
+        //     select.options.add(opt);
+        // })
+
+        field.options.forEach(t => {
+            let opt = new Option(t, t);
+            select.options.add(opt);
+        })
+        return select
+    }
+
+
+    _input(field) {
+        let {
+            value
+        } = field
+        let input = this._createEle("input", Object.assign(field, {
             type: 'text',
-            value: value ? JSON.stringify(value) : ""
+            value: typeof value == "object" ? JSON.stringify(value) : value
         }))
         return input
     }
 
-    _textarea(options) {
+    _textarea(field) {
         return this._createEle("textarea",
-            Object.assign(options, {
+            Object.assign(field, {
                 innerHTML: text,
                 value: value ? JSON.stringify(value) : ""
             })

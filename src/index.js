@@ -167,10 +167,10 @@ points.forEach((t, i) => {
 //     padding: 10
 // })
 
-// new Events({
-//     ctx,
-//     canvas
-// })
+new Events({
+    ctx,
+    canvas
+})
 
 import Axis from './coord/Axis'
 
@@ -195,37 +195,45 @@ let branch = new Branch({
     ctx,
     shrink: 0.5,
     level: 8,
-    direction: -45,
+    angle: -45,
     shape: 'Polygon'
 })
+console.log(branch)
+// console.log(branch.test)
+
 
 import UI from './ui'
 
 new UI.Form({
-    el: "#wrapper",
-    fields: [{
-        "key": "o",
-        "label": "center",
-        value: [width / 2, height / 2],
-    }, {
-        "key": "r",
-        "label": "radius",
-        value: 100,
-    }, {
-        "key": "n",
-        "label": "sides",
-        value: 3,
+    // input:branch
+    fields: branch,
+    options:{
+        shape:["Polygon","Ray"]
     },
-    {
-        "key": "level",
-        "label": "level",
-        value: 8,
-    },
-    {
-        "key": "shrink",
-        "label": "shrink",
-        value: 0.5,
-    }],
+    
+    // [{
+    //     "key": "o",
+    //     "label": "center",
+    //     value: [width / 2, height / 2],
+    // }, {
+    //     "key": "r",
+    //     "label": "radius",
+    //     value: 100,
+    // }, {
+    //     "key": "n",
+    //     "label": "sides",
+    //     value: 3,
+    // },
+    // {
+    //     "key": "level",
+    //     "label": "level",
+    //     value: 8,
+    // },
+    // {
+    //     "key": "shrink",
+    //     "label": "shrink",
+    //     value: 0.5,
+    // }],
     title: "Params",
     btn: {
         text: "draw",

@@ -1,6 +1,38 @@
+import {
+    _type
+} from '../utils'
 export default class BaseDom {
-    constructor(opitons) {
-        Object.assign(this, opitons)
+    constructor(options) {
+        Object.assign(this, options)
+        if (_type(options.fields) == "object") {
+            this.fields = this.toFields(options.fields, options.options)
+        }
+
+        console.log(this)
+    }
+    // 入参转换
+    toFields(obj, options) {
+        let fields = []
+        for (let key in obj) {
+            if (options && options[key]) {
+                fields[fields.length] = {
+                    key,
+                    label: key,
+                    value: obj[key],
+                    type: "select",
+                    options: options[key]
+                }
+            } else {
+                fields[fields.length] = {
+                    key,
+                    label: key,
+                    value: obj[key],
+                    type: _type(obj[key])
+                }
+            }
+
+        }
+        return fields
     }
     _random() {
         return "_" + Math.random().toString(16).slice(2)
@@ -58,7 +90,7 @@ export default class BaseDom {
             if (options[key] !== undefined) {
                 if ("class" == key) {
                     ele.className = options[key]
-                } else if (['name', 'innertext', 'id', 'innerHTML', 'value'].indexOf(key.toLocaleLowerCase())) {
+                } else if (['name', 'innertext', 'id', 'innerHTML', 'value'].indexOf(key.toLocaleLowerCase())>=0) {
                     ele[key] = options[key]
                 } else {
                     ele.setAttribute(key, options[key])
@@ -74,6 +106,7 @@ export default class BaseDom {
         }))
         return div
     }
+
 
 
 
