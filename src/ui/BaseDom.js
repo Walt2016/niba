@@ -90,8 +90,10 @@ export default class BaseDom {
             if (options[key] !== undefined) {
                 if ("class" == key) {
                     ele.className = options[key]
-                } else if (['name', 'innertext', 'id', 'innerHTML', 'value'].indexOf(key.toLocaleLowerCase())>=0) {
+                } else if (['name', 'innertext', 'id', 'innerHTML', 'value'].indexOf(key.toLocaleLowerCase()) >= 0) {
                     ele[key] = options[key]
+                } else if (key === "click") {
+                    ele.addEventListener("click", options[key], false)
                 } else {
                     ele.setAttribute(key, options[key])
                 }
@@ -107,8 +109,50 @@ export default class BaseDom {
         return div
     }
 
-
-
-
-
+    //允许一次加多个样式
+    //去重
+    _addClass(el, cls) {
+        var arr1 = el.className.split(" ")
+        var arr2 = cls.split(" ")
+        var obj = {}
+        arr1.forEach(t => {
+            obj[t] = 1
+        })
+        arr2.forEach(t => {
+            obj[t] = 1
+        })
+        var keys = []
+        for (var key in obj) {
+            keys.push(key)
+        }
+        el.className = keys.join(" ")
+        return el;
+    }
+    _removeClass(el, cls) {
+        var arr1 = el.className.split(" ")
+        var arr2 = cls.split(" ")
+        var obj = {}
+        arr1.forEach(t => {
+            if (arr2.indexOf(t) === -1) {
+                obj[t] = 1
+            }
+        })
+        var keys = []
+        for (var key in obj) {
+            keys.push(key)
+        }
+        el.className = keys.join(" ")
+        return el;
+    }
+    _hasClass(el, cls) {
+        var arr = el.className.split(" ")
+        return arr.indexOf(cls) >= 0
+    }
+    _toggle(el,cls){
+        if(this._hasClass(el,cls)){
+            this._removeClass(el,cls)
+        }else{
+            this._addClass(el,cls)
+        }
+    }
 }

@@ -4,6 +4,7 @@ import {
     Ray,
     Polygon,
     Arc,
+    Ball,
     Circle
 } from '../entity'
 import BaseFractal from './BaseFractal'
@@ -36,6 +37,7 @@ export default class Branch extends BaseFractal {
         }
         // this.ctx.fillStyle = 'rgba(0,0,0, .01)';
         // this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        let alpha = this.alpha || 0.5
         let entity
         let options = { //Ray Polygon
             o,
@@ -43,7 +45,7 @@ export default class Branch extends BaseFractal {
             n,
             a1,
             a2,
-            color: "hsla(" + 360 * level / this.level + ",100%, 50%,0.5)",
+            color: "hsla(" + 360 * level / this.level + ",100%, 50%," + alpha + ")",
         }
         switch (shape.toLowerCase()) {
             case "ray":
@@ -51,6 +53,9 @@ export default class Branch extends BaseFractal {
                 break;
             case "arc":
                 entity = new Arc(options)
+                break;
+            case "ball":
+                entity = new Ball(options)
                 break;
             case "polygon":
             default:

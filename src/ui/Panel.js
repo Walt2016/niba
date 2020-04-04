@@ -20,12 +20,29 @@ export default class Panel extends BaseDom {
 
         let panelHeader = this._div({
             class: "panel_header",
-            text: title
+            text: title,
+
         })
-        let toolsWrapper=this._div({
-            class:"tools"
+        let expandbtn = this._div({
+            class: "fold",
+            // text: "",
+            click: (e) => {
+                console.log(e.target)
+                let el=e.target
+                this._toggle(el, "down")
+                let panel = this._closest(el, ".panel")
+                let panel_body = this._query(".panel_body", panel)
+                this._toggle(panel_body, "hide")
+                let panel_footer = this._query(".panel_footer", panel)
+                this._toggle(panel_footer, "hide")
+            }
+        })
+
+        let toolsWrapper = this._div({
+            class: "tools"
         })
         toolsWrapper.appendChild(tools)
+        panelHeader.appendChild(expandbtn)
         panelHeader.appendChild(toolsWrapper)
 
         let panelBody = this._div({

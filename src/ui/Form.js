@@ -116,7 +116,8 @@ export default class Form extends Panel {
                 }, field))
                 formItem.appendChild(textarea)
                 break;
-            case "trueorfalse": case "boolean":
+            case "trueorfalse":
+            case "boolean":
                 let div = this._trueorfalse(Object.assign({
                     class: 'form_item_select',
                     name: key
@@ -172,19 +173,44 @@ export default class Form extends Panel {
             if (fields) {
                 fields.forEach(t => {
                     let value = this._query("[name='" + t.key + "']", form).value
-                    if (t.value !== undefined) { //判断类型
-                        if (typeof t.value == "object") {
-                            bizModel[t.key] = JSON.parse(value)
-                        } else if (typeof t.value == "number") {
+                    switch (t.type) {
+                        case "number":
                             bizModel[t.key] = Number(value)
-                        } else if (typeof t.value == "boolean") {
-                            bizModel[t.key] = value=="true"
-                        } else {
+                            break;
+                        case "object":
+                            bizModel[t.key] = JSON.parse(value)
+                            break;
+                        case "array":
+                            if (/\[.*?\]/.test(value)) {
+                                bizModel[t.key] = JSON.parse(value)
+                            } else {
+                                bizModel[t.key] = value.split(",").map(t => {
+                                    return Number(t)
+                                })
+                            }
+
+                            break;
+                        case "boolean":
+                            bizModel[t.key] = this._query("[name='" + t.key + "']", form).checked
+                            break;
+                        case "select":
+                        default:
                             bizModel[t.key] = value
-                        }
-                    } else {
-                        bizModel[t.key] = value
+                            break;
                     }
+                    // if (t.value !== undefined) { //判断类型
+                    //     if (typeof t.value == "object") {
+                    //         bizModel[t.key] = JSON.parse(value)
+                    //     } else if (typeof t.value == "number") {
+                    //         bizModel[t.key] = Number(value)
+                    //     } else if (typeof t.value == "boolean") {
+                    //         bizModel[t.key] = value=="true"
+                    //     } else {
+                    //         bizModel[t.key] = value
+                    //     }
+                    // } else {
+                    //     bizModel[t.key] = value
+                    // }
 
                 })
             }
@@ -243,30 +269,12 @@ export default class Form extends Panel {
     }
 
     _select(field) {
-        let {
-            value
-        } = field
-        // let select = this._createEle("select", Object.assign(field, {
-        //     type: 'text',
-        //     // value: typeof value =="object" ? JSON.stringify(value) : value
-        // }))
-        // let options
-
-
-        let select = this._createEle("select",field);
-
-        // field.options.map(t => {
-        //     return {
-        //         label: t,
-        //         value: t
-        //     }
-        // }).forEach(t => {
-        //     let opt = new Option(t.label, t.value);
-        //     select.options.add(opt);
-        // })
-
+        let select = this._createEle("select", field);
         field.options.forEach(t => {
             let opt = new Option(t, t);
+            if (field.value === t.value) {
+                opt.selected = true
+            }
             select.options.add(opt);
         })
         return select
@@ -275,11 +283,22 @@ export default class Form extends Panel {
 
     _input(field) {
         let {
-            value
+            value,
+            type
         } = field
+
+        switch (type) {
+            case "array":
+                value = value.join(",")
+                break;
+            case "object":
+                value = JSON.stringify(value)
+                break;
+        }
         let input = this._createEle("input", Object.assign(field, {
             type: 'text',
-            value: typeof value == "object" ? JSON.stringify(value) : value
+            value
+            // value: typeof value == "object" ? JSON.stringify(value) : value
         }))
         return input
     }
@@ -294,24 +313,29 @@ export default class Form extends Panel {
     }
 
     _trueorfalse(field) {
-        let select = this._createEle("select", field);
-
-        [{
-            label: "true",
-            value: true
-        }, {
-            label: "false",
-            value: false
-        }].forEach(t => {
-          
-            let opt = new Option(t.label, t.value);
-            if(field.value===t.value){
-                opt.selected=true
-            }
-            
-            select.options.add(opt);
-        })
-        return select
+        let checkbox = this._createEle("input",
+            Object.assign(field, {
+                type: "checkbox",
+                // value:field.value
+                checked: field.value ? ture : undefined
+            })
+        );
+        return checkbox
+        // let select = this._createEle("select", field);
+        // [{
+        //     label: "true",
+        //     value: true
+        // }, {
+        //     label: "false",
+        //     value: false
+        // }].forEach(t => {
+        //     let opt = new Option(t.label, t.value);
+        //     if(field.value===t.value){
+        //         opt.selected=true
+        //     }
+        //     select.options.add(opt);
+        // })
+        // return select
     }
 
 }

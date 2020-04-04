@@ -78,16 +78,42 @@
             border-bottom: 1px solid #d4d4d4;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
+
+        #wrapper .panel .panel_header .fold {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid gray;
+        }
+
+        #wrapper .panel .panel_header .fold.down {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid gray;
+            border-bottom: none
+        }
+
 
         #wrapper .panel .panel_body {
             padding: 10px;
         }
 
+
+
         #wrapper .panel .panel_footer {
             width: 100%;
             text-align: center;
             padding: 4px;
+        }
+
+        #wrapper .panel .panel_body.hide,
+        #wrapper .panel .panel_footer.hide {
+            display: none;
         }
 
         #wrapper .panel .panel_footer button {
@@ -106,14 +132,18 @@
         .panel .form_item .form_item_label {
             width: 50px;
             text-align: center;
+            display: flex;
+            align-items: center;
+
         }
 
-        .panel .form_item .form_item_input, .panel .form_item .form_item_select {
+        .panel .form_item .form_item_input,
+        .panel .form_item .form_item_select {
             border: 1px solid #ccc;
             padding: 0 2px;
             height: 28px;
             line-height: 28px;
-            width:200px;
+            width: 200px;
         }
 
         .panel .form_item .form_item_textarea {
@@ -150,4 +180,5 @@
 
 </body>
 <script src="dist/bundle.js"></script>
+
 </html>

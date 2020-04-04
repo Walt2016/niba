@@ -1,8 +1,12 @@
 //小球
 import BaseEntity from './BaseEntity'
+import {
+    ArcSeg
+} from '../points'
 export default class Ball extends BaseEntity { //(x, y, width, height) 
     constructor(options) {
         super(options)
+        Object.assign(this, new ArcSeg(options))
     }
 
     draw(ctx) {
