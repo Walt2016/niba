@@ -27,17 +27,22 @@ export default class Branch extends BaseFractal {
             level,
             shape
         } = this
-        this.branch(o, r, n, a1, level, shape, a1, a2, )
+        this.branch(o, r, n, a1, level, a1, a2, )
 
     }
 
-    branch(o, r, n, a, level, shape, a1, a2) {
+    branch(o, r, n, a, level, a1, a2) {
         if (level-- === 0) {
             return
         }
         // this.ctx.fillStyle = 'rgba(0,0,0, .01)';
         // this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        let alpha = this.alpha || 0.5
+        // let alpha = this.alpha || 0.5
+        let {
+            alpha = 0.5, shape, fill,
+                colorful = true,
+                color
+        } = this
         let entity
         let options = { //Ray Polygon
             o,
@@ -45,7 +50,8 @@ export default class Branch extends BaseFractal {
             n,
             a1,
             a2,
-            color: "hsla(" + 360 * level / this.level + ",100%, 50%," + alpha + ")",
+            color: colorful ? "hsla(" + 360 * level / this.level + ",100%, 50%," + alpha + ")" : color || "red",
+            fill
         }
         switch (shape.toLowerCase()) {
             case "ray":
@@ -71,7 +77,7 @@ export default class Branch extends BaseFractal {
             let d = _atan(o, t)
             this.timmers[this.timmers.length] = setTimeout(() => {
                 this.branch(t,
-                    r * this.shrink, n, d, level, shape, a1, a2)
+                    r * this.shrink, n, d, level, a1, a2)
             })
         })
     }

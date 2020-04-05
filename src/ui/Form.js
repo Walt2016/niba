@@ -317,7 +317,7 @@ export default class Form extends Panel {
             Object.assign(field, {
                 type: "checkbox",
                 // value:field.value
-                checked: field.value ? ture : undefined
+                checked: field.value ? true : undefined
             })
         );
         return checkbox

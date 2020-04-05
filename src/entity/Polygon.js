@@ -17,9 +17,11 @@ export default class Polygon extends BaseEntity {
             colors,
             index = 0,
             points,
-            color
+            color,
+            fill
         } = this
         if(color) fillStyle=color
+
         if (colors)
             strokeStyle = colors[index]
         if (fillStyle) ctx.fillStyle = fillStyle //"white"
@@ -33,7 +35,9 @@ export default class Polygon extends BaseEntity {
         if (closePath)
             ctx.closePath();
         ctx.stroke()
-        if (fillStyle) ctx.fill()
+        if (fill){
+            ctx.fill()
+        } 
     };
     draw(ctx) {
         this.line(ctx)

@@ -10,11 +10,15 @@ export default class Ball extends BaseEntity { //(x, y, width, height)
     }
 
     draw(ctx) {
+        ctx.strokeStyle = this.color || "#0000ff";
         ctx.fillStyle = this.color || "#0000ff";
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r || 3, 0, 2 * Math.PI);
-        // ctx.stroke();
-        ctx.fill();
+        ctx.stroke();
+        if (this.fill) {
+            ctx.fill();
+        }
+
 
         // ctx.save();
         // // ctx.fillStyle = 'rgb(' + (51 * i) + ', ' + (255 - 51 * i) + ', 255)';

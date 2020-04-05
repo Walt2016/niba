@@ -4,8 +4,8 @@ import {
 export default class BaseDom {
     constructor(options) {
         Object.assign(this, options)
-        if (_type(options.fields) == "object") {
-            this.fields = this.toFields(options.fields, options.options)
+        if (_type(options.data) == "object") {
+            this.fields = this.toFields(options.data, options.options)
         }
 
         console.log(this)

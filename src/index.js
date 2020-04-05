@@ -199,8 +199,11 @@ let branch = new Branch({
     a1:0,
     a2:360,
     shape: 'Polygon',
+    alpha:0.5,
     showController:false,
-    alpha:0.5
+    fill:true,
+    colorful:true,
+    color:"red"
 })
 console.log(branch)
 // console.log(branch.test)
@@ -209,12 +212,11 @@ console.log(branch)
 import UI from './ui'
 
 new UI.Form({
-    // input:branch
-    fields: branch,
+    data:branch,
     options:{
-        shape:["Polygon","Ray","Arc","Ball"]
+        shape:["Polygon","Ray","Arc","Ball"],
+        color:["red","blue","black","green","yellow","pink","gray","purple"]
     },
-  
     title: "UI",
     btn: {
         text: "draw",

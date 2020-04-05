@@ -317,7 +317,7 @@ class Colors {
         }
 
         color = this.rgb(color)
-        color = rgbaArr(color)
+        color = this.rgbaArr(color)
         //RGB值是51的倍数
         for (var i = 0; i < 3; i++) {
             var q1 = Math.floor(color[i] / 51) * 51;
@@ -325,7 +325,7 @@ class Colors {
             if (Math.abs(q1 - color[i]) <= Math.abs(q2 - color[i])) color[i] = q1;
             else color[i] = q2;
         }
-        return this.hex(rgbaWrapper(color));
+        return this.hex(this.rgbaWrapper(color));
     }
 }
 
