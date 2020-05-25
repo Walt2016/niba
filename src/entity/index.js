@@ -7,8 +7,10 @@ import FoldLine from  './FoldLine'
 import Ray from  './Ray'
 import Text from  './Text'
 import Arc from  './Arc'
+import ArcTo from  './ArcTo'
 import Circle from './Circle'
 import ColorBalls from  './ColorBalls'
+import RoundRect from './RoundRect'
 export {
     BaseEntity,
     Ball,
@@ -19,6 +21,8 @@ export {
     Ray,
     Text,
     Arc,
+    ArcTo,
     Circle,
-    ColorBalls
+    ColorBalls,
+    RoundRect
 }

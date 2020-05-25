@@ -4,8 +4,10 @@ import {
     Ray,
     Polygon,
     Arc,
+    ArcTo,
     Ball,
-    Circle
+    Circle,
+    Rect
 } from '../entity'
 import BaseFractal from './BaseFractal'
 import {
@@ -17,7 +19,28 @@ export default class Branch extends BaseFractal {
         this.draw()
 
     }
+
+    anime() { //animate
+        let {
+            ctx,
+            entities
+        } = this;
+        this.requestID && cancelAnimationFrame(this.requestID);
+        let _inner = () => {
+            ctx.fillStyle = 'rgba(0,0,0, .08)';
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            entities.forEach(t => {
+                t.update(ctx);
+                t.draw(ctx);
+                // shape("circle", {r:2,color:"red",o:[t.x,t.y]})
+            })
+            this.requestID = requestAnimationFrame(_inner);
+        }
+
+        _inner()
+    }
     draw() {
+        // this.requestID && cancelAnimationFrame(this.requestID);
         let {
             o,
             r,
@@ -27,6 +50,7 @@ export default class Branch extends BaseFractal {
             level,
             shape
         } = this
+        this.entities.length = 0
         this.branch(o, r, n, a1, level, a1, a2, )
 
     }
@@ -60,14 +84,24 @@ export default class Branch extends BaseFractal {
             case "arc":
                 entity = new Arc(options)
                 break;
+            case "arcto":
+                entity = new ArcTo(options)
+                break;
             case "ball":
                 entity = new Ball(options)
+                break;
+            case "circle":
+                entity = new Circle(options)
+                break;
+            case "rect":
+                entity = new Rect(options)
                 break;
             case "polygon":
             default:
                 entity = new Polygon(options)
                 break
         }
+        this.entities.push(entity)
         if (this.showController) {
             entity.drawController(this.ctx)
         }

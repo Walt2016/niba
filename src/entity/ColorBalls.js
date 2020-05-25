@@ -32,13 +32,14 @@ var phi = 0;
 export default class ColorBalls extends BaseEntity {
     constructor(options) {
         super(options)
-        let cs = new CurveSeg(options)
-        this.cs = cs
-        this.points = cs.points
+        this.setPoints(new CurveSeg(options))
+        // let cs = new CurveSeg(options)
+        // this.cs = cs
+        // this.points = cs.points
     }
-    update() {
-        this.points = this.cs.seg()
-    }
+    // update() {
+    //     this.points = this.cs.seg()
+    // }
     draw(ctx) {
         let {
             n

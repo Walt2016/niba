@@ -4,20 +4,31 @@ import {
 export default class BaseDom {
     constructor(options) {
         Object.assign(this, options)
-        if (_type(options.data) == "object") {
-            this.fields = this.toFields(options.data, options.options)
-        }
-
+        this.setData(options.data)
         console.log(this)
     }
+    // 接口
+    render() {}
+    setData(data) {
+        if (_type(data) == "object") {
+            this.fields = this.objToFields(data, this.options, this.labels)
+        }
+        this.render()
+    }
     // 入参转换
-    toFields(obj, options) {
+    objToFields(obj = {}, options = {}, labels = {}) {
+        Object.assign(labels, {
+            o: 'center',
+            r: 'radius',
+            n: 'sides'
+        })
         let fields = []
         for (let key in obj) {
-            if (options && options[key]) {
+            let label = labels[key] ? labels[key] : key;
+            if (options[key]) {
                 fields[fields.length] = {
                     key,
-                    label: key,
+                    label,
                     value: obj[key],
                     type: "select",
                     options: options[key]
@@ -25,7 +36,7 @@ export default class BaseDom {
             } else {
                 fields[fields.length] = {
                     key,
-                    label: key,
+                    label,
                     value: obj[key],
                     type: _type(obj[key])
                 }
@@ -47,6 +58,9 @@ export default class BaseDom {
                 return document.querySelector("#" + parent + " " + el)
             }
             return document.querySelector("#" + parent.id + " " + el)
+        }
+        if ("htmldivelement" == _type(el)) {
+            return el
         }
         return document.querySelector(el)
     }
@@ -80,7 +94,8 @@ export default class BaseDom {
     }
 
     _appendTo(el, form) {
-        el = el ? document.querySelector(el) : document.body
+        // el = el ? document.querySelector(el) : document.body
+        el = el ? this._query(el) : document.body
         el.appendChild(form)
     }
 
@@ -148,11 +163,71 @@ export default class BaseDom {
         var arr = el.className.split(" ")
         return arr.indexOf(cls) >= 0
     }
-    _toggle(el,cls){
-        if(this._hasClass(el,cls)){
-            this._removeClass(el,cls)
-        }else{
-            this._addClass(el,cls)
+    _toggle(el, cls) {
+        if (this._hasClass(el, cls)) {
+            this._removeClass(el, cls)
+        } else {
+            this._addClass(el, cls)
+        }
+    }
+    _get(field, form) {
+        let formitem = this._query("[name='" + field.key + "']", form)
+        let value = formitem.value
+        switch (field.type) {
+            case "number":
+                return Number(value)
+                break;
+            case "object":
+                return JSON.parse(value)
+                break;
+            case "array":
+                if (/\[.*?\]/.test(value)) {
+                    return JSON.parse(value)
+                } else {
+                    return value.split(",").map(t => {
+                        return Number(t)
+                    })
+                }
+
+                break;
+            case "boolean":
+                return formitem.checked
+                break;
+            case "select":
+            default:
+                return value
+
+        }
+    }
+    _set(key, value) {
+        let field = this.fields.filter(t => t.key == key)[0]
+        if (field) {
+
+            let formitem = this._query("[name='" + field.key + "']")
+
+            switch (field.type) {
+                case "number":
+                    formitem.value = Number(value)
+                    break;
+                case "object":
+                    formitem.value = JSON.parse(value)
+                    break;
+                case "array":
+                    if (/\[.*?\]/.test(value)) {
+                        formitem.value = JSON.parse(value)
+                    } else {
+                        formitem.value = value.join(",")
+                    }
+
+                    break;
+                case "boolean":
+                    formitem.value = formitem.checked
+                    break;
+                case "select":
+                default:
+                    formitem.value = value
+                    break;
+            }
         }
     }
 }

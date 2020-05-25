@@ -4,10 +4,16 @@ import {
     _cos
 } from '../utils'
 import BaseEntity from './BaseEntity'
+import {
+    ArcSeg
+} from '../points'
 let index=0
 export default class Rect extends BaseEntity {
     constructor(options) {
         super(options)
+        this.setPoints(new ArcSeg(options))
+
+        
         this.rectWidth = this.r * _sin(this.a) *2
         this.rectHeight = this.r * _cos(this.a)*2
         // this.index=0

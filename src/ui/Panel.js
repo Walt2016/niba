@@ -1,4 +1,4 @@
-import BaseDom from "./baseDom";
+import BaseDom from "./BaseDom";
 
 export default class Panel extends BaseDom {
     constructor(options) {
@@ -28,7 +28,7 @@ export default class Panel extends BaseDom {
             // text: "",
             click: (e) => {
                 console.log(e.target)
-                let el=e.target
+                let el = e.target
                 this._toggle(el, "down")
                 let panel = this._closest(el, ".panel")
                 let panel_body = this._query(".panel_body", panel)
@@ -41,7 +41,14 @@ export default class Panel extends BaseDom {
         let toolsWrapper = this._div({
             class: "tools"
         })
-        toolsWrapper.appendChild(tools)
+        if (Array.isArray(tools)) {
+            tools.forEach(t => {
+                toolsWrapper.appendChild(t)
+            })
+        } else if(tools){
+            toolsWrapper.appendChild(tools)
+        }
+
         panelHeader.appendChild(expandbtn)
         panelHeader.appendChild(toolsWrapper)
 

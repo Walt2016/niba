@@ -7,10 +7,7 @@ import {
 export default class Ray extends BaseEntity {
     constructor(options) {
         super(options)
-        if (!this.points) {
-            Object.assign(this, new ArcSeg(options))
-        }
-
+        this.setPoints(new ArcSeg(options))
     }
     draw(ctx) {
         let {

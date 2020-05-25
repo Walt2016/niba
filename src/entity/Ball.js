@@ -6,7 +6,7 @@ import {
 export default class Ball extends BaseEntity { //(x, y, width, height) 
     constructor(options) {
         super(options)
-        Object.assign(this, new ArcSeg(options))
+        this.setPoints(new ArcSeg(options))
     }
 
     draw(ctx) {

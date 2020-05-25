@@ -174,6 +174,13 @@ function kebab(ggname) {
     return splitWords(ggname.toLowerCase()).join("-")
 }
 
+function _pos(e, canvas) {
+    let x = e.clientX,
+        y = e.clientY
+    var canvasBox = canvas.getBoundingClientRect(); //获取canvas元素的边界框
+    return [(x - canvasBox.left) * (canvas.width / canvasBox.width), (y - canvasBox.top) * (canvas.height / canvasBox.height)]
+}
+
 export {
     _type,
     _sin,
@@ -182,6 +189,7 @@ export {
     _mid,
     _dis,
     _atan,
+    _pos,
 
     splitWords,
     camelCase,

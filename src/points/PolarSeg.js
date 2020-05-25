@@ -1,4 +1,4 @@
-// 极坐标云点
+// 极坐标云点  切割机
 
 export default class PolarSeg {
     constructor(options) {
@@ -16,8 +16,6 @@ export default class PolarSeg {
             },
             options)
         this.center = this.o
-
-
     }
     update() {
         this.phi++ //动画入参

@@ -1,202 +1,104 @@
 import {
+    _atan,
+    _dis,
     _sin,
-    _cos
+    _cos,
+    _pos
 } from '../utils'
+import Controler from './Controler'
+import PolarSeg from '../points/PolarSeg'
+import Freeform from '../points/Freeform'
+import BaseDom from '../ui/BaseDom'
 export default class BaseEntity {
     constructor(options) {
-
-        let {
-            // x,
-            // y,
-            o = [0, 0],
-                r = 50,
-                a = 0,
-                n = 3,
-                width,
-                height,
-                speed,
-                animate = "move2,bounce",
-                shape
-        } = options
-
-        Object.assign(this, options)
-
-        let [x, y] = o
-        this.x = x
-        this.y = y
-        // 中点 //[x,y]
-        this.o = o
-        //半径
-        this.r = r
-        // 角度
-        this.a = a
-        //速度   
-        this.vx = Math.random();
-        this.vy = Math.random();
-        this.va = Math.random() //* 10
-        this.speed = speed || Math.random()
-        // 方向
-        this.dirX = 1
-        this.dirY = 1
-
-        // 活动范围
-        this.width = width
-        this.height = height
-
-        this.animate = animate
-        this.shape = shape
-        this.n = n
-        this.index = 0
-
+        this.init(options)
     }
-    update() {
-        if (this.animate) {
-            this.animate.split(",").forEach(t => {
-                this[t] && this[t]()
+    init(options) {
+        for (let key in options) {
+            if (options[key] instanceof CanvasRenderingContext2D || options[key] instanceof BaseDom) {
+                this.set(key, options[key])
+            } else {
+                this[key] = options[key]
+            }
+        }
+    }
+    // 根据切割机 设置点
+    setPoints(options) {
+        if (options instanceof PolarSeg) {
+            let {
+                points,
+                seg
+            } = options
+            return this.set("points", points).set("seg", seg.bind(options))
+        } else if (Array.isArray(options)) {
+
+            let {
+                points,
+                o
+            } = new Freeform({
+                points: options.points
             })
-        }
-        this.o = [this.x, this.y]
-    }
-    //反弹
-    bounce() {
-        // let r=this.r //边框
-        if (this.width) {
-            if (this.x + this.r > this.width || this.x - this.r < 0) {
-                this.dirX *= -1
-            }
-        }
+            return this.set("points", points)
 
-        if (this.height > 0) {
-            if (this.y + this.r > this.height || this.y - this.r < 0) {
-                this.dirY *= -1
-            }
         }
 
     }
-    //直线运动
-    move() {
-        this.x += this.speed * this.vx * this.dirX;
-        this.y += this.speed * this.vy * this.dirY
-
+    // 根据参数 重新计算节点
+    update(options) {
+        Object.assign(this, options)
+        if (this.seg) {
+            this.points = this.seg()
+        }
+        return this
     }
-    //小蝌蚪游泳运动
-    move2() {
-        this.x += _cos(this.a) * this.speed * this.dirX;
-        this.y += _sin(this.a) * this.speed * this.dirY
-        this.a += Math.random() * 90 - 45;
-        // this.a += Math.random() * 0.8 - 0.4;
-
-        // if (this.x < 0 || this.x > this.w - this.radius) {
-        //   return false;
-        // }
-
-        // if (this.y < 0 || this.y > this.h - this.radius) {
-        //   return false;
-        // }
-
+    _fadeout(step = 0.01) {
+        let ctx = this.ctx
+        if (ctx) {
+            ctx.fillStyle = 'rgba(0,0,0, ' + step + ')';
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        }
+        return this
     }
-    //转动
-    roll() {
-        this.a += this.va
+    clear(ctx = this.ctx) {
+        // this.timmer && clearInterval(this.timmer)
+        // this.ctx.fillStyle = 'rgba(0,0,0, .01)';
+        // this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        if (ctx) {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        }
+
+        // this.timmer&&clearTimeout(this.timmer)
+        // this.timmers.forEach(t => {
+        //     t && clearTimeout(t)
+        // })
+        // this.timmers.length=0
+        return this
     }
-    // roll2() {
-    //     this.a2 += this.va2
-    // }
-
-    // 连线
-    // link(points,ctx){
-    //     points.forEach((t, i) => {
-    //         ctx[i == 0 ? 'moveTo' : 'lineTo'].apply(ctx, t)
-    //     });
-    // }
-
-    //生成顶点
-    // createPoints(start, end) {
-    //     var x1 = end.x - start.x,
-    //         y1 = end.y - start.y,
-    //         angle = 0;
-    //     this.points = [];
-    //     for (var i = 0; i < this.sides; i++) {
-    //         angle = 2 * Math.PI / this.sides * i;
-    //         var sin = Math.sin(angle),
-    //             cos = Math.cos(angle),
-    //             newX = x1 * cos - y1 * sin,
-    //             newY = y1 * cos + x1 * sin;
-    //         this.points.push({
-    //             x: Math.round(start.x + newX),
-    //             y: Math.round(start.y + newY)
-    //         });
-    //     }
-    // }
-
-
-    //生成控制点
-    // createControlPoint(start, end, len) {
-    //     var x1 = end.x - start.x,
-    //         y1 = end.y - start.y,
-    //         angle = Math.atan2(y1, x1),
-    //         c = Math.round(Math.sqrt(x1 * x1 + y1 * y1)),
-    //         l = c + (!len ? 0 : c / len),
-    //         x2 = l * Math.cos(angle) + start.x,
-    //         y2 = l * Math.sin(angle) + start.y;
-    //     return {
-    //         x: x2,
-    //         y: y2
-    //     };
-    // }
-
-
-    // 控制点
-    drawCPoints(ctx) {
-        ctx.save();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'hsla(0,0%,50%,1)';
-        ctx.fillStyle = 'hsla(0,100%,60%,1)';
-        this.cPoints.forEach(p => {
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(p.x, p.y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 6, 0, Math.PI * 2, false);
-            ctx.stroke();
-            ctx.fill();
-        });
-        ctx.restore();
+    // 不可枚举属性  this.ctx
+    set(key, value) {
+        return Object.defineProperty(this, key, {
+            value,
+            writable: true,
+            enumerable: false
+        })
+    }
+    //清空定时器
+    reset() {
+        this.timmer && clearInterval(this.timmer)
+        return this
     }
 
-
-    //绘制顶点
-    drawPoints(ctx) {
-        if (!this.points) return
-        ctx.save();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#999';
-        ctx.font ="12px Verdana";
-        this.points.forEach( (p,i) => {
-            ctx.beginPath();
-            ctx.arc(p[0], p[1], 5, 0, Math.PI * 2, false);
-            ctx.fillText(i, p[0], p[1]);
-            ctx.stroke();
-        });
-        ctx.restore();
-    }
-    //绘制中心点
-    drawCenter(ctx) {
-        ctx.save();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'hsla(60,100%,45%,1)';
-        ctx.fillStyle = 'hsla(60,100%,50%,1)';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 5, 0, Math.PI * 2, false);
-        ctx.stroke();
-        ctx.fill();
-        ctx.restore();
-    }
     //绘制控制点
-    drawController(ctx) {
-        this.drawPoints(ctx);
-        this.drawCenter(ctx);
+    drawController(ctx = this.ctx, points = this.points, o = this.o, pos = this.pos) {
+        let controler = new Controler({
+            ctx,
+            points,
+            o,
+            pos
+        })
+        this.controler = controler
+        // this.set("controler",controler)
+        this.activePointIndex = controler.draw().activePointIndex
     }
 
     // 生成代码
@@ -219,7 +121,7 @@ export default class BaseEntity {
     }
 
     //网格
-    drawGuidewires(ctx, x, y) {
+    drawGuidewires(ctx = this.ctx, x, y) {
         ctx.save();
         ctx.strokeStyle = 'rgba(0,0,230,0.4)';
         ctx.lineWidth = 0.5;
@@ -235,42 +137,95 @@ export default class BaseEntity {
     }
 
     //绘制路径
-    createPath(ctx) {
+    createPath(ctx = this.ctx) {
         ctx.beginPath();
         this.points.forEach((p, i) => {
-            ctx[i == 0 ? 'moveTo' : 'lineTo'](p.x, p.y);
+            ctx[i == 0 ? 'moveTo' : 'lineTo'](p[0], p[1]);
         });
         ctx.closePath();
     }
 
 
     //判断鼠标是否选中对应的图形，选中哪个顶点，选中哪个控制点，中心点；
-    isInPath(ctx, pos) {
-        for (var i = 0, point, len = this.points.length; i < len; i++) {
-            point = this.points[i];
-            ctx.beginPath();
-            ctx.arc(point[0], point[1], 5, 0, Math.PI * 2, false);
-            if (ctx.isPointInPath(pos[0], pos[1])) {
-                return i;
+    // isInPath(ctx = this.ctx, pos) {
+    //     for (var i = 0, point, len = this.points.length; i < len; i++) {
+    //         point = this.points[i];
+    //         ctx.beginPath();
+    //         ctx.arc(point[0], point[1], 5, 0, Math.PI * 2, false);
+    //         if (ctx.isPointInPath(pos[0], pos[1])) {
+    //             return i;
+    //         }
+    //     }
+    //     this.createPath(ctx);
+    //     if (ctx.isPointInPath(pos[0], pos[1])) {
+    //         return 9999;
+    //     }
+    //     return -1
+    // }
+
+    // 接口
+    draw(ctx = this.ctx) {
+        // ctx.save();
+        // ctx.fillStyle = this.color || "#0000ff";
+        // ctx.beginPath();
+        // ctx.arc(this.x, this.y, this.r || 3, 0, 2 * Math.PI);
+        // // ctx.stroke();
+        // ctx.fill();
+        // ctx.restore();
+        // return this
+    }
+    // 动画  靠近目标
+    moveTo([tx, ty]) {
+        this.timmer && clearInterval(this.timmer)
+        this.timmer = setInterval(() => {
+            let d = _dis(this.o, [tx, ty])
+            console.log(d)
+            if (d < 1) {
+                this.render([tx, ty])
+                this.timmer && clearInterval(this.timmer)
+            }
+
+            let [x, y] = this.o
+            this.render([Math.round((x + (tx - x) / 10) * 100) / 100, Math.round((y + (ty - y) / 10) * 100) / 100])
+        }, 17)
+    }
+    // 根据中心点重绘
+    render(o) {
+        // [tx, ty] = this.o
+        if (o) {
+            // console.log(this.ui)
+            console.log(o)
+
+            this.ui._set("o", o)
+            // return this.update({
+            //     o
+            // }).clear().draw();
+
+            if (this.controler) {
+                this.points = this.controler.move(o).points
+                this.o = o //= this.controler._o()
             }
         }
-        this.createPath(ctx);
-        if (ctx.isPointInPath(pos[0], pos[1])) {
-            return 9999;
+        if (this.fadeout) {
+            return this._fadeout(this.fadeout).draw();
         }
-        return -1
+        return this.clear().draw();
     }
-
-
-
-    draw(ctx) {
-        ctx.save();
-        ctx.fillStyle = this.color || "#0000ff";
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r || 3, 0, 2 * Math.PI);
-        // ctx.stroke();
-        ctx.fill();
-        ctx.restore();
+    // 跟随鼠标
+    follow(e) {
+        let pos = _pos(e, this.ctx.canvas)
+        if (this.showController) {
+            this.pos = pos
+        }
+        if (this.followMouse) {
+            // ui&& ui._set("o", pos)
+            if (this.animate) {
+                this.moveTo(pos)
+            } else {
+                this.render(pos)
+            }
+        } else {
+            this.render()
+        }
     }
 }
-

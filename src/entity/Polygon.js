@@ -6,40 +6,52 @@ import {
 export default class Polygon extends BaseEntity {
     constructor(options) {
         super(options)
-        Object.assign(this, new ArcSeg(options))
+        this.setPoints(new ArcSeg(options))
+    }
+    update(options) {
+        Object.assign(this, options)
+        return this.setPoints(new ArcSeg(this))
+        // return this.setPoints(new ArcSeg(options))
     }
     //连线
     line(ctx) {
         let {
-            fillStyle,
-            strokeStyle = "#FF0000",
-            closePath = true,
-            colors,
-            index = 0,
-            points,
-            color,
-            fill
+            fillStyle = "#FF0000",
+                strokeStyle = "#FF0000",
+                closePath = true,
+                points,
+                color,
+                fill,
+                lineWidth = 1
         } = this
-        if(color) fillStyle=color
-
-        if (colors)
-            strokeStyle = colors[index]
-        if (fillStyle) ctx.fillStyle = fillStyle //"white"
-        ctx.strokeStyle = color||strokeStyle;
+        ctx.fillStyle = color || fillStyle
+        ctx.strokeStyle = color || strokeStyle;
+        ctx.lineWidth = lineWidth
 
         ctx.beginPath();
         points.forEach((t, i) => {
             ctx[i == 0 ? 'moveTo' : 'lineTo'].apply(ctx, t)
         });
 
-        if (closePath)
+        if (closePath) {
             ctx.closePath();
+        }
         ctx.stroke()
-        if (fill){
+        if (fill) {
             ctx.fill()
-        } 
+        }
     };
-    draw(ctx) {
+    // update(ctx) {
+    //     // this.tx += this.vx
+    //     // this.ty += this.vy
+    //     // ctx.translate(this.tx, this.ty)
+    // }
+
+    draw(ctx = this.ctx) {
         this.line(ctx)
+        if (this.showController) {
+            this.drawController(ctx)
+        }
+        return this
     }
 }

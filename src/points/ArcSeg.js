@@ -19,6 +19,7 @@ export default class ArcSeg extends PolarSeg {
     constructor(options) {
         super(options)
         this.points = this.seg()
+        this.phi=0
     }
 
     seg() {
@@ -26,8 +27,8 @@ export default class ArcSeg extends PolarSeg {
             o,
             r,
             n,
-            a1,
-            a2
+            a1=0,
+            a2=360
         } = this
         let points = [];
         for (let i = 0; i < n; i++) {

@@ -1,16 +1,19 @@
-export default class BaseFractal {
+import { BaseEntity } from "../entity"
+
+export default class BaseFractal extends BaseEntity {
     constructor(options) {
-        for (let key in options) {
-            if (options[key] instanceof CanvasRenderingContext2D) {
-                // 不可枚举属性  this.ctx
-                Object.defineProperty(this, key, {
-                    value: options[key],
-                    enumerable: false
-                })
-            } else {
-                this[key] = options[key]
-            }
-        }
+        super(options)
+        // for (let key in options) {
+        //     if (options[key] instanceof CanvasRenderingContext2D) {
+        //         // 不可枚举属性  this.ctx
+        //         Object.defineProperty(this, key, {
+        //             value: options[key],
+        //             enumerable: false
+        //         })
+        //     } else {
+        //         this[key] = options[key]
+        //     }
+        // }
         let {
             level,
             n
@@ -24,6 +27,11 @@ export default class BaseFractal {
         console.log("count=" + this.count)
         // 定时器
         Object.defineProperty(this, "timmers", {
+            value: [],
+            enumerable: false
+        })
+
+        Object.defineProperty(this, "entities", {
             value: [],
             enumerable: false
         })
@@ -57,4 +65,7 @@ export default class BaseFractal {
         }
         return total
     }
+
+
+
 }
