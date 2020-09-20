@@ -4,13 +4,16 @@ import Panel from "./Panel";
 export default class List extends Panel{
     constructor(options){
         super(options)
-        this.List=this._list(options)
+        
+    }
+    render(){
+        this.List=this._list()
     }
     _list(options) {
         let {
             el,
             fields
-        } = options
+        } = options || this
         let table = this._createEle("table")
         let tr = this._createEle("tr")
 

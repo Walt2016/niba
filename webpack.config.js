@@ -12,10 +12,10 @@ const config = {
     path: path.resolve(__dirname, 'dist'),
     // publicPath: '../dist/', // 配置生成输出路径
     // filename: 'bundle.js'
-    // filename: '[name]_bundle.js'
-    filename: 'bundle-[hash:5].js' // 带hash值得js
+    filename: '[name]_bundle.js'
+    // filename: 'bundle-[hash:5].js' // 带hash值得js
   },
-  // devtool:'eval-source-map' ,
+  devtool:'eval-source-map' ,
   module: {
     rules: [
       // { // loader js
@@ -131,9 +131,9 @@ if (isDev) {
     port: 8000, //启动服务监听端口
     host: '0.0.0.0', //可以通过localhost访问
     overlay: { //在页面上显示错误信息
-      errors: true,
+      errors: false,
     },
-    open: true, //启动webpack-dev-server时自动打开浏览器
+    open: false, //启动webpack-dev-server时自动打开浏览器
     hot: true //启用热更
   }
   config.plugins.push(

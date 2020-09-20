@@ -4,17 +4,28 @@ export default class Panel extends BaseDom {
     constructor(options) {
         super(options)
     }
+    // 实现接口
+    render() {
+        let el = this.el ? this.el : this._div({
+            id: "wrapper"
+        })
+        let panel = this._panel()
+        el.appendChild(panel)
+        this._appendTo(null, el)
+        this.el = el
+    }
     _panel(options) {
         let {
             title,
             body,
             footer,
             tools
-        } = options
+        } = options || this
+        console.log(this)
 
         let id = this._random()
         let panel = this._div({
-            class: 'panel' + (options['class'] ? " " + options['class'] : ""),
+            class: 'panel' + (options && options['class'] ? " " + options['class'] : ""),
             id
         })
 
@@ -45,7 +56,7 @@ export default class Panel extends BaseDom {
             tools.forEach(t => {
                 toolsWrapper.appendChild(t)
             })
-        } else if(tools){
+        } else if (tools) {
             toolsWrapper.appendChild(tools)
         }
 
@@ -62,12 +73,11 @@ export default class Panel extends BaseDom {
 
         if (Array.isArray(body)) {
             body.forEach(t => {
-                // t.form=id
                 t.setAttribute("form", id)
                 panelBody.appendChild(t)
             })
 
-        } else {
+        } else if (body) {
             body.setAttribute("form", id)
             panelBody.appendChild(body)
         }

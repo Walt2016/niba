@@ -15,25 +15,39 @@ let {
 
 let rr = new RoundRect({
     ctx,
-    x: width/2-100,
-    y: height/2-50,
+    x: width / 2 - 100,
+    y: height / 2 - 50,
     width: 200,
     height: 100,
     radius: 20,
     // fillColor:'red',
-    fill:false,
-    color:'red'
+    fill: false,
+    color: 'red',
+    lineWidth: 1
 })
 
 rr.draw()
 
+// 参数分组
+let group = [{
+    pos: ['x', 'y']
+}, {
+    shape: ['width', 'height', 'radius']
+}, {
+    fill: ['fill', 'color']
+},{
+    line:['lineWidth']
+}]
+
+
 
 import UI from '../ui'
-let ui=new UI.Form({
+let ui = new UI.Form({
     data: rr,
     options: {
         color: ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple"]
     },
+    group,
     btns: [{
         text: "apply",
         name: 'submit',

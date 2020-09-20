@@ -19,6 +19,7 @@ export default class RoundRect extends BaseEntity {
             fill,
             color = 'red',
             strokeColor,
+            lineWidth,
             ctx
         } = this
         //圆的直径必然要小于矩形的宽高          
@@ -32,9 +33,8 @@ export default class RoundRect extends BaseEntity {
         this.drawRoundRectPath(width, height, radius);
         ctx.fillStyle = fillColor || color;
         ctx.strokeStyle = strokeColor || color
-        if (fill) {
-            ctx.fill();
-        }
+        ctx.lineWidth = lineWidth || 1
+        fill && ctx.fill();
         ctx.stroke()
         ctx.restore();
     }

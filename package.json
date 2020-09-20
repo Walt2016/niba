@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "build": "webpack",
+    "build": "npx webpack",
     "dev": "webpack-dev-server --open --hot",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve":"serve ./dist"

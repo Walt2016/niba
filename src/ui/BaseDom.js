@@ -10,13 +10,15 @@ export default class BaseDom {
     // 接口
     render() {}
     setData(data) {
-        if (_type(data) == "object") {
-            this.fields = this.objToFields(data, this.options, this.labels)
+        if (_type(data) === "object") {
+            this.fields = this.dataToFields(data, this.options, this.labels)
+            if (this.group)
+                this.group = this._groupFields(this.group, this.fields)
         }
         this.render()
     }
-    // 入参转换
-    objToFields(obj = {}, options = {}, labels = {}) {
+    // 入参转换 data 数据 options 参数  labels参数字典
+    dataToFields(obj = {}, options = {}, labels = {}) {
         Object.assign(labels, {
             o: 'center',
             r: 'radius',
@@ -45,13 +47,41 @@ export default class BaseDom {
         }
         return fields
     }
+    // 字段分组
+    _groupFields(group, fields) {
+        return group.map(item => {
+            for (let key in item) {
+                return {
+                    label: key,
+                    fields: item[key].map(t => {
+                        return fields.filter(f => f.key.toLocaleLowerCase() === t.toLocaleLowerCase())[0]
+                    })
+                }
+            }
+        })
+
+
+    }
+
+    // 数据模型
+    _dataModel(fields,form) {
+        let dataModel = {}
+        if (fields) {
+            fields.forEach(t => {
+                dataModel[t.key] = this._get(t, form)
+            })
+        }
+        return dataModel
+    }
+
+    // 随机数
     _random() {
         return "_" + Math.random().toString(16).slice(2)
     }
-
+    // 查询
     _query(el, parent) {
         if (parent) {
-            if (typeof parent == "string") {
+            if (typeof parent === "string") {
                 if (parent.charAt(0).match(/[\#\.]/)) {
                     return document.querySelector(parent + " " + el)
                 }
@@ -59,7 +89,7 @@ export default class BaseDom {
             }
             return document.querySelector("#" + parent.id + " " + el)
         }
-        if ("htmldivelement" == _type(el)) {
+        if ("htmldivelement" === _type(el)) {
             return el
         }
         return document.querySelector(el)
@@ -67,7 +97,7 @@ export default class BaseDom {
 
     _queryAll(el, parent) {
         if (parent) {
-            if (typeof parent == "string") {
+            if (typeof parent === "string") {
                 if (parent.charAt(0).match(/[\#\.]/)) {
                     return document.querySelectorAll(parent + " " + el)
                 }
@@ -94,7 +124,6 @@ export default class BaseDom {
     }
 
     _appendTo(el, form) {
-        // el = el ? document.querySelector(el) : document.body
         el = el ? this._query(el) : document.body
         el.appendChild(form)
     }
@@ -103,14 +132,24 @@ export default class BaseDom {
         let ele = document.createElement(tag)
         for (let key in options) {
             if (options[key] !== undefined) {
-                if ("class" == key) {
-                    ele.className = options[key]
-                } else if (['name', 'innertext', 'id', 'innerHTML', 'value'].indexOf(key.toLocaleLowerCase()) >= 0) {
-                    ele[key] = options[key]
-                } else if (key === "click") {
-                    ele.addEventListener("click", options[key], false)
-                } else {
-                    ele.setAttribute(key, options[key])
+                switch (key.toLocaleLowerCase()) {
+                    case "class":
+                        ele.className = options[key]
+                        break;
+                    case "name":
+                    case "innertext":
+                    case "id":
+                    case "innerhtml":
+                    case "value":
+                        ele[key] = options[key]
+                        break;
+                    case "click":
+                        ele.addEventListener("click", options[key], false)
+                        break;
+                    default:
+                        ele.setAttribute(key, options[key])
+                        break;
+
                 }
             }
         }
@@ -200,7 +239,7 @@ export default class BaseDom {
         }
     }
     _set(key, value) {
-        let field = this.fields.filter(t => t.key == key)[0]
+        let field = this.fields.filter(t => t.key === key)[0]
         if (field) {
 
             let formitem = this._query("[name='" + field.key + "']")

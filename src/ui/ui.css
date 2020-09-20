@@ -153,3 +153,9 @@ body {
     outline: 1px solid #ccc;
     padding: 4px;
 }
+
+.form-group-item-title{
+    font-size: 14px;
+    font-weight: bold;
+
+}

@@ -6,40 +6,69 @@ import {
 export default class Form extends Panel {
     constructor(options) {
         super(options)
-        // this.render()
     }
     // 实现接口
     render() {
         let el = this.el ? this.el : this._div({
             id: "wrapper"
         })
-        let panel=this._query(".panel.ui",el)
-        let form=this._form()
-        if(panel){
-            // el.removeChild(panel)
-            el.replaceChild(form,panel)
-        }else{
-            el.appendChild(form) //options
-        }
-        
-       
+        // let panel = this._query(".panel.ui", el)
+        // let form = this.group ? this._group() : this._form()
+        let form = this._panelWrap()
+        el.appendChild(form)
+        // if (panel) {
+        //     el.replaceChild(form, panel)
+        // } else {
+        //     el.appendChild(form) //options
+        // }
         this._appendTo(null, el)
         this.el = el
     }
 
-    _form(options) {
+    _panelWrap(options) {
         let {
             el,
             fields = [],
-            click,
-            events = [],
             btn,
             btns = [],
             title
-        } = this
+        } = options || this
+        let tools = this._tools(btns.length > 0 ? btns : btn, fields)
 
+
+        let form = this._panel({
+            title,
+            class: 'ui',
+            body: this.group ? this._group() : this._form(),
+            // body: fields.map(t => {
+            //     return this._formItem(t)
+            // }),
+            tools
+        })
+        this._appendTo(el, form)
+        return form
+
+    }
+    // 表单
+    _form(options) {
+        let {
+            fields = [],
+        } = options || this
+
+        let form = this._div({
+            class: "form"
+        })
+
+        fields.forEach(t => {
+            form.appendChild(this._formItem(t))
+        })
+        return form
+    }
+
+    // 按钮
+    _tools(btns, fields) {
         let tools;
-        if (btns.length > 0) {
+        if (Array.isArray(btns)) {
             tools = btns.map(t => {
                 return this._btn(
                     Object.assign(t, {
@@ -48,25 +77,44 @@ export default class Form extends Panel {
                 )
             })
         } else {
-            tools = btn ? this._btn(
-                Object.assign(btn, {
+            tools = btns ? this._btn(
+                Object.assign(btns, {
                     fields
                 })
             ) : ""
         }
+        return tools
 
-
-        let form = this._panel({
-            title,
-            class: 'ui',
-            body: fields.map(t => {
-                return this._formItem(t)
-            }),
-            tools
-        })
-        this._appendTo(el, form)
-        return form
     }
+    // 表单分组
+    _group() {
+        let {
+            group
+        } = this
+        let formGroupWrap = this._div({
+            class: "form-group-wrap"
+        })
+        group.forEach(t => {
+            let formGroup = this._div({
+                class: "form-group-item",
+            })
+            let formGroupItemTitle = this._div({
+                class: "form-group-item-title",
+                text: t.label
+            })
+            formGroup.appendChild(formGroupItemTitle)
+
+            t.fields.map(t => {
+                formGroup.appendChild(this._formItem(t))
+            })
+
+            formGroupWrap.appendChild(formGroup)
+
+        })
+        return formGroupWrap
+    }
+
+    // 表单单元
     _formItem(field, form) {
         let {
             label,
@@ -127,6 +175,7 @@ export default class Form extends Panel {
 
     }
 
+    // 按钮
     _btn({
         click,
         text,
@@ -144,12 +193,7 @@ export default class Form extends Panel {
         btn.onclick = (e) => {
             let form = this._closest(e.target, ".panel").id
             console.log(fields)
-            let bizModel = {}
-            if (fields) {
-                fields.forEach(t => {
-                    bizModel[t.key] = this._get(t, form)
-                })
-            }
+            let dataModel = this._dataModel(fields, form)
 
             let inputs = this._queryAll("[name='input']", form)
             let output = this._query("[name='output']", form)
@@ -162,7 +206,7 @@ export default class Form extends Panel {
             let result = ""
             switch (name) {
                 case "submit":
-                    click(bizModel)
+                    click(dataModel)
 
                     break;
                 case "to_form":
@@ -193,6 +237,7 @@ export default class Form extends Panel {
         return btn
     }
 
+    // 下拉选项
     _select(field) {
         let select = this._createEle("select", field);
         field.options.forEach(t => {
@@ -205,6 +250,7 @@ export default class Form extends Panel {
         return select
     }
 
+    // 输入框
     _input(field) {
         let {
             value,
@@ -226,6 +272,7 @@ export default class Form extends Panel {
         return input
     }
 
+    // 文本框
     _textarea(field) {
         return this._createEle("textarea",
             Object.assign(field, {
@@ -235,6 +282,7 @@ export default class Form extends Panel {
         )
     }
 
+    // 是否
     _trueorfalse(field) {
         let checkbox = this._createEle("input",
             Object.assign(field, {
@@ -244,5 +292,4 @@ export default class Form extends Panel {
         );
         return checkbox
     }
-
 }
