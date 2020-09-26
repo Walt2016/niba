@@ -36,7 +36,7 @@ let {
 } = wrapperOptions
 
 let canvas, ctx;
-var setup = function () {
+const setup = () => {
     canvas = document.createElement('canvas')
     ctx = canvas.getContext("2d")
     canvas.width = width
@@ -45,14 +45,14 @@ var setup = function () {
 
     // canvas.width = innerWidth;
     // canvas.height = innerHeight;
-            
+
     canvas.style.position = 'absolute';
     canvas.style.top = 0;
     canvas.style.bottom = 0;
     canvas.style.left = 0;
     canvas.style.right = 0;
     canvas.style.zIndex = -1;
-    
+
     canvas.style.background = '-webkit-radial-gradient(#ffffff, #505050)';
     canvas.style.background = '-moz-radial-gradient(#ffffff, #505050)';
     canvas.style.background = '-ms-radial-gradient(#ffffff, #505050)';
@@ -111,7 +111,7 @@ function fill({
 
 //链接
 //arr, shape
-var link = function (opt) {
+const link = (opt) => {
     var _link = function (p1, p2, shape, sAngle, eAngle) {
         ctx.strokeStyle = "#000";
         ctx.beginPath();
@@ -170,14 +170,14 @@ var link = function (opt) {
 
 
 //点阵
-var lattice = function (options) {
+const lattice = (options) => {
     let points = latticepoints(options)
     return line(Object.assign(options, {
         points
     }))
 }
 //同义词
-var _synonym = function (options) {
+const _synonym = (options) => {
     var synonym = {
         color: 'fillStyle',
         linecolor: 'strokeStyle',
@@ -192,7 +192,7 @@ var _synonym = function (options) {
     return options
 }
 //默认参数
-var defaultOptions = function (tag, options) {
+const defaultOptions = (tag, options) => {
     let _default = {}
     switch (tag) {
         case 'circle':
@@ -266,27 +266,27 @@ var defaultOptions = function (tag, options) {
 
 
 //图形
-var shape = function (tag, options) {
+const shape = (tag, options) => {
     options = defaultOptions(tag, options)
     switch (tag) {
         case "circle":
             options = new Circle(options);
             break;
         case 'text':
-            options =new  Text(options);
+            options = new Text(options);
             // console.log(options)
             break;
         case 'polygon':
-            options =new Polygon(options);
+            options = new Polygon(options);
             break;
         case 'ray':
             options = new Ray(options);
             break;
         case 'arc':
-            options =new  Arc(options);
+            options = new Arc(options);
             break;
         case 'rect':
-            options =new  Rect(options);
+            options = new Rect(options);
             break;
         case 'lattice':
             options = lattice(options)
@@ -298,7 +298,7 @@ var shape = function (tag, options) {
 
 
 //滤镜
-function doFilter(t, options) {
+const doFilter = (t, options) => {
     if (t === 'lattice') {
         let points = pixel({
             canvas,
@@ -403,7 +403,7 @@ function figure(options) {
 
 
 //画图
-var draw = function (arr, options) {
+const draw = (arr, options) => {
     console.log(arr)
     arr.forEach(t => {
         // console.log(t, options)
@@ -448,7 +448,7 @@ var draw = function (arr, options) {
 }
 
 //动画
-let anime = (figures, options) => {
+const anime = (figures, options) => {
     setInterval(() => {
         clear()
         figures = figures.map(t => {

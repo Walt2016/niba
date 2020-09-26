@@ -6,27 +6,36 @@ import {
 import {
     RoundRect
 } from '../entity'
-let {
-    ctx,
-    canvas,
-    width,
-    height
-} = setupCanvas()
 
-let rr = new RoundRect({
-    ctx,
-    x: width / 2 - 100,
-    y: height / 2 - 50,
-    width: 200,
-    height: 100,
-    radius: 20,
-    // fillColor:'red',
-    fill: false,
-    color: 'red',
-    lineWidth: 1
-})
+import UI from '../ui'
 
-rr.draw()
+let start = () => {
+    let {
+        ctx,
+        canvas,
+        width,
+        height
+    } = setupCanvas()
+
+    let rr = new RoundRect({
+        ctx,
+        x: width / 2 - 100,
+        y: height / 2 - 50,
+        width: 200,
+        height: 100,
+        radius: 20,
+        // fillColor:'red',
+        fill: false,
+        color: 'red',
+        lineWidth: 1
+    })
+
+    rr.draw()
+    return rr
+
+
+}
+let data = start()
 
 // 参数分组
 let group = [{
@@ -35,15 +44,13 @@ let group = [{
     shape: ['width', 'height', 'radius']
 }, {
     fill: ['fill', 'color']
-},{
-    line:['lineWidth']
+}, {
+    line: ['lineWidth']
 }]
 
 
-
-import UI from '../ui'
 let ui = new UI.Form({
-    data: rr,
+    data,
     options: {
         color: ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple"]
     },
@@ -53,7 +60,12 @@ let ui = new UI.Form({
         name: 'submit',
         click: (e) => {
             console.log(e)
-            rr.reset().update(e).clear().draw()
+            data.reset().update(e).clear().draw()
         }
     }]
 })
+
+// // 窗体改变重绘
+// window.onresize = () => {
+//     start()
+// }

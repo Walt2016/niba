@@ -1,4 +1,5 @@
 import BaseDom from "./BaseDom";
+import Dragger from "./Dragger"
 
 export default class Panel extends BaseDom {
     constructor(options) {
@@ -32,13 +33,12 @@ export default class Panel extends BaseDom {
         let panelHeader = this._div({
             class: "panel_header",
             text: title,
-
         })
+
         let expandbtn = this._div({
             class: "fold",
             // text: "",
             click: (e) => {
-                console.log(e.target)
                 let el = e.target
                 this._toggle(el, "down")
                 let panel = this._closest(el, ".panel")
@@ -91,6 +91,8 @@ export default class Panel extends BaseDom {
         panel.appendChild(panelHeader)
         panel.appendChild(panelBody)
         panel.appendChild(panelFooter)
+
+        new Dragger(panelHeader,panel)
         return panel
     }
 }

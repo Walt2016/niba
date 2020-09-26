@@ -24,11 +24,25 @@ let {
 
 
 
+let polygon = new Polygon({
+    o: [width / 2, height / 2],
+    r: 100,
+    n: 6,
+    fill: true,
+    showController: false,
+    color: "red",
+    lineWidth: 1,
+    // followMouse:false,
+    // animate:false,
+    // drag:false,
+    ctx
+    // ui
+})
 
-
+polygon.draw(ctx)
 
 let ui=new UI.Form({
-    // data: polygon,
+    data: polygon,
     options: {
         color: ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple"]
     },
@@ -43,29 +57,15 @@ let ui=new UI.Form({
 })
 console.log(ui)
 
-let polygon = new Polygon({
-    o: [width / 2, height / 2],
-    r: 100,
-    n: 6,
-    fill: true,
-    showController: false,
-    color: "red",
-    lineWidth: 1,
-    followMouse:false,
-    animate:false,
-    drag:false,
-    ctx,
-    ui
-})
 
-ui.setData(polygon)
-
-polygon.draw(ctx)
+// ui.setData(polygon)
 
 
-new Events({
-    canvas,
-    ctx,
-    entity:polygon,
-    // ui
-})
+
+
+// new Events({
+//     canvas,
+//     ctx,
+//     entity:polygon,
+//     // ui
+// })
