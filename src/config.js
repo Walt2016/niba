@@ -1,7 +1,7 @@
 
 
 
-let wrapperOptions = (function () {
+let env = (function () {
     var width = window.innerWidth ||
         document.documentElement.clientWidth ||
         document.body.clientWidth || 640;
@@ -15,11 +15,11 @@ let wrapperOptions = (function () {
         cy: height / 2
     }
 }())
-let center = [wrapperOptions.cx, wrapperOptions.cy];
+let center = [env.cx, env.cy];
 let words = ['stroke', 'fill', 'width'];
 
 export default {
-    wrapperOptions,
+    env,
     center,
     words
 }

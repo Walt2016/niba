@@ -27,13 +27,13 @@ import {
     Arc
 } from './entity'
 let {
-    wrapperOptions,
+    env,
     center
 } = config
 let {
     width,
     height
-} = wrapperOptions
+} = env
 
 let canvas, ctx;
 const setup = () => {

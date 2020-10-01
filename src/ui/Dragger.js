@@ -1,49 +1,58 @@
 //获取元素
-
+import config from '../config'
 export default class Dragger {
-    constructor(dragerDiv, targetDiv) {
-        this.init(dragerDiv, targetDiv)
+    constructor(dragerDiv, moveDiv) {
+        this.init(dragerDiv, moveDiv)
     }
-    init(div, targetDiv) {
-        var x = 0;
-        var y = 0;
-        var l = 0;
-        var t = 0;
-        var isDown = false;
+    init(div, moveDiv) {
+        let x = 0;
+        let y = 0;
+        let l = 0;
+        let t = 0;
+        let isDown = false;
+        let limitedWidth = config.env.width
+        let limitedHeight = config.env.height
+
         //鼠标按下事件
-        div.onmousedown = function (e) {
+        div.onmousedown = (e) => {
             //获取x坐标和y坐标
             x = e.clientX;
             y = e.clientY;
 
             //获取左部和顶部的偏移量
-            l = targetDiv.offsetLeft;
-            t = targetDiv.offsetTop;
+            l = moveDiv.offsetLeft;
+            t = moveDiv.offsetTop;
             //开关打开
             isDown = true;
             //设置样式  
-            targetDiv.style.cursor = 'move';
+            moveDiv.style.cursor = 'move';
+
+            limitedWidth = config.env.width - moveDiv.offsetWidth
+            limitedHeight = config.env.height - moveDiv.offsetHeight
         }
         //鼠标移动
-        window.onmousemove = function (e) {
+        window.onmousemove = (e) => {
             if (isDown == false) {
                 return;
             }
             //获取x和y
-            var nx = e.clientX;
-            var ny = e.clientY;
+            let nx = e.clientX;
+            let ny = e.clientY;
             //计算移动后的左偏移量和顶部的偏移量
-            var nl = nx - (x - l);
-            var nt = ny - (y - t);
-
-            targetDiv.style.left = (nl > 0 ? nl : 0) + 'px';
-            targetDiv.style.top = (nt > 0 ? nt : 0) + 'px';
+            let nl = nx - (x - l);
+            let nt = ny - (y - t);
+            nl = nl > 0 ? nl : 0
+            nt = nt > 0 ? nt : 0
+            nl = nl > limitedWidth ? limitedWidth : nl
+            nt = nt > limitedHeight ? limitedHeight : nt
+            moveDiv.style.left = nl + 'px';
+            moveDiv.style.top = nt + 'px';
         }
         //鼠标抬起事件
-        div.onmouseup = function () {
+        div.onmouseup = window.onmouseup = () => {
             //开关关闭
             isDown = false;
-            targetDiv.style.cursor = 'default';
+            moveDiv.style.cursor = 'default';
         }
     }
 
