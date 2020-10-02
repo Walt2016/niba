@@ -12,15 +12,8 @@ export default class Form extends Panel {
         let el = this.el ? this.el : this._div({
             id: "wrapper"
         })
-        // let panel = this._query(".panel.ui", el)
-        // let form = this.group ? this._group() : this._form()
         let form = this._panelWrap()
         el.appendChild(form)
-        // if (panel) {
-        //     el.replaceChild(form, panel)
-        // } else {
-        //     el.appendChild(form) //options
-        // }
         this._appendTo(null, el)
         this.el = el
     }
@@ -40,9 +33,6 @@ export default class Form extends Panel {
             title,
             class: 'ui',
             body: this.group ? this._group() : this._form(),
-            // body: fields.map(t => {
-            //     return this._formItem(t)
-            // }),
             tools
         })
         this._appendTo(el, form)
@@ -124,48 +114,53 @@ export default class Form extends Panel {
             btn
         } = field
         let formItem = this._div({
-            class: "form_item"
+            class: "form-item"
         })
         let labelDiv = this._div({
-            class: "form_item_label",
+            class: "form-item-label",
             text: label
         })
 
         formItem.appendChild(labelDiv)
+        let itemDiv
 
         switch (type) {
             case "textarea":
-                let textarea = this._textarea(Object.assign({
-                    class: 'form_item_textarea',
+                itemDiv = this._textarea(Object.assign({
+                    class: 'form-item-textarea',
                     value,
                     name: key
                 }, field))
-                formItem.appendChild(textarea)
                 break;
             case "trueorfalse":
             case "boolean":
-                let div = this._trueorfalse(Object.assign({
-                    class: 'form_item_select',
+                itemDiv = this._trueorfalse(Object.assign({
+                    class: 'form-item-select',
                     name: key
                 }, field))
-                formItem.appendChild(div)
                 break;
             case "select":
-                let select = this._select(Object.assign({
-                    class: 'form_item_select',
+                itemDiv = this._select(Object.assign({
+                    class: 'form-item-select',
                     value,
                     name: key
                 }, field))
-                formItem.appendChild(select)
                 break
-            default:
-                let input = this._input({
-                    class: 'form_item_input',
+            case "number":
+                itemDiv = this._inputNumber({
+                    class: 'form-item-inputnumber',
                     value,
                     name: key
                 })
-                formItem.appendChild(input)
+                break;
+            default:
+                itemDiv = this._input({
+                    class: 'form-item-input',
+                    value,
+                    name: key
+                })
         }
+        formItem.appendChild(itemDiv)
         if (btn) {
             formItem.appendChild(_btn(Object.assign(btn, {
                 form
@@ -207,7 +202,6 @@ export default class Form extends Panel {
             switch (name) {
                 case "submit":
                     click(dataModel)
-
                     break;
                 case "to_form":
                     click(JSON.parse(output.value));
@@ -230,8 +224,6 @@ export default class Form extends Panel {
                     if (output) {
                         output.value = result
                     }
-
-
             }
         }
         return btn
@@ -249,12 +241,18 @@ export default class Form extends Panel {
         })
         return select
     }
+    // 数字
+    _inputNumber(field) {
+      return  this._input(Object.assign(field, {
+            type: 'number'
+        }))
+    }
 
     // 输入框
     _input(field) {
         let {
             value,
-            type
+            type = 'text'
         } = field
 
         switch (type) {
@@ -266,7 +264,7 @@ export default class Form extends Panel {
                 break;
         }
         let input = this._createEle("input", Object.assign(field, {
-            type: 'text',
+            type,
             value
         }))
         return input

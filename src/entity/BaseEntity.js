@@ -60,18 +60,9 @@ export default class BaseEntity {
         return this
     }
     clear(ctx = this.ctx) {
-        // this.timmer && clearInterval(this.timmer)
-        // this.ctx.fillStyle = 'rgba(0,0,0, .01)';
-        // this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         if (ctx) {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         }
-
-        // this.timmer&&clearTimeout(this.timmer)
-        // this.timmers.forEach(t => {
-        //     t && clearTimeout(t)
-        // })
-        // this.timmers.length=0
         return this
     }
     // 不可枚举属性  this.ctx
@@ -97,7 +88,6 @@ export default class BaseEntity {
             pos
         })
         this.controler = controler
-        // this.set("controler",controler)
         this.activePointIndex = controler.draw().activePointIndex
     }
 
@@ -165,14 +155,10 @@ export default class BaseEntity {
 
     // 接口
     draw(ctx = this.ctx) {
-        // ctx.save();
-        // ctx.fillStyle = this.color || "#0000ff";
-        // ctx.beginPath();
-        // ctx.arc(this.x, this.y, this.r || 3, 0, 2 * Math.PI);
-        // // ctx.stroke();
-        // ctx.fill();
-        // ctx.restore();
-        // return this
+    }
+    // 从新画
+    redraw(options){
+        this.reset().update(options).clear().draw()
     }
     // 动画  靠近目标
     moveTo([tx, ty]) {
@@ -193,14 +179,8 @@ export default class BaseEntity {
     render(o) {
         // [tx, ty] = this.o
         if (o) {
-            // console.log(this.ui)
             console.log(o)
-
             this.ui._set("o", o)
-            // return this.update({
-            //     o
-            // }).clear().draw();
-
             if (this.controler) {
                 this.points = this.controler.move(o).points
                 this.o = o //= this.controler._o()
@@ -218,7 +198,6 @@ export default class BaseEntity {
             this.pos = pos
         }
         if (this.followMouse) {
-            // ui&& ui._set("o", pos)
             if (this.animate) {
                 this.moveTo(pos)
             } else {

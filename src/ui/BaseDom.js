@@ -59,8 +59,6 @@ export default class BaseDom {
                 }
             }
         })
-
-
     }
 
     // 数据模型
@@ -77,6 +75,10 @@ export default class BaseDom {
     // 随机数
     _random() {
         return "_" + Math.random().toString(16).slice(2)
+    }
+    // 查询简易
+    $(el,parent){
+       return this._query(el, parent)
     }
     // 查询
     _query(el, parent) {

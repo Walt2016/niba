@@ -31,7 +31,7 @@ export default class Panel extends BaseDom {
         })
 
         let panelHeader = this._div({
-            class: "panel_header",
+            class: "panel-header",
             text: title,
         })
 
@@ -42,9 +42,9 @@ export default class Panel extends BaseDom {
                 let el = e.target
                 this._toggle(el, "down")
                 let panel = this._closest(el, ".panel")
-                let panel_body = this._query(".panel_body", panel)
+                let panel_body = this._query(".panel-body", panel)
                 this._toggle(panel_body, "hide")
-                let panel_footer = this._query(".panel_footer", panel)
+                let panel_footer = this._query(".panel-footer", panel)
                 this._toggle(panel_footer, "hide")
             }
         })
@@ -64,11 +64,11 @@ export default class Panel extends BaseDom {
         panelHeader.appendChild(toolsWrapper)
 
         let panelBody = this._div({
-            class: 'panel_body'
+            class: 'panel-body'
         })
 
         let panelFooter = this._div({
-            class: "panel_footer"
+            class: "panel-footer"
         });
 
         if (Array.isArray(body)) {

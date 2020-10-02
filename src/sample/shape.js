@@ -38,6 +38,17 @@ let polygon = new Polygon({
     ctx
     // ui
 })
+let group =[{
+    pos:['o']
+},{
+    shape:['r','n']
+},{
+    controller:['showController']
+},{
+    color:['fill','color']
+},{
+    line:['lineWidth']
+}]
 
 polygon.draw(ctx)
 
@@ -46,12 +57,13 @@ let ui=new UI.Form({
     options: {
         color: ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple"]
     },
+    group,
     btns: [{
         text: "apply",
         name: 'submit',
         click: (e) => {
             console.log(e)
-            polygon.reset().update(e).clear().draw()
+            polygon.redraw(e)
         }
     }]
 })

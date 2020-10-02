@@ -11,10 +11,9 @@ export default class Polygon extends BaseEntity {
     update(options) {
         Object.assign(this, options)
         return this.setPoints(new ArcSeg(this))
-        // return this.setPoints(new ArcSeg(options))
     }
     //连线
-    line(ctx) {
+    line(ctx = this.ctx) {
         let {
             fillStyle = "#FF0000",
                 strokeStyle = "#FF0000",
@@ -41,11 +40,6 @@ export default class Polygon extends BaseEntity {
             ctx.fill()
         }
     };
-    // update(ctx) {
-    //     // this.tx += this.vx
-    //     // this.ty += this.vy
-    //     // ctx.translate(this.tx, this.ty)
-    // }
 
     draw(ctx = this.ctx) {
         this.line(ctx)
