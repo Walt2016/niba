@@ -4,8 +4,8 @@ import {
     _dis,
     _sin,
     _cos
-} from '../utils'
-import Freeform from '../points/Freeform'
+} from '../../utils'
+import Freeform from '../../points/Freeform'
 export default class Controler extends  Freeform{
     constructor(options) {
         super(options)

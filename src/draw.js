@@ -42,10 +42,6 @@ const setup = () => {
     canvas.width = width
     canvas.height = height
 
-
-    // canvas.width = innerWidth;
-    // canvas.height = innerHeight;
-
     canvas.style.position = 'absolute';
     canvas.style.top = 0;
     canvas.style.bottom = 0;
@@ -65,18 +61,6 @@ const setup = () => {
         width,
         height
     }
-    // var el = this.el = _.query(options.el)
-    // el.appendChild(canvas)
-    // var padding = options.padding || 0,
-    //     paddingLeft = options.paddingLeft || padding,
-    //     paddingRight = options.paddingRight || padding,
-    //     paddingTop = options.paddingTop || padding,
-    //     paddingBottom = options.paddingBottom || padding;
-    // this.center = [this.width / 2, this.height / 2];
-    // this.lefttop = [0 + paddingLeft, 0 + paddingTop];
-    // this.leftbottom = [0 + paddingLeft, this.height - paddingBottom];
-    // this.rightbottom = [this.width - paddingRight, this.height - paddingBottom];
-    // this.righttop = [this.width - paddingRight, 0 + paddingTop];
 }
 
 // function setup() {

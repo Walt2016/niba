@@ -7,7 +7,7 @@ import {
     arcseg
 } from './points1'
 let {
-    wrapperOptions,
+    env,
     center
 } = config
 
@@ -20,7 +20,7 @@ var createSvgDom = function (tag) {
 }
 var svgWrappper = function (svgDom) {
     var svg = createSvgDom("svg")
-    var options = Object.assign(wrapperOptions, {
+    var options = Object.assign(env, {
         fill: 'red'
     })
     console.log(options, document.body)
@@ -76,7 +76,7 @@ var defaultOptions = function (tag, options) {
         height,
         cx,
         cy
-    } = wrapperOptions
+    } = env
     switch (tag) {
         case 'circle':
             _default = {

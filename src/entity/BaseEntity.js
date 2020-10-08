@@ -5,18 +5,26 @@ import {
     _cos,
     _pos
 } from '../utils'
-import Controler from './Controler'
+import Controler from '../draw/canvas/Controler'
 import PolarSeg from '../points/PolarSeg'
 import Freeform from '../points/Freeform'
 import BaseDom from '../ui/BaseDom'
+import DrawCanvas from '../draw/canvas/index'
+import DrawSVG from '../draw/svg/index'
 export default class BaseEntity {
     constructor(options) {
         this.init(options)
     }
     init(options) {
         for (let key in options) {
-            if (options[key] instanceof CanvasRenderingContext2D || options[key] instanceof BaseDom) {
-                this.set(key, options[key])
+            // [CanvasRenderingContext2D, BaseDom, DrawCanvas, DrawSVG].forEach(t => {
+            //     if (options[key] instanceof t) {
+            //         this.setEnumerable(key, options[key])
+            //     }
+            // })
+            if (options[key] instanceof CanvasRenderingContext2D || options[key] instanceof BaseDom || options[key] instanceof DrawCanvas || options[key] instanceof DrawSVG) {
+                // this.setEnumerable(key, options[key])
+                this.setEnumerable(key, options[key])
             } else {
                 this[key] = options[key]
             }
@@ -29,49 +37,62 @@ export default class BaseEntity {
                 points,
                 seg
             } = options
-            return this.set("points", points).set("seg", seg.bind(options))
-        } else if (Array.isArray(options)) {
-
-            let {
+            return this.setEnumerable({
                 points,
-                o
+                seg: seg.bind(options)
+            })
+        } else if (Array.isArray(options)) {
+            let {
+                points
             } = new Freeform({
                 points: options.points
             })
-            return this.set("points", points)
-
+            return this.setEnumerable({
+                points
+            })
         }
-
     }
     // 根据参数 重新计算节点
     update(options) {
         Object.assign(this, options)
         if (this.seg) {
-            this.points = this.seg()
+            this._points = this.seg()
         }
         return this
     }
-    _fadeout(step = 0.01) {
-        let ctx = this.ctx
-        if (ctx) {
-            ctx.fillStyle = 'rgba(0,0,0, ' + step + ')';
-            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        }
-        return this
-    }
-    clear(ctx = this.ctx) {
+    // _fadeout(step = 0.01) {
+    //     let ctx = this._ctx
+    //     if (ctx) {
+    //         ctx.fillStyle = 'rgba(0,0,0, ' + step + ')';
+    //         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    //     }
+    //     return this
+    // }
+    clear(ctx = this._ctx) {
         if (ctx) {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         }
         return this
     }
-    // 不可枚举属性  this.ctx
-    set(key, value) {
-        return Object.defineProperty(this, key, {
-            value,
-            writable: true,
-            enumerable: false
-        })
+    // 不可枚举属性  this._ctx
+    setEnumerable() { //key, value
+        if (arguments.length === 1) {
+            let options = arguments[0]
+            for (let key in options) {
+                return Object.defineProperty(this, "_" + key, {
+                    value: options[key],
+                    writable: true,
+                    enumerable: false
+                })
+            }
+        } else if (arguments.length === 2) {
+            let [key, value] = arguments
+            return Object.defineProperty(this, "_" + key, {
+                value,
+                writable: true,
+                enumerable: false
+            })
+        }
     }
     //清空定时器
     reset() {
@@ -80,7 +101,7 @@ export default class BaseEntity {
     }
 
     //绘制控制点
-    drawController(ctx = this.ctx, points = this.points, o = this.o, pos = this.pos) {
+    drawController(ctx = this._ctx, points = this._points, o = this.o, pos = this.pos) {
         let controler = new Controler({
             ctx,
             points,
@@ -91,55 +112,55 @@ export default class BaseEntity {
         this.activePointIndex = controler.draw().activePointIndex
     }
 
-    // 生成代码
-    createCode() {
-        if (!this.points) return false
-        var codes = ['// ' + this.name];
-        codes.push('ctx.lineWidth=' + this.lineWidth);
-        codes.push('ctx.strokeStyle=\'' + this.strokeStyle + '\';');
-        codes.push('ctx.beginPath();');
-        this.points.forEach((p, i) => {
-            if (i == 0) {
-                codes.push('ctx.moveTo(' + p[0] + ',' + p[1] + ');');
-            } else {
-                codes.push('ctx.lineTo(' + p[0] + ',' + p[1] + ');');
-            }
-        });
-        codes.push('ctx.closePath();');
-        codes.push('ctx.stroke();');
-        return codes.join('\n');
-    }
+    // // 生成代码
+    // createCode() {
+    //     if (!this._points) return false
+    //     var codes = ['// ' + this.name];
+    //     codes.push('ctx.lineWidth=' + this.lineWidth);
+    //     codes.push('ctx.strokeStyle=\'' + this.strokeStyle + '\';');
+    //     codes.push('ctx.beginPath();');
+    //     this._points.forEach((p, i) => {
+    //         if (i == 0) {
+    //             codes.push('ctx.moveTo(' + p[0] + ',' + p[1] + ');');
+    //         } else {
+    //             codes.push('ctx.lineTo(' + p[0] + ',' + p[1] + ');');
+    //         }
+    //     });
+    //     codes.push('ctx.closePath();');
+    //     codes.push('ctx.stroke();');
+    //     return codes.join('\n');
+    // }
 
-    //网格
-    drawGuidewires(ctx = this.ctx, x, y) {
-        ctx.save();
-        ctx.strokeStyle = 'rgba(0,0,230,0.4)';
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.moveTo(x + 0.5, 0);
-        ctx.lineTo(x + 0.5, ctx.canvas.height);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(0, y + 0.5);
-        ctx.lineTo(ctx.canvas.width, y + 0.5);
-        ctx.stroke();
-        ctx.restore();
-    }
+    // //网格
+    // drawGuidewires(ctx = this._ctx, x, y) {
+    //     ctx.save();
+    //     ctx.strokeStyle = 'rgba(0,0,230,0.4)';
+    //     ctx.lineWidth = 0.5;
+    //     ctx.beginPath();
+    //     ctx.moveTo(x + 0.5, 0);
+    //     ctx.lineTo(x + 0.5, ctx.canvas.height);
+    //     ctx.stroke();
+    //     ctx.beginPath();
+    //     ctx.moveTo(0, y + 0.5);
+    //     ctx.lineTo(ctx.canvas.width, y + 0.5);
+    //     ctx.stroke();
+    //     ctx.restore();
+    // }
 
-    //绘制路径
-    createPath(ctx = this.ctx) {
-        ctx.beginPath();
-        this.points.forEach((p, i) => {
-            ctx[i == 0 ? 'moveTo' : 'lineTo'](p[0], p[1]);
-        });
-        ctx.closePath();
-    }
+    // //绘制路径
+    // createPath(ctx = this._ctx) {
+    //     ctx.beginPath();
+    //     this._points.forEach((p, i) => {
+    //         ctx[i == 0 ? 'moveTo' : 'lineTo'](p[0], p[1]);
+    //     });
+    //     ctx.closePath();
+    // }
 
 
     //判断鼠标是否选中对应的图形，选中哪个顶点，选中哪个控制点，中心点；
-    // isInPath(ctx = this.ctx, pos) {
-    //     for (var i = 0, point, len = this.points.length; i < len; i++) {
-    //         point = this.points[i];
+    // isInPath(ctx = this._ctx, pos) {
+    //     for (var i = 0, point, len = this._points.length; i < len; i++) {
+    //         point = this._points[i];
     //         ctx.beginPath();
     //         ctx.arc(point[0], point[1], 5, 0, Math.PI * 2, false);
     //         if (ctx.isPointInPath(pos[0], pos[1])) {
@@ -154,11 +175,24 @@ export default class BaseEntity {
     // }
 
     // 接口
-    draw(ctx = this.ctx) {
+    draw(ctx = this._ctx) {
+        this._draw.line.call(this, ctx)
+        this.showController && this.drawController(ctx)
+        return this
     }
     // 从新画
-    redraw(options){
-        this.reset().update(options).clear().draw()
+    redraw(options) {
+        this.reset().update(options)
+        this._draw.clear.call(this, this._ctx)
+        this.draw()
+    }
+    drawSVG() {
+        this._draw.path(this)
+    }
+    redrawSVG(options) {
+        this.reset().update(options)
+        this._draw.clear()
+        this.drawSVG()
     }
     // 动画  靠近目标
     moveTo([tx, ty]) {
@@ -182,7 +216,7 @@ export default class BaseEntity {
             console.log(o)
             this.ui._set("o", o)
             if (this.controler) {
-                this.points = this.controler.move(o).points
+                this._points = this.controler.move(o).points
                 this.o = o //= this.controler._o()
             }
         }
@@ -193,7 +227,7 @@ export default class BaseEntity {
     }
     // 跟随鼠标
     follow(e) {
-        let pos = _pos(e, this.ctx.canvas)
+        let pos = _pos(e, this._ctx.canvas)
         if (this.showController) {
             this.pos = pos
         }
