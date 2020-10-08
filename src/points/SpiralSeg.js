@@ -9,7 +9,6 @@ export default class SpiralSeg extends PolarSeg {
     constructor(options) {
         super(options)
         this.points = this.seg()
-        // this.phi = 0
         console.log(this)
     }
     seg() {

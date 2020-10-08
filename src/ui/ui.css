@@ -44,11 +44,15 @@ body {
 
 #wrapper .panel.ui {
     width: 244px;
+    
     /* color: #eee;
     font: 11px 'Lucida Grande', sans-serif;
     text-shadow: 0 -1px 0 #111; */
     /* background: #1a1a1a; */
     /* border-bottom: 1px solid #2c2c2c; */
+}
+#wrapper .panel.ui.fullheight{
+    height: 100%;
 }
 
 #wrapper .panel .panel-header {
@@ -82,9 +86,9 @@ body {
 #wrapper .panel .panel-body {
     padding: 10px;
     transition: 0.5s;
+    height: calc(100% - 60px);
+    overflow-y: auto;
 }
-
-
 
 #wrapper .panel .panel-footer {
     width: 100%;
@@ -116,7 +120,7 @@ body {
 }
 
 .panel .form-item .form-item-label {
-    width: 50px;
+    width: 100px;
     text-align: center;
     display: flex;
     align-items: center;
@@ -130,7 +134,7 @@ body {
     padding: 0 2px;
     height: 28px;
     line-height: 28px;
-    width: 200px;
+    width: 120px;
 }
 
 .panel .form-item .form-item-textarea {

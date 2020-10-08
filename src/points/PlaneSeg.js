@@ -13,11 +13,10 @@ export default class PlaneSeg {
         if (n !== undefined && n1 === undefined && n2 === undefined) {
             n1 = n2 = n
         }
-        if (random) {
-            this.points = this.random(p1, p2, n1, n2)
-        } else {
-            this.points = this.seg(p1, p2, n1, n2)
-        }
+        let points = random ? this.random(p1, p2, n1, n2) : this.seg(p1, p2, n1, n2)
+        Object.assign(this, {
+            points
+        })
 
     }
     seg(p1, p2, n1, n2) {

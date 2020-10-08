@@ -1,4 +1,5 @@
 import config from '../../config'
+import MidSeg from '../../points/MidSeg'
 let {
     env,
     center
@@ -29,7 +30,7 @@ export default class DrawSVG {
         return svg
     }
     svgWrappper(svgDom) {
-        let svg = this._createEle("svg",{
+        let svg = this._createEle("svg", {
             width,
             height
         })
@@ -42,30 +43,70 @@ export default class DrawSVG {
         }
         return svg
     }
-    path(options) {
-        // console.log(options)
+    _path(options) {
+        console.log(options)
         let points = options._points || []
-        let d = points.map((t, index) => {
-            return (index === 0 ? "M" : "L") + t.join(" ")
-        }).concat(["z"]).join(" ")
-        let path = this._createEle("path", {
-            d,
-            stroke: options.color || 'black',
-            "stroke-width": options.lineWidth,
-            fill: options.fill ? options.color : 'transparent'
-        })
-        this._svg.appendChild(path)
+        // 边
+        if (options.showSides) {
+            let d = points.map((t, index) => {
+                return (index === 0 ? "M" : "L") + t.join(" ")
+            }).concat(["z"]).join(" ")
+            let sides = this._createEle("path", {
+                d,
+                stroke: options.color || 'black',
+                "stroke-width": options.lineWidth,
+                fill: options.fill ? options.color : 'transparent'
+            })
+            this._svg.appendChild(sides)
+        }
+        // 半径
+        if (options.showRadius) {
+            let d = points.map((t, index) => {
+                return `M${options.o.join(" ")} L${t.join(" ")}`
+            }).concat(["z"]).join(" ")
+            let path = this._createEle("path", {
+                d,
+                stroke: options.color || 'black',
+                "stroke-width": options.lineWidth,
+                fill: options.fill ? options.color : 'transparent'
+            })
+            this._svg.appendChild(path)
+        }
+
         // 控制点
         if (options.showController) {
+            // 圆心
+            let center = this._createEle("circle", {
+                cx: options.o[0],
+                cy: options.o[1],
+                r: 8,
+                fill: 'red',
+                // stroke: 'red'
+            })
+            this._svg.appendChild(center)
             points.forEach(t => {
                 let circle = this._createEle("circle", {
                     cx: t[0],
                     cy: t[1],
-                    r: 5,
-                    fill: 'red'
+                    r: options.controllerRadius || 5,
+                    fill: options.controllerFill ? options.controllerColor || 'red' : 'transparent',
+                    stroke: options.controllerColor || 'red',
                 })
                 this._svg.appendChild(circle)
             })
+        }
+        
+        // 分形
+        if (options.midSeg) {
+            let midseg = new MidSeg({
+                points: options._points,
+                offset: options.offset || 0
+            })
+            this._path(Object.assign({}, options, {
+                _points: midseg.points,
+                level: options.level - 1,
+                midSeg: options.level > 1
+            }))
         }
     }
     clear() {

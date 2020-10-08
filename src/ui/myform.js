@@ -56,7 +56,6 @@ function _createEle(tag, options) {
         } else {
             ele.setAttribute(key, options[key])
         }
-
     }
     return ele
 }
@@ -125,7 +124,6 @@ export default class MyForm {
 
         if (Array.isArray(body)) {
             body.forEach(t => {
-                // t.form=id
                 t.setAttribute("form", id)
                 panelBody.appendChild(t)
             })
@@ -294,10 +292,10 @@ export default class MyForm {
             btn
         } = field
         let formItem = _div({
-            class: "form_item"
+            class: "form-item"
         })
         let labelDiv = _div({
-            class: "form_item_label",
+            class: "form-item-label",
             text: label
         })
 
@@ -306,7 +304,7 @@ export default class MyForm {
         switch (type) {
             case "textarea":
                 let textarea = _textarea(Object.assign({
-                    class: 'form_item_textarea',
+                    class: 'form-item-textarea',
                     value,
                     name: key
                 }, field))
@@ -314,14 +312,14 @@ export default class MyForm {
                 break;
             case "trueorfalse":
                 let div = _trueorfalse(Object.assign({
-                    class: 'form_item_select',
+                    class: 'form-item-select',
                     name: key
                 }, field))
                 formItem.appendChild(div)
                 break;
             default:
                 let input = _input({
-                    class: 'form_item_input',
+                    class: 'form-item-input',
                     value,
                     name: key
                 })
@@ -348,7 +346,6 @@ export default class MyForm {
             if (typeof t == "boolean") {
                 type = "trueorfalse"
             }
-
             return {
                 label: 'input',
                 key: 'input',

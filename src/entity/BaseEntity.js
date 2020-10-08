@@ -17,13 +17,7 @@ export default class BaseEntity {
     }
     init(options) {
         for (let key in options) {
-            // [CanvasRenderingContext2D, BaseDom, DrawCanvas, DrawSVG].forEach(t => {
-            //     if (options[key] instanceof t) {
-            //         this.setEnumerable(key, options[key])
-            //     }
-            // })
             if (options[key] instanceof CanvasRenderingContext2D || options[key] instanceof BaseDom || options[key] instanceof DrawCanvas || options[key] instanceof DrawSVG) {
-                // this.setEnumerable(key, options[key])
                 this.setEnumerable(key, options[key])
             } else {
                 this[key] = options[key]
@@ -187,7 +181,7 @@ export default class BaseEntity {
         this.draw()
     }
     drawSVG() {
-        this._draw.path(this)
+        this._draw._path(this)
     }
     redrawSVG(options) {
         this.reset().update(options)

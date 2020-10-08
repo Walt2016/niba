@@ -7,12 +7,13 @@ export default class LineSeg {
             p2,
             n
         } = options
-        this.p1 = p1
-        this.p2 = p2
-        this.n = n
-        // this.width = p2[0] - p1[0]
-        // this.height = p2[1] - p1[1]
-        this.points = this.seg(p1, p2, n)
+        let points = this.seg(p1, p2, n)
+        Object.assign(this, {
+            p1,
+            p2,
+            n,
+            points
+        })
     }
     seg(p1, p2, n) {
         let points = []
