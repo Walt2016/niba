@@ -1,8 +1,6 @@
 import config from '../../config'
 import MidSeg from '../../points/MidSeg'
-import {
-    _sin
-} from '../../utils'
+import _ from '../../utils/index'
 let {
     env,
     center
@@ -82,7 +80,8 @@ export default class DrawSVG {
                 d,
                 stroke: options.color || 'black',
                 "stroke-width": options.lineWidth,
-                fill: options.fill ? options.color : 'transparent'
+                fill: options.fill ? options.color : 'transparent',
+                opacity: _.isUndefined(options.opacity) ? 1 : options.opacity
             })
             this._svg.appendChild(sides)
         }
@@ -115,7 +114,7 @@ export default class DrawSVG {
                 switch (options.controllerShape) {
                     case "rect":
                         // 正方形
-                        let width = _sin(45) * options.controllerRadius || 5
+                        let width = _.sin(45) * options.controllerRadius || 5
                         let rect = this._createEle("rect", {
                             x: t[0] - width / 2,
                             y: t[1] - width / 2,
@@ -161,10 +160,17 @@ export default class DrawSVG {
                 points: options._points,
                 offset: options.offset || 0
             })
+            let level = options.level - 1
+
+            if (options._colors) {
+                options.color = options._colors[level % options._colors.length]
+            }
+            // let color = options._colors && options._colors[level]
             this._path(Object.assign({}, options, {
                 _points: midseg.points,
-                level: options.level - 1,
-                midSeg: options.level > 1
+                level,
+                midSeg: level > 1,
+                // _colors:options._colors
             }))
         }
     }

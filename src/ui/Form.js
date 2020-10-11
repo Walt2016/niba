@@ -105,7 +105,7 @@ export default class Form extends Panel {
     }
 
     // 表单单元
-    _formItem(field, form) {
+    _formItem(field = {}, form) {
         let {
             label,
             key,
@@ -243,7 +243,7 @@ export default class Form extends Panel {
     }
     // 数字
     _inputNumber(field) {
-      return  this._input(Object.assign(field, {
+        return this._input(Object.assign(field, {
             type: 'number'
         }))
     }

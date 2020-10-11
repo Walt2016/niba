@@ -11,6 +11,7 @@ import Freeform from '../points/Freeform'
 import BaseDom from '../ui/BaseDom'
 import DrawCanvas from '../draw/canvas/index'
 import DrawSVG from '../draw/svg/index'
+import Colors from '../colors'
 export default class BaseEntity {
     constructor(options) {
         this.init(options)
@@ -21,6 +22,11 @@ export default class BaseEntity {
                 this.setEnumerable(key, options[key])
             } else {
                 this[key] = options[key]
+            }
+
+            if (key === "colorful") {
+                options[key] &&
+                    this.setEnumerable("colors", new Colors())
             }
         }
     }
@@ -52,6 +58,11 @@ export default class BaseEntity {
         if (this.seg) {
             this._points = this.seg()
         }
+        if (this.colorful) {
+            this._colors = new Colors()
+        }
+        // options[key] &&
+        // this.setEnumerable("colors", new Colors())
         return this
     }
     // _fadeout(step = 0.01) {

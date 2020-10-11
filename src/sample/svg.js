@@ -11,6 +11,7 @@ let {
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
 
+
 let polygon = new Polygon({
     o: [width / 2, height / 2],
     r: 100,
@@ -30,6 +31,8 @@ let polygon = new Polygon({
     offset: 0,
     showRadius: false,
     showSides: true,
+    opacity: 0.5,
+    // colorful: false,
 
     // followMouse:false,
     // animate:false,
@@ -45,11 +48,11 @@ let group = [{
 }, {
     controller: ['showController', 'controllerRadius', 'controllerColor', 'controllerFill', 'controllerText', 'controllerShape', 'showRadius', 'showSides']
 }, {
-    color: ['fill', 'color']
+    color: ['fill', 'color', 'opacity']
 }, {
     line: ['lineWidth']
 }, {
-    fractal: ['midSeg', 'level', 'offset']
+    fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
 }]
 
 // polygon.draw(ctx)

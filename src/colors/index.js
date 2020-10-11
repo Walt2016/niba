@@ -1,15 +1,24 @@
 // 颜色
 
-class Colors {
-    constructor(options) {
+import _ from '../utils/index'
+
+export default class Colors extends Array {
+    constructor(options = {
+        color: '#000000',
+        alpha: 1,
+        n: 5
+    }) {
+        super()
         let {
             color,
             alpha,
             n
         } = options
+        let colors = this.genColors(color, alpha, n)
 
-        this.colors = this.genColors(color, alpha, n)
-
+        colors.forEach(t => {
+            this.push(t)
+        })
     }
     genColors(color, alpha, n) {
         let colors = []
@@ -19,8 +28,6 @@ class Colors {
         return colors
     }
     genColor(color, alpha) {
-
-
         //分类颜色
         //红 100
         //绿 010
@@ -328,5 +335,3 @@ class Colors {
         return this.hex(this.rgbaWrapper(color));
     }
 }
-
-export default Colors
