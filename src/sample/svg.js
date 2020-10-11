@@ -28,7 +28,7 @@ let polygon = new Polygon({
     controllerFill: true,
     controllerText: false,
     controllerShape: 'circle',
-    offset: 0,
+    offset: 0.5,
     showRadius: false,
     showSides: true,
     opacity: 0.5,

@@ -147,10 +147,13 @@ export default class Form extends Panel {
                 }, field))
                 break
             case "number":
+                let d = value.toString().split(".")[1]
+                let step = Math.pow(10, d ? -1 * d.toString().length : 0)
                 itemDiv = this._inputNumber({
                     class: 'form-item-inputnumber',
                     value,
-                    name: key
+                    name: key,
+                    step
                 })
                 break;
             default:
@@ -244,7 +247,8 @@ export default class Form extends Panel {
     // 数字
     _inputNumber(field) {
         return this._input(Object.assign(field, {
-            type: 'number'
+            type: 'number',
+            // step: 1
         }))
     }
 
