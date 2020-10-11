@@ -1,5 +1,8 @@
 import config from '../../config'
 import MidSeg from '../../points/MidSeg'
+import {
+    _sin
+} from '../../utils'
 let {
     env,
     center
@@ -23,11 +26,35 @@ export default class DrawSVG {
         })
     }
     _createEle(tag, options) {
-        let svg = document.createElementNS('http://www.w3.org/2000/svg', tag)
+        let ele = document.createElementNS('http://www.w3.org/2000/svg', tag)
+        // for (let key in options) {
+        //     svg.setAttribute(key, options[key])
+        // }
         for (let key in options) {
-            svg.setAttribute(key, options[key])
+            if (options[key] !== undefined) {
+                switch (key.toLocaleLowerCase()) {
+                    case "class":
+                        ele.className = options[key]
+                        break;
+                    case "name":
+                    case "innertext":
+                    case "id":
+                    case "innerhtml":
+                    case "value":
+                        ele['textContent'] = options[key]
+                        // ele[key] = options[key]
+                        break;
+                    case "click":
+                        ele.addEventListener("click", options[key], false)
+                        break;
+                    default:
+                        ele.setAttribute(key, options[key])
+                        break;
+
+                }
+            }
         }
-        return svg
+        return ele
     }
     svgWrappper(svgDom) {
         let svg = this._createEle("svg", {
@@ -81,21 +108,53 @@ export default class DrawSVG {
                 cy: options.o[1],
                 r: 8,
                 fill: 'red',
-                // stroke: 'red'
             })
             this._svg.appendChild(center)
-            points.forEach(t => {
-                let circle = this._createEle("circle", {
-                    cx: t[0],
-                    cy: t[1],
-                    r: options.controllerRadius || 5,
-                    fill: options.controllerFill ? options.controllerColor || 'red' : 'transparent',
-                    stroke: options.controllerColor || 'red',
-                })
-                this._svg.appendChild(circle)
+            // 控制点
+            points.forEach((t, index) => {
+                switch (options.controllerShape) {
+                    case "rect":
+                        // 正方形
+                        let width = _sin(45) * options.controllerRadius || 5
+                        let rect = this._createEle("rect", {
+                            x: t[0] - width / 2,
+                            y: t[1] - width / 2,
+                            width,
+                            height: width,
+                            fill: options.controllerFill ? options.controllerColor || 'red' : 'transparent',
+                            stroke: options.controllerColor || 'red',
+                        })
+                        this._svg.appendChild(rect)
+                        break;
+                    default:
+                        // 原型
+                        let circle = this._createEle("circle", {
+                            cx: t[0],
+                            cy: t[1],
+                            r: options.controllerRadius || 5,
+                            fill: options.controllerFill ? options.controllerColor || 'red' : 'transparent',
+                            stroke: options.controllerColor || 'red',
+                        })
+                        this._svg.appendChild(circle)
+                        break;
+
+                }
+
+
+                // 标注文字
+                if (options.controllerText) {
+                    let text = this._createEle("text", {
+                        x: t[0],
+                        y: t[1],
+                        fill: 'black',
+                        innerText: index
+                    })
+                    this._svg.appendChild(text)
+                }
+
             })
         }
-        
+
         // 分形
         if (options.midSeg) {
             let midseg = new MidSeg({

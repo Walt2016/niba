@@ -165,6 +165,14 @@ export default class BaseDom {
         return div
     }
 
+    _icon(options) {
+        let icon =this._createEle("i",
+        Object.assign(options,{
+            class: 'icon ' +options.class
+        }))
+        return icon
+    }
+
     //允许一次加多个样式
     //去重
     _addClass(el, cls) {

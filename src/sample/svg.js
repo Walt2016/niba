@@ -15,6 +15,7 @@ let polygon = new Polygon({
     o: [width / 2, height / 2],
     r: 100,
     n: 6,
+    angle: 0,
     fill: false,
     showController: false,
     color: "red",
@@ -24,9 +25,12 @@ let polygon = new Polygon({
     controllerRadius: 5,
     controllerColor: 'red',
     controllerFill: true,
+    controllerText: false,
+    controllerShape: 'circle',
     offset: 0,
     showRadius: false,
     showSides: true,
+
     // followMouse:false,
     // animate:false,
     // drag:false,
@@ -37,9 +41,9 @@ let polygon = new Polygon({
 let group = [{
     pos: ['o']
 }, {
-    shape: ['r', 'n']
+    shape: ['r', 'n', 'angle']
 }, {
-    controller: ['showController', 'controllerRadius', 'controllerColor', 'controllerFill', 'showRadius','showSides']
+    controller: ['showController', 'controllerRadius', 'controllerColor', 'controllerFill', 'controllerText', 'controllerShape', 'showRadius', 'showSides']
 }, {
     color: ['fill', 'color']
 }, {
@@ -52,12 +56,14 @@ let group = [{
 
 polygon.drawSVG()
 let color = ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple"]
+let controllerShape = ['circle', 'rect']
 
 let ui = new UI.Form({
     data: polygon,
     options: {
         color,
         controllerColor: color,
+        controllerShape
     },
     group,
     btns: [{

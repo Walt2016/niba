@@ -18,8 +18,13 @@ import PolarSeg from './PolarSeg';
 export default class ArcSeg extends PolarSeg {
     constructor(options) {
         super(options)
+        if (options.angle) {
+            this.a1 = options.angle
+            this.a2 = 360 + this.a1
+        }
+
         this.points = this.seg()
-        this.phi=0
+        this.phi = 0
     }
 
     seg() {
@@ -27,8 +32,8 @@ export default class ArcSeg extends PolarSeg {
             o,
             r,
             n,
-            a1=0,
-            a2=360
+            a1 = 0,
+            a2 = 360
         } = this
         let points = [];
         for (let i = 0; i < n; i++) {
