@@ -4,6 +4,10 @@ body {
     overflow: hidden;
 }
 
+::-webkit-scrollbar {
+    display: none
+}
+
 #wrapper {
     display: flex;
     flex-direction: column;
@@ -65,8 +69,8 @@ body {
 
 
 #wrapper .panel .panel-body {
-    padding: 10px;
-    transition: 0.5s;
+    /* padding: 10px; */
+    /* transition: 0.5s; */
     height: calc(100% - 60px);
     overflow-y: auto;
 }
@@ -104,7 +108,7 @@ body {
     text-align: center;
     display: flex;
     align-items: center;
-
+    padding-left: 10px;
 }
 
 .panel .form-item .form-item-input,
@@ -138,17 +142,40 @@ body {
     padding: 4px;
 }
 
+.form-group-item {
+    border-bottom: 1px solid #ccc;
+}
+
+.form-group-item:last-child {
+    border: none
+}
+
 .form-group-item-title {
     font-size: 14px;
     font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #dedede;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
+.form-group-item-body {
+    transition: 0.5s;
+}
+
+.form-group-item-body.hide {
+    display: none;
 }
 
 .icon {
     width: 8px;
     height: 8px;
-    border-bottom: 1px solid  gray;
-    border-right: 1px solid  gray;
+    border-bottom: 1px solid gray;
+    border-right: 1px solid gray;
     transform: rotate(45deg);
     transition: 0.5s;
 }
@@ -156,13 +183,15 @@ body {
 .icon.up {
     transform: rotate(225deg);
 }
+
 .icon.down {
     transform: rotate(45deg);
 }
+
 .icon.right {
-    transform: rotate(135deg);
-}
-.icon.left {
     transform: rotate(-45deg);
 }
 
+.icon.left {
+    transform: rotate(135deg);
+}

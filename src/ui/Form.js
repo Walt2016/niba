@@ -1,7 +1,4 @@
 import Panel from "./Panel";
-import {
-    _type
-} from "../utils"
 
 export default class Form extends Panel {
     constructor(options) {
@@ -90,13 +87,33 @@ export default class Form extends Panel {
             })
             let formGroupItemTitle = this._div({
                 class: "form-group-item-title",
-                text: t.label
+                text: t.label,
+                click: (e) => {
+                    let el = e.target
+                    this._toggle(el, "down")
+                    let item = this._closest(el, ".form-group-item")
+                    let iteml_body = this._query(".form-group-item-body", item)
+                    this._toggle(iteml_body, "hide")
+                }
             })
             formGroup.appendChild(formGroupItemTitle)
+            let icon = this._icon({
+                class: "right",
+                click: (e) => {
+
+                }
+            })
+            formGroupItemTitle.appendChild(icon)
+
+            let formGroupItemBody = this._div({
+                class: "form-group-item-body"
+            })
+            formGroup.appendChild(formGroupItemBody)
 
             t.fields.map(t => {
-                formGroup.appendChild(this._formItem(t))
+                formGroupItemBody.appendChild(this._formItem(t))
             })
+
 
             formGroupWrap.appendChild(formGroup)
 

@@ -1,5 +1,5 @@
 //类型判断
-const _type = (o) => {
+const type = (o) => {
     if (o === null) return 'null';
     if (o === undefined) return 'undefined'; //兼容ie8
     var s = Object.prototype.toString.call(o);
@@ -7,9 +7,9 @@ const _type = (o) => {
     return t === 'number' ? isNaN(o) ? 'nan' : !isFinite(o) ? 'infinity' : t : t;
 }
 const isUndefined = (o) => {
-    _type(o) === 'undefined'
+    type(o) === 'undefined'
 }
 export default {
-    _type,
+    type,
     isUndefined
 }

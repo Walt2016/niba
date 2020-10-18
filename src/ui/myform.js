@@ -10,7 +10,13 @@ function _query(el, parent) {
             }
             return document.querySelector("#" + parent + " " + el)
         }
-        return document.querySelector("#" + parent.id + " " + el)
+        if (parent.id) {
+            return document.querySelector("#" + parent.id + " " + el)
+        } else {
+            parent.id = _random()
+            return document.querySelector("#" + parent.id + " " + el)
+        }
+
     }
     return document.querySelector(el)
 }
@@ -202,7 +208,7 @@ export default class MyForm {
                     _query("#" + form).appendChild(_div({
                         text: JSON.stringify(bizModel)
                     }))
-                   break;
+                    break;
                 case "to_form":
                     click(JSON.parse(output.value));
                     // result = JSON.stringify(click(JSON.parse(output.value)))

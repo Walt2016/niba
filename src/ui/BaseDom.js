@@ -1,6 +1,4 @@
-import {
-    _type
-} from '../utils'
+import _ from '../utils/index'
 export default class BaseDom {
     constructor(options) {
         Object.assign(this, options)
@@ -10,7 +8,7 @@ export default class BaseDom {
     // 接口
     render() {}
     setData(data) {
-        if (_type(data) === "object") {
+        if (_.type(data) === "object") {
             this.fields = this.dataToFields(data, this.options, this.labels)
             if (this.group)
                 this.group = this._groupFields(this.group, this.fields)
@@ -40,7 +38,7 @@ export default class BaseDom {
                     key,
                     label,
                     value: obj[key],
-                    type: _type(obj[key])
+                    type: _.type(obj[key])
                 }
             }
 
@@ -89,9 +87,15 @@ export default class BaseDom {
                 }
                 return document.querySelector("#" + parent + " " + el)
             }
-            return document.querySelector("#" + parent.id + " " + el)
+            // return document.querySelector("#" + parent.id + " " + el)
+            if (parent.id) {
+                return document.querySelector("#" + parent.id + " " + el)
+            } else {
+                parent.id = this._random()
+                return document.querySelector("#" + parent.id + " " + el)
+            }
         }
-        if ("htmldivelement" === _type(el)) {
+        if ("htmldivelement" === _.type(el)) {
             return el
         }
         return document.querySelector(el)
@@ -105,7 +109,13 @@ export default class BaseDom {
                 }
                 return document.querySelectorAll("#" + parent + " " + el)
             }
-            return document.querySelectorAll("#" + parent.id + " " + el)
+            // return document.querySelectorAll("#" + parent.id + " " + el)
+            if (parent.id) {
+                return document.querySelector("#" + parent.id + " " + el)
+            } else {
+                parent.id = this._random()
+                return document.querySelector("#" + parent.id + " " + el)
+            }
         }
         return document.querySelectorAll(el)
     }
