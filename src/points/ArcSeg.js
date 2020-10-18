@@ -1,11 +1,12 @@
 //圆弧切割 arc seg
 // import sort from '../sort'
 
-import {
-    _sin,
-    _cos,
-    _polar
-} from '../utils'
+// import {
+//     _.sin,
+//     _.cos,
+//     _.polar
+// } from '../utils'
+import _ from '../utils/index'
 import PolarSeg from './PolarSeg';
 
 //顶点 vertices
@@ -40,9 +41,9 @@ export default class ArcSeg extends PolarSeg {
             // a = i * 2 * Math.PI / n + (a1 / 2 * Math.PI) //等角
             // points[i] = [o[0] + r * Math.cos(a), o[1] + r * Math.sin(a)]
             let a = a1 + i * (a2 - a1) / n
-            // points[points.length] = [o[0] + r * _cos(a), o[1] + r * _sin(a)]
-            let r2 = r + 0.5 * r * _sin(this.phi)
-            points[i] = _polar(o, r2, a)
+            // points[points.length] = [o[0] + r * _.cos(a), o[1] + r * _.sin(a)]
+            let r2 = r + 0.5 * r * _.sin(this.phi)
+            points[i] = _.polar(o, r2, a)
         }
         this.phi++
         return points

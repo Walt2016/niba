@@ -62,7 +62,7 @@ export default class BaseDom {
     }
 
     // 数据模型
-    _dataModel(fields,form) {
+    _dataModel(fields, form) {
         let dataModel = {}
         if (fields) {
             fields.forEach(t => {
@@ -77,8 +77,8 @@ export default class BaseDom {
         return "_" + Math.random().toString(16).slice(2)
     }
     // 查询简易
-    $(el,parent){
-       return this._query(el, parent)
+    $(el, parent) {
+        return this._query(el, parent)
     }
     // 查询
     _query(el, parent) {
@@ -166,10 +166,10 @@ export default class BaseDom {
     }
 
     _icon(options) {
-        let icon =this._createEle("i",
-        Object.assign(options,{
-            class: 'icon ' +options.class
-        }))
+        let icon = this._createEle("i",
+            Object.assign(options, {
+                class: 'icon ' + options.class
+            }))
         return icon
     }
 
@@ -221,32 +221,35 @@ export default class BaseDom {
     }
     _get(field, form) {
         let formitem = this._query("[name='" + field.key + "']", form)
-        let value = formitem.value
-        switch (field.type) {
-            case "number":
-                return Number(value)
-                break;
-            case "object":
-                return JSON.parse(value)
-                break;
-            case "array":
-                if (/\[.*?\]/.test(value)) {
+        if (formitem) {
+            let value = formitem.value
+            switch (field.type) {
+                case "number":
+                    return Number(value)
+                    break;
+                case "object":
                     return JSON.parse(value)
-                } else {
-                    return value.split(",").map(t => {
-                        return Number(t)
-                    })
-                }
+                    break;
+                case "array":
+                    if (/\[.*?\]/.test(value)) {
+                        return JSON.parse(value)
+                    } else {
+                        return value.split(",").map(t => {
+                            return Number(t)
+                        })
+                    }
 
-                break;
-            case "boolean":
-                return formitem.checked
-                break;
-            case "select":
-            default:
-                return value
+                    break;
+                case "boolean":
+                    return formitem.checked
+                    break;
+                case "select":
+                default:
+                    return value
 
+            }
         }
+
     }
     _set(key, value) {
         let field = this.fields.filter(t => t.key === key)[0]

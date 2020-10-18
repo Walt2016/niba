@@ -1,3 +1,4 @@
+import _ from '../utils/index'
 import DrawSVG from '../draw/svg/index'
 let draw = new DrawSVG()
 let {
@@ -18,20 +19,60 @@ let polygon = new Polygon({
     n: 6,
     angle: 0,
     fill: false,
-    showController: false,
+
     color: "red",
     lineWidth: 1,
     midSeg: false,
     level: 2,
-    controllerRadius: 5,
-    controllerColor: 'red',
-    controllerFill: true,
-    controllerText: false,
-    controllerShape: 'circle',
+    // showController: false,
+    // controllerRadius: 5,
+    // controllerColor: 'red',
+    // controllerFill: true,
+    // controllerText: false,
+    // controllerShape: 'circle',
     offset: 0.5,
-    showRadius: false,
-    showSides: true,
     opacity: 0.5,
+    dashLine: false,
+    dashArray: [5, 5],
+
+    radiusShow: false,
+    radiusLineWidth: 1,
+    radiusColor: 'red',
+    radiusOpacity: 1,
+    radiusDashLine: false,
+    radiusDashArray: [5, 5],
+
+    sidesShow: true,
+    sidesNumber: 5,
+    sidesLineWidth: 1,
+    sidesColor: 'red',
+    sidesOpacity: 1,
+    sidesDashLine: false,
+    sidesDashArray: [5, 5],
+
+
+    centerShow: false,
+    centerFill: true,
+    centerColor: 'red',
+    centerRadius: 8,
+    centerShape: 'circle',
+    centerOpacity: 0.5,
+    centerLineWidth: 1,
+    centerDashLine: false,
+    centerDashArray: [5, 5],
+
+
+    vertexShow: false,
+    vertexFill: true,
+    vertexColor: 'red',
+    vertexRadius: 5,
+    vertexShape: 'circle',
+    vertexText: false,
+    vertexTextColor: 'red',
+    vertexOpacity: 0.5,
+    vertexLineWidth: 1,
+    vertexDashLine: false,
+    vertexDashArray: [5, 5],
     // colorful: false,
 
     // followMouse:false,
@@ -41,33 +82,46 @@ let polygon = new Polygon({
     // ui
     draw
 })
+
+let _groupItem = (name) => {
+    return {
+        [name]: Object.keys(polygon).filter(t => t.indexOf(name) === 0)
+        // [name]: [_.camelCase(['show', name])].concat(Object.keys(polygon).filter(t => t.indexOf(name) === 0))
+    }
+}
+let _group = (props) => {
+    return props.map(t => _groupItem(t))
+}
+
 let group = [{
-    pos: ['o']
-}, {
-    shape: ['r', 'n', 'angle']
-}, {
-    controller: ['showController', 'controllerRadius', 'controllerColor', 'controllerFill', 'controllerText', 'controllerShape', 'showRadius', 'showSides']
-}, {
-    color: ['fill', 'color', 'opacity']
-}, {
-    line: ['lineWidth']
-}, {
-    fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
-}]
+        shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity']
+    },
+    ..._group(['sides', 'radius', 'vertex', 'center']),
+    {
+        fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
+    }
+]
 
 // polygon.draw(ctx)
-
 polygon.drawSVG()
-let color = ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple"]
-let controllerShape = ['circle', 'rect']
+let color = ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple", 'lime']
+let shape = ['circle', 'rect', 'line']
+
+let _options = () => {
+    let keys = Object.keys(polygon)
+    let opt = {}
+    keys.filter(t => /color/i.test(t)).forEach(t => {
+        opt[t] = color
+    })
+    keys.filter(t => /shape/i.test(t)).forEach(t => {
+        opt[t] = shape
+    })
+    return opt
+}
 
 let ui = new UI.Form({
     data: polygon,
-    options: {
-        color,
-        controllerColor: color,
-        controllerShape
-    },
+    options: _options(),
     group,
     btns: [{
         text: "apply",
