@@ -35,20 +35,6 @@ export default class Panel extends BaseDom {
             text: title,
         })
 
-        // let expandbtn = this._div({
-        //     class: "fold",
-        //     // text: "",
-        //     click: (e) => {
-        //         let el = e.target
-        //         this._toggle(el, "down")
-        //         let panel = this._closest(el, ".panel")
-        //         let panel_body = this._query(".panel-body", panel)
-        //         this._toggle(panel, "fullheight")
-        //         this._toggle(panel_body, "hide")
-        //         let panel_footer = this._query(".panel-footer", panel)
-        //         this._toggle(panel_footer, "hide")
-        //     }
-        // })
         let icon = this._icon({
                 class: 'up',
                 click: (e) => {

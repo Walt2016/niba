@@ -1,6 +1,9 @@
 import config from '../../config'
 import MidSeg from '../../points/MidSeg'
 import _ from '../../utils/index'
+import {
+    ArcSeg
+} from '../../points'
 let {
     env,
     center
@@ -126,6 +129,17 @@ export default class DrawSVG {
                         y2: t[1] + r,
                     })
                     break;
+                case "polygon":
+                    let seg = new ArcSeg({
+                        o: t,
+                        r: opt.radius,
+                        n: options.n
+                    })
+                    Object.assign(props, {
+                        points: seg.points.join(" ")
+                    })
+
+                    break;
                 default:
                     // 原型
                     Object.assign(props, {
@@ -159,7 +173,6 @@ export default class DrawSVG {
             return (index === 0 ? "M" : "L") + t.join(" ")
         }).concat(["z"]).join(" ")
         if (options.sidesShow) {
-
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "sides")
             let shapePros = this._shapeProps(defaultOpt)
@@ -170,9 +183,7 @@ export default class DrawSVG {
             this._svg.appendChild(sides)
         } else {
             let defaultOpt = this._regualrOptions(options)
-            // let opt = this._regualrOptions(options, "sides")
             let shapePros = this._shapeProps(defaultOpt)
-            // let sidesProps = this._lineProps(opt)
             let sides = this._createEle("path", Object.assign(shapePros, {
                 d
             }))
@@ -211,7 +222,7 @@ export default class DrawSVG {
             if (options._colors) {
                 options.color = options._colors[level % options._colors.length]
             }
-            // let color = options._colors && options._colors[level]
+
             this._path(Object.assign({}, options, {
                 _points: midseg.points,
                 level,

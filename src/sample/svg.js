@@ -43,7 +43,7 @@ let polygon = new Polygon({
     radiusDashArray: [5, 5],
 
     sidesShow: true,
-    sidesNumber: 5,
+    // sidesNumber: 5,
     sidesLineWidth: 1,
     sidesColor: 'red',
     sidesOpacity: 1,
@@ -105,7 +105,7 @@ let group = [{
 // polygon.draw(ctx)
 polygon.drawSVG()
 let color = ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple", 'lime']
-let shape = ['circle', 'rect', 'line']
+let shape = ['circle', 'rect', 'line', 'polygon']
 
 let _options = () => {
     let keys = Object.keys(polygon)
@@ -118,7 +118,7 @@ let _options = () => {
     })
     return opt
 }
-
+let timmer
 let ui = new UI.Form({
     data: polygon,
     options: _options(),
@@ -129,6 +129,43 @@ let ui = new UI.Form({
         click: (e) => {
             console.log(e)
             polygon.redrawSVG(e)
+            timmer && clearTimeout(timmer)
+        }
+    }, {
+        text: 'roate',
+        name: 'animate',
+        click: (e) => {
+            polygon.redrawSVG(e)
+            let sides = document.querySelector("[name='angle']")
+            let btn = document.querySelector("[name='animate']")
+            timmer && clearTimeout(timmer)
+            timmer = setTimeout(() => {
+                sides.value = Number(sides.value) + Number(sides.getAttribute("step"))
+                if (sides.value > 360) {
+                    sides.value = 0
+                }
+                btn.click()
+            }, 17)
+            // if (btn.innerText === 'stop') {
+            //     // btn.innerText = "animate"
+            // } else {
+            //     btn.innerText = "stop"
+            //     setTimeout(() => {
+            //         sides.value = Number(sides.value) + Number(sides.getAttribute("step"))
+            //         btn.click()
+            //     }, 1000)
+            // }
+            // timmer && clearTimeout(timmer)
+
+
+            // timmer && clearInterval(timmer)
+
+            // timmer = setInterval(() => {
+            //     sides.value = Number(sides.value) + Number(sides.getAttribute("step"))
+            //     console.log(e)
+            //     // debugger
+            //     polygon.redrawSVG(e)
+            // }, 1000)
         }
     }]
 })

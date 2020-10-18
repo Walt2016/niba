@@ -93,7 +93,9 @@ export default class Form extends Panel {
                     this._toggle(el, "down")
                     let item = this._closest(el, ".form-group-item")
                     let iteml_body = this._query(".form-group-item-body", item)
-                    this._toggle(iteml_body, "hide")
+                    iteml_body.style.height = iteml_body.style.height === '0px' ? iteml_body.getAttribute("height") : "0px"
+
+                    // this._toggle(iteml_body, "hide")
                 }
             })
             formGroup.appendChild(formGroupItemTitle)
@@ -113,6 +115,11 @@ export default class Form extends Panel {
             t.fields.map(t => {
                 formGroupItemBody.appendChild(this._formItem(t))
             })
+            // 计算高度
+            // formGroupItemBody.style.height ='100px'
+            let height = (35 * t.fields.length) + 'px'
+            formGroupItemBody.style.height = height
+            formGroupItemBody.setAttribute("height", height)
 
 
             formGroupWrap.appendChild(formGroup)
@@ -220,7 +227,7 @@ export default class Form extends Panel {
             })
             let result = ""
             switch (name) {
-                case "submit":
+                case "submit": case "animate":
                     click(dataModel)
                     break;
                 case "to_form":

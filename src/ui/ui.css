@@ -165,10 +165,17 @@ body {
 
 .form-group-item-body {
     transition: 0.5s;
+    transition-property: all;
+    transition-timing-function: ease;
+    overflow: hidden;
+    overflow-y: auto;
+    /* height: 200px; */
 }
 
 .form-group-item-body.hide {
-    display: none;
+    /* display: none; */
+    height: 0;
+    overflow: hidden;
 }
 
 .icon {
