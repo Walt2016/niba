@@ -82,7 +82,7 @@ export default class DrawSVG {
     }
     _regualrOptions(options, prefix) {
         let opt = {};
-        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize','interval'].forEach(t => {
+        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize', 'interval'].forEach(t => {
             if (prefix) {
                 let name = _.camelCase([prefix, t])
                 if (options[name]) {
@@ -193,10 +193,9 @@ export default class DrawSVG {
     _axis(options) {
         let opt = this._regualrOptions(options, "axis")
         let interval = opt.interval || 100
-
-
         let offsetX = (width / 2) % interval
         let offsetY = (height / 2) % interval
+        // 竖线
         let points = [
             [0 + offsetX, 0],
             [0 + offsetX, height]
@@ -205,20 +204,29 @@ export default class DrawSVG {
             points
         })
         for (let i = 0; i < width / interval; i++) {
-            this._line(tf.translate(interval * i), opt)
+            points = points.concat(tf.translate(interval * i))
         }
-
-        points = [
+        // 横线
+        let points2 = [
             [0, 0 + offsetY],
             [width, 0 + offsetY]
         ]
         tf = new Transform({
-            points
+            points: points2
         })
-        for (let i = 0; i < width / interval; i++) {
-            this._line(tf.translateY(interval * i), opt)
+        for (let i = 0; i < height / interval; i++) {
+            points = points.concat(tf.translateY(interval * i))
         }
 
+        let d = points.map((t, index) => {
+            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
+        }).join(" ")
+        let pros = this._lineProps(opt)
+
+        let axis = this._createEle("path", Object.assign(pros, {
+            d
+        }))
+        this._svg.appendChild(axis)
     }
     // 图形组成
     _path(options) {

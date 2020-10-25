@@ -78,7 +78,8 @@ let dataModel = {
     axisOpacity: 0.5,
     axisDashLine: false,
     axisDashArray: [5, 5],
-    axisInterval: 100
+    axisInterval: 100,
+    axisColor: 'black'
 
     // colorful: false,
 
