@@ -72,6 +72,14 @@ let dataModel = {
     vertexText: false,
     vertexTextColor: 'red',
     vertexTextFontSize: 12,
+
+    axisShow: false,
+    axisLineWidth: 1,
+    axisOpacity: 0.5,
+    axisDashLine: false,
+    axisDashArray: [5, 5],
+    axisInterval: 100
+
     // colorful: false,
 
     // followMouse:false,
@@ -88,7 +96,6 @@ let polygon = new Polygon(dataModel, draw)
 let _groupItem = (name) => {
     return {
         [name]: Object.keys(polygon).filter(t => t.indexOf(name) === 0)
-        // [name]: [_.camelCase(['show', name])].concat(Object.keys(polygon).filter(t => t.indexOf(name) === 0))
     }
 }
 let _group = (props) => {
@@ -98,10 +105,13 @@ let _group = (props) => {
 let group = [{
         shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity']
     },
-    ..._group(['sides', 'radius', 'vertex', 'center']),
+    ..._group(['sides', 'radius', 'vertex', 'center', 'axis']),
     {
         fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
-    }
+    },
+    // {
+    //     axis: ['axisShow']
+    // }
 ]
 
 // polygon.draw(ctx)

@@ -1,6 +1,7 @@
 import config from '../../config'
 import MidSeg from '../../points/MidSeg'
 import _ from '../../utils/index'
+import Transform from '../../points/Transform'
 import {
     ArcSeg
 } from '../../points'
@@ -81,7 +82,7 @@ export default class DrawSVG {
     }
     _regualrOptions(options, prefix) {
         let opt = {};
-        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize'].forEach(t => {
+        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize','interval'].forEach(t => {
             if (prefix) {
                 let name = _.camelCase([prefix, t])
                 if (options[name]) {
@@ -96,11 +97,11 @@ export default class DrawSVG {
         return opt
     }
     // 线条属性
-    _lineProps(opt) {
+    _lineProps(opt = {}) {
         return {
-            stroke: opt.color || 'black',
+            stroke: opt.color || opt.stroke || 'black',
             'stroke-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
-            'stroke-width': opt.lineWidth || 1,
+            'stroke-width': opt.lineWidth || opt.strokeWidth || 1,
             'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined
         }
     }
@@ -175,6 +176,50 @@ export default class DrawSVG {
             }
         })
     }
+    _line(points, options) {
+        let props = {
+            x1: points[0][0],
+            y1: points[0][1],
+            x2: points[1][0],
+            y2: points[1][1],
+        }
+        Object.assign(props, this._lineProps(options))
+
+        let line = this._createEle("line", props)
+        this._svg.appendChild(line)
+
+    }
+    // 坐标轴
+    _axis(options) {
+        let opt = this._regualrOptions(options, "axis")
+        let interval = opt.interval || 100
+
+
+        let offsetX = (width / 2) % interval
+        let offsetY = (height / 2) % interval
+        let points = [
+            [0 + offsetX, 0],
+            [0 + offsetX, height]
+        ]
+        let tf = new Transform({
+            points
+        })
+        for (let i = 0; i < width / interval; i++) {
+            this._line(tf.translate(interval * i), opt)
+        }
+
+        points = [
+            [0, 0 + offsetY],
+            [width, 0 + offsetY]
+        ]
+        tf = new Transform({
+            points
+        })
+        for (let i = 0; i < width / interval; i++) {
+            this._line(tf.translateY(interval * i), opt)
+        }
+
+    }
     // 图形组成
     _path(options) {
         console.log(options)
@@ -239,6 +284,12 @@ export default class DrawSVG {
                 level,
                 midSeg: level > 1,
             }))
+        }
+
+        // 坐标
+        if (options.axisShow) {
+            this._axis(options)
+
         }
     }
     clear() {
