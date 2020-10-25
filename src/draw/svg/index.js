@@ -51,7 +51,7 @@ export default class DrawSVG {
                     case "id":
                     case "innerhtml":
                     case "value":
-                    case "textContent":
+                    case "textcontent":
                         ele[key] = options[key]
                         break;
                     case "click":
@@ -60,7 +60,6 @@ export default class DrawSVG {
                     default:
                         ele.setAttribute(key, options[key])
                         break;
-
                 }
             }
         }
@@ -82,7 +81,7 @@ export default class DrawSVG {
     }
     _regualrOptions(options, prefix) {
         let opt = {};
-        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray'].forEach(t => {
+        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize'].forEach(t => {
             if (prefix) {
                 let name = _.camelCase([prefix, t])
                 if (options[name]) {
@@ -168,8 +167,9 @@ export default class DrawSVG {
                 let text = this._createEle("text", {
                     x: t[0],
                     y: t[1],
-                    fill: opt.textColor || 'black',
-                    textContent: index
+                    fill: opt.textColor || opt.color || 'black',
+                    textContent: index,
+                    'font-size': opt.textFontSize || 12
                 })
                 this._svg.appendChild(text)
             }

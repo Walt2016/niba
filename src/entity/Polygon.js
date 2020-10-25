@@ -5,8 +5,8 @@ import {
     ArcSeg
 } from '../points'
 export default class Polygon extends BaseEntity {
-    constructor(options) {
-        super(options)
+    constructor(options,draw) {
+        super(options,draw)
         this.setPoints(new ArcSeg(options))
     }
     update(options) {

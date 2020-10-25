@@ -13,10 +13,13 @@ import DrawCanvas from '../draw/canvas/index'
 import DrawSVG from '../draw/svg/index'
 import Colors from '../colors'
 export default class BaseEntity {
-    constructor(options) {
-        this.init(options)
+    constructor(options, draw) {
+        this.init(options, draw)
     }
-    init(options) {
+    init(options, draw) {
+        // localStorage.setItem("defaultDataModel", JSON.stringify(options))
+        let dataModel = localStorage.getItem("dataModel")
+        options = dataModel ? JSON.parse(dataModel) : options
         for (let key in options) {
             if (options[key] instanceof CanvasRenderingContext2D || options[key] instanceof BaseDom || options[key] instanceof DrawCanvas || options[key] instanceof DrawSVG) {
                 this.setEnumerable(key, options[key])
@@ -28,6 +31,9 @@ export default class BaseEntity {
                 options[key] &&
                     this.setEnumerable("colors", new Colors())
             }
+        }
+        if (draw) {
+            this.setEnumerable("draw", draw)
         }
     }
     // 根据切割机 设置点

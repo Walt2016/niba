@@ -91,7 +91,7 @@ export default class Form extends Panel {
                 click: (e) => {
                     let el = e.target
                     let item = this._closest(el, ".form-group-item")
-                    this._toggle(item,"close")
+                    this._toggle(item, "close")
                     // let iteml_body = this._query(".form-group-item-body", item)
                     // iteml_body.style.height = iteml_body.style.height === '0px' ? iteml_body.getAttribute("height") : "0px"
 
@@ -225,9 +225,23 @@ export default class Form extends Panel {
             })
             let result = ""
             switch (name) {
-                case "submit": case "animate":
+                case "submit":
+                case "animate":
+                case "move":
+                case "rotate":
                     click(dataModel)
+                    // 保存local
+                    localStorage.setItem("dataModel", JSON.stringify(dataModel))
                     break;
+                case "reset":
+                    console.log(this)
+                    // let defaultDataModel = localStorage.getItem("defaultDataModel")
+                    // localStorage.setItem("dataModel", defaultDataModel)
+                    localStorage.removeItem("dataModel")
+                    location.reload()
+
+                    break;
+
                 case "to_form":
                     click(JSON.parse(output.value));
                     break;

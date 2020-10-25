@@ -11,9 +11,7 @@ let {
 
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
-
-
-let polygon = new Polygon({
+let dataModel = {
     o: [width / 2, height / 2],
     r: 100,
     n: 6,
@@ -67,12 +65,13 @@ let polygon = new Polygon({
     vertexColor: 'red',
     vertexRadius: 5,
     vertexShape: 'circle',
-    vertexText: false,
-    vertexTextColor: 'red',
     vertexOpacity: 0.5,
     vertexLineWidth: 1,
     vertexDashLine: false,
     vertexDashArray: [5, 5],
+    vertexText: false,
+    vertexTextColor: 'red',
+    vertexTextFontSize: 12,
     // colorful: false,
 
     // followMouse:false,
@@ -80,8 +79,11 @@ let polygon = new Polygon({
     // drag:false,
     // ctx
     // ui
-    draw
-})
+    // draw
+}
+
+// debugger
+let polygon = new Polygon(dataModel, draw)
 
 let _groupItem = (name) => {
     return {
@@ -119,6 +121,7 @@ let _options = () => {
     return opt
 }
 let timmer
+let v = Math.random()
 let ui = new UI.Form({
     data: polygon,
     options: _options(),
@@ -133,11 +136,11 @@ let ui = new UI.Form({
         }
     }, {
         text: 'rotate',
-        name: 'animate',
+        name: 'rotate',
         click: (e) => {
             polygon.redrawSVG(e)
             let sides = document.querySelector("[name='angle']")
-            let btn = document.querySelector("[name='animate']")
+            let btn = document.querySelector("[name='rotate']")
             timmer && clearTimeout(timmer)
             timmer = setTimeout(() => {
                 sides.value = Number(sides.value) + Number(sides.getAttribute("step"))
@@ -146,27 +149,38 @@ let ui = new UI.Form({
                 }
                 btn.click()
             }, 17)
-            // if (btn.innerText === 'stop') {
-            //     // btn.innerText = "animate"
-            // } else {
-            //     btn.innerText = "stop"
-            //     setTimeout(() => {
-            //         sides.value = Number(sides.value) + Number(sides.getAttribute("step"))
-            //         btn.click()
-            //     }, 1000)
-            // }
-            // timmer && clearTimeout(timmer)
-
-
-            // timmer && clearInterval(timmer)
-
-            // timmer = setInterval(() => {
-            //     sides.value = Number(sides.value) + Number(sides.getAttribute("step"))
-            //     console.log(e)
-            //     // debugger
-            //     polygon.redrawSVG(e)
-            // }, 1000)
         }
+    }, {
+        text: 'reset',
+        name: 'reset'
+
+    }, {
+        text: 'move',
+        name: 'move',
+        click: (e) => {
+            // debugger
+            polygon.redrawSVG(e)
+            let o = document.querySelector("[name='o']")
+            let btn = document.querySelector("[name='move']")
+            console.log(o.value)
+            let [x, y] = o.value.split(",").map(t => Number(t))
+            console.log(x, y)
+            timmer && clearTimeout(timmer)
+            timmer = setTimeout(() => {
+
+                // let directX = 1 //x > width ? -1 : x < 0 ? -1 : 1
+                // let directY = 1 // y > height ? -1 : y < 0 ? -1 : 1
+                // x += directX * v
+                // y += directY * v
+                x += v
+                y += v
+
+                o.value = [x, y].map(t => +Number(t).toFixed(2))
+
+                btn.click()
+            }, 17)
+        }
+
     }]
 })
 console.log(ui)

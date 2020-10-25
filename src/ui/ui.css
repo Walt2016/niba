@@ -32,6 +32,7 @@ body {
     top: 0;
     right: 0;
     outline: 1px solid #333;
+    background-color: #dedededd;
     
 }
 
@@ -52,7 +53,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ccc;
+    background-color: #6666666a;
 }
 
 
@@ -61,7 +62,7 @@ body {
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid gray;
+    border-bottom: 8px solid #333;
     transition: 0.5s;
 }
 
@@ -82,7 +83,7 @@ body {
     height: 100px;
     text-align: center;
     padding: 0px;
-    background-color: #ccc;
+    background-color: #6666666a;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -108,6 +109,7 @@ body {
     outline: 0;
     border: 1px solid #333;
     margin-right: 10px;
+    margin-top: 10px;
 }
 #wrapper .panel .panel-footer button:hover{
     background-color: #aaa;
@@ -178,7 +180,7 @@ body {
     padding-right: 10px;
     height: 30px;
     line-height: 30px;
-    background-color: #dedede;
+    background-color: #6666664a;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -205,8 +207,8 @@ body {
 .icon {
     width: 8px;
     height: 8px;
-    border-bottom: 1px solid gray;
-    border-right: 1px solid gray;
+    border-bottom: 1px solid #333333;
+    border-right: 1px solid #333333;
     transform: rotate(45deg);
     transition: 0.5s;
 }
@@ -222,7 +224,18 @@ body {
 .icon.right {
     transform: rotate(-45deg);
 }
+.form-group-item.close .icon.right{
+    transform: rotate(45deg);
+}
 
 .icon.left {
     transform: rotate(135deg);
+}
+
+.tools{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
 }
