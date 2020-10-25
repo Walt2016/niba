@@ -85,27 +85,26 @@ export default class Form extends Panel {
             let formGroup = this._div({
                 class: "form-group-item",
             })
-            let formGroupItemTitle = this._div({
-                class: "form-group-item-title",
+            let formGroupItemHeader = this._div({
+                class: "form-group-item-header",
                 text: t.label,
                 click: (e) => {
                     let el = e.target
-                    this._toggle(el, "down")
                     let item = this._closest(el, ".form-group-item")
-                    let iteml_body = this._query(".form-group-item-body", item)
-                    iteml_body.style.height = iteml_body.style.height === '0px' ? iteml_body.getAttribute("height") : "0px"
+                    this._toggle(item,"close")
+                    // let iteml_body = this._query(".form-group-item-body", item)
+                    // iteml_body.style.height = iteml_body.style.height === '0px' ? iteml_body.getAttribute("height") : "0px"
 
-                    // this._toggle(iteml_body, "hide")
                 }
             })
-            formGroup.appendChild(formGroupItemTitle)
+            formGroup.appendChild(formGroupItemHeader)
             let icon = this._icon({
                 class: "right",
                 click: (e) => {
 
                 }
             })
-            formGroupItemTitle.appendChild(icon)
+            formGroupItemHeader.appendChild(icon)
 
             let formGroupItemBody = this._div({
                 class: "form-group-item-body"
@@ -116,10 +115,9 @@ export default class Form extends Panel {
                 formGroupItemBody.appendChild(this._formItem(t))
             })
             // 计算高度
-            // formGroupItemBody.style.height ='100px'
-            let height = (35 * t.fields.length) + 'px'
-            formGroupItemBody.style.height = height
-            formGroupItemBody.setAttribute("height", height)
+            // let height = (35 * t.fields.length) + 'px'
+            // formGroupItemBody.style.height = height
+            // formGroupItemBody.setAttribute("height", height)
 
 
             formGroupWrap.appendChild(formGroup)

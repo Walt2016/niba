@@ -21,16 +21,18 @@ body {
     margin-bottom: 40px;
     width: 500px;
     color: #000;
-    background-color: #f6f4f0;
+    /* background-color: #f6f4f0;
     background-color: #d0e69c;
     background-color: #dcecb5;
     background-color: #e5eecc;
-    border: 1px solid #d4d4d4;
+
     background-image: -webkit-linear-gradient(#fff, #e5eecc 100px);
-    background-image: linear-gradient(#fff, #e5eecc 100px);
+    background-image: linear-gradient(#fff, #e5eecc 100px); */
     position: absolute;
     top: 0;
-    right: 0
+    right: 0;
+    outline: 1px solid #333;
+    
 }
 
 #wrapper .panel.ui {
@@ -46,7 +48,7 @@ body {
     line-height: 40px;
     height: 40px;
     padding: 0px 10px;
-    border-bottom: 1px solid #d4d4d4;
+    border-bottom: 1px solid #666;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,14 +73,20 @@ body {
 #wrapper .panel .panel-body {
     /* padding: 10px; */
     /* transition: 0.5s; */
-    height: calc(100% - 60px);
+    height: calc(100% - 140px);
     overflow-y: auto;
 }
 
 #wrapper .panel .panel-footer {
     width: 100%;
+    height: 100px;
     text-align: center;
-    padding: 4px;
+    padding: 0px;
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #666;
 }
 
 #wrapper .panel .panel-body.fadeup {
@@ -92,16 +100,29 @@ body {
 
 #wrapper .panel .panel-footer button {
     padding: 0px;
-    width: 100px;
-    height: 40px;
-    line-height: 40px;
-    font-size: 18px;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    background-color: #ccc;
+    outline: 0;
+    border: 1px solid #333;
+    margin-right: 10px;
+}
+#wrapper .panel .panel-footer button:hover{
+    background-color: #aaa;
 }
 
 .panel .form-item {
     display: flex;
     margin-bottom: 4px;
+    height: 30px;
 }
+.panel .form-item:first-child{
+    margin-top: 4px;
+}
+
+
 
 .panel .form-item .form-item-label {
     width: 100px;
@@ -150,7 +171,7 @@ body {
     border: none
 }
 
-.form-group-item-title {
+.form-group-item-header {
     font-size: 14px;
     font-weight: bold;
     padding-left: 10px;
@@ -169,7 +190,10 @@ body {
     transition-timing-function: ease;
     overflow: hidden;
     overflow-y: auto;
-    /* height: 200px; */
+}
+
+.panel .form-group-item.close .form-group-item-body{
+    height: 0px;
 }
 
 .form-group-item-body.hide {

@@ -20,8 +20,20 @@ export default class DrawSVG {
     init(options) {
         let _svg = this.svgWrappper()
         document.body.appendChild(_svg);
+        // let defs = this._defs()
+        // _svg.appendChild(defs)
+        // let g = this._g()
+        // defs.appendChild(g)
+        // let _symbol=this._symbol()
+        // _svg.appendChild(_symbol)
+        // setTimeout(()=>{
+        // let use = this._use()
+        // _svg.appendChild(use)
+        // },2000)
+
         Object.assign(this, {
             _svg,
+            // _svg: _symbol,
             width,
             height
         })
@@ -39,7 +51,8 @@ export default class DrawSVG {
                     case "id":
                     case "innerhtml":
                     case "value":
-                        ele['textContent'] = options[key]
+                    case "textContent":
+                        ele[key] = options[key]
                         break;
                     case "click":
                         ele.addEventListener("click", options[key], false)
@@ -86,8 +99,6 @@ export default class DrawSVG {
     // 线条属性
     _lineProps(opt) {
         return {
-            // fill: opt.fill ? opt.color : 'transparent',
-            // opacity: _.isUndefined(opt.opacity) ? 1 : opt.opacity,
             stroke: opt.color || 'black',
             'stroke-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
             'stroke-width': opt.lineWidth || 1,
@@ -158,7 +169,7 @@ export default class DrawSVG {
                     x: t[0],
                     y: t[1],
                     fill: opt.textColor || 'black',
-                    innerText: index
+                    textContent: index
                 })
                 this._svg.appendChild(text)
             }
@@ -237,5 +248,27 @@ export default class DrawSVG {
             div.removeChild(div.firstChild);
         }
         return this
+    }
+    _defs() {
+        return this._createEle("defs")
+    }
+    _g() {
+        return this._createEle("g", {
+            id: 'shape'
+        })
+    }
+    _use() {
+        return this._createEle("use", {
+            x: 0,
+            y: 0,
+            width,
+            height,
+            'xlink:href': '#shape'
+        })
+    }
+    _symbol() {
+        return this._createEle("symbol", {
+            id: "shape"
+        })
     }
 }

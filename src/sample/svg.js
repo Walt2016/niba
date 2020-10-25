@@ -132,7 +132,7 @@ let ui = new UI.Form({
             timmer && clearTimeout(timmer)
         }
     }, {
-        text: 'roate',
+        text: 'rotate',
         name: 'animate',
         click: (e) => {
             polygon.redrawSVG(e)

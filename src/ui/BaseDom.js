@@ -111,10 +111,10 @@ export default class BaseDom {
             }
             // return document.querySelectorAll("#" + parent.id + " " + el)
             if (parent.id) {
-                return document.querySelector("#" + parent.id + " " + el)
+                return document.querySelectorAll("#" + parent.id + " " + el)
             } else {
                 parent.id = this._random()
-                return document.querySelector("#" + parent.id + " " + el)
+                return document.querySelectorAll("#" + parent.id + " " + el)
             }
         }
         return document.querySelectorAll(el)
@@ -223,10 +223,16 @@ export default class BaseDom {
         return arr.indexOf(cls) >= 0
     }
     _toggle(el, cls) {
-        if (this._hasClass(el, cls)) {
-            this._removeClass(el, cls)
+        if (el.length) {
+            el.forEach(t => {
+                this._toggle(t, cls)
+            })
         } else {
-            this._addClass(el, cls)
+            if (this._hasClass(el, cls)) {
+                this._removeClass(el, cls)
+            } else {
+                this._addClass(el, cls)
+            }
         }
     }
     _get(field, form) {
