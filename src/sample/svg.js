@@ -39,14 +39,17 @@ let dataModel = {
     radiusOpacity: 1,
     radiusDashLine: false,
     radiusDashArray: [5, 5],
+    radiusLinecap: 'butt',
+    
 
-    sidesShow: true,
-    // sidesNumber: 5,
-    sidesLineWidth: 1,
-    sidesColor: 'red',
-    sidesOpacity: 1,
-    sidesDashLine: false,
-    sidesDashArray: [5, 5],
+    edgeShow: true,
+    // edgeNumber: 5,
+    edgeLineWidth: 1,
+    edgeColor: 'red',
+    edgeOpacity: 1,
+    edgeDashLine: false,
+    edgeDashArray: [5, 5],
+    edgeLinejoin: 'arcs',
 
 
     centerShow: false,
@@ -73,13 +76,22 @@ let dataModel = {
     vertexTextColor: 'red',
     vertexTextFontSize: 12,
 
-    axisShow: false,
-    axisLineWidth: 1,
-    axisOpacity: 0.5,
-    axisDashLine: false,
-    axisDashArray: [5, 5],
-    axisInterval: 100,
-    axisColor: 'black'
+    gridShow: false,
+    gridLineWidth: 1,
+    gridOpacity: 0.5,
+    gridDashLine: false,
+    gridDashArray: [5, 5],
+    gridInterval: 100,
+    gridColor: 'black',
+
+
+    polarShow: false,
+    polarLineWidth: 1,
+    polarOpacity: 0.5,
+    polarDashLine: false,
+    polarDashArray: [5, 5],
+    polarInterval: 100,
+    polarColor: 'black'
 
     // colorful: false,
 
@@ -106,12 +118,12 @@ let _group = (props) => {
 let group = [{
         shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity']
     },
-    ..._group(['sides', 'radius', 'vertex', 'center', 'axis']),
+    ..._group(['edge', 'radius', 'vertex', 'center', 'grid','polar']),
     {
         fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
     },
     // {
-    //     axis: ['axisShow']
+    //     grid: ['gridShow']
     // }
 ]
 
@@ -119,6 +131,8 @@ let group = [{
 polygon.drawSVG()
 let color = ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple", 'lime']
 let shape = ['circle', 'rect', 'line', 'polygon']
+let linecap = ['butt', 'round', 'square', 'inherit']
+let linejoin = ['arcs', 'bevel', 'miter', 'miter-clip', 'round']
 
 let _options = () => {
     let keys = Object.keys(polygon)
@@ -128,6 +142,12 @@ let _options = () => {
     })
     keys.filter(t => /shape/i.test(t)).forEach(t => {
         opt[t] = shape
+    })
+    keys.filter(t => /linecap/i.test(t)).forEach(t => {
+        opt[t] = linecap
+    })
+    keys.filter(t => /linejoin/i.test(t)).forEach(t => {
+        opt[t] = linejoin
     })
     return opt
 }
@@ -150,13 +170,13 @@ let ui = new UI.Form({
         name: 'rotate',
         click: (e) => {
             polygon.redrawSVG(e)
-            let sides = document.querySelector("[name='angle']")
+            let edge = document.querySelector("[name='angle']")
             let btn = document.querySelector("[name='rotate']")
             timmer && clearTimeout(timmer)
             timmer = setTimeout(() => {
-                sides.value = Number(sides.value) + Number(sides.getAttribute("step"))
-                if (sides.value > 360) {
-                    sides.value = 0
+                edge.value = Number(edge.value) + Number(edge.getAttribute("step"))
+                if (edge.value > 360) {
+                    edge.value = 0
                 }
                 btn.click()
             }, 17)

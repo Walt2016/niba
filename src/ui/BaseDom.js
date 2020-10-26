@@ -20,7 +20,7 @@ export default class BaseDom {
         Object.assign(labels, {
             o: 'center',
             r: 'radius',
-            n: 'sides'
+            n: 'edge'
         })
         let fields = []
         for (let key in obj) {

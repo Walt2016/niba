@@ -82,7 +82,7 @@ export default class DrawSVG {
     }
     _regualrOptions(options, prefix) {
         let opt = {};
-        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize', 'interval'].forEach(t => {
+        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize', 'interval', 'linecap', 'linejoin'].forEach(t => {
             if (prefix) {
                 let name = _.camelCase([prefix, t])
                 if (options[name]) {
@@ -102,14 +102,16 @@ export default class DrawSVG {
             stroke: opt.color || opt.stroke || 'black',
             'stroke-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
             'stroke-width': opt.lineWidth || opt.strokeWidth || 1,
-            'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined
+            'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
+            'stroke-linecap': opt.linecap ? opt.linecap : undefined,
+            'stroke-linejoin': opt.linejoin
         }
     }
     // 图形属性
     _shapeProps(opt) {
         return opt.fill ? {
             fill: opt.color || 'red',
-            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
+            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity
         } : {
             fill: 'transparent'
         }
@@ -152,7 +154,7 @@ export default class DrawSVG {
 
                     break;
                 default:
-                    // 原型
+                    // 圆形
                     Object.assign(props, {
                         cx: t[0],
                         cy: t[1],
@@ -187,11 +189,13 @@ export default class DrawSVG {
 
         let line = this._createEle("line", props)
         this._svg.appendChild(line)
-
     }
-    // 坐标轴
-    _axis(options) {
-        let opt = this._regualrOptions(options, "axis")
+    // _polyLine(){
+
+    // }
+    // 网格坐标
+    _grid(options) {
+        let opt = this._regualrOptions(options, "grid")
         let interval = opt.interval || 100
         let offsetX = (width / 2) % interval
         let offsetY = (height / 2) % interval
@@ -221,12 +225,46 @@ export default class DrawSVG {
         let d = points.map((t, index) => {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
-        let pros = this._lineProps(opt)
-
-        let axis = this._createEle("path", Object.assign(pros, {
+        let props = this._lineProps(opt)
+        let grid = this._createEle("path", Object.assign(props, {
             d
         }))
-        this._svg.appendChild(axis)
+        this._svg.appendChild(grid)
+    }
+    // 极坐标
+    _polar(options) {
+        let opt = this._regualrOptions(options, "polar")
+        let interval = opt.interval || 100
+        let props = this._lineProps(opt)
+        let o = [width / 2, height / 2]
+
+        for (let i = 0; i < height / interval; i++) {
+            Object.assign(props, {
+                cx: o[0],
+                cy: o[1],
+                r: interval * i,
+                fill: 'transparent'
+            })
+            let circle = this._createEle("circle", props)
+            this._svg.appendChild(circle)
+        }
+
+        let points = [
+            [width / 2, 0],
+            [width / 2, height],
+            [0, height / 2],
+            [width, height / 2]
+        ]
+
+        let d = points.map((t, index) => {
+            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
+        }).join(" ")
+        let grid = this._createEle("path", Object.assign(props, {
+            d
+        }))
+        this._svg.appendChild(grid)
+
+
     }
     // 图形组成
     _path(options) {
@@ -236,22 +274,22 @@ export default class DrawSVG {
         let d = points.map((t, index) => {
             return (index === 0 ? "M" : "L") + t.join(" ")
         }).concat(["z"]).join(" ")
-        if (options.sidesShow) {
+        if (options.edgeShow) {
             let defaultOpt = this._regualrOptions(options)
-            let opt = this._regualrOptions(options, "sides")
-            let shapePros = this._shapeProps(defaultOpt)
-            let sidesProps = this._lineProps(opt)
-            let sides = this._createEle("path", Object.assign(shapePros, sidesProps, {
+            let opt = this._regualrOptions(options, "edge")
+            let shapeprops = this._shapeProps(defaultOpt)
+            let edgeProps = this._lineProps(opt)
+            let edge = this._createEle("path", Object.assign(shapeprops, edgeProps, {
                 d
             }))
-            this._svg.appendChild(sides)
+            this._svg.appendChild(edge)
         } else {
             let defaultOpt = this._regualrOptions(options)
-            let shapePros = this._shapeProps(defaultOpt)
-            let sides = this._createEle("path", Object.assign(shapePros, {
+            let shapeprops = this._shapeProps(defaultOpt)
+            let edge = this._createEle("path", Object.assign(shapeprops, {
                 d
             }))
-            this._svg.appendChild(sides)
+            this._svg.appendChild(edge)
         }
         // 半径
         if (options.radiusShow) {
@@ -294,10 +332,14 @@ export default class DrawSVG {
             }))
         }
 
-        // 坐标
-        if (options.axisShow) {
-            this._axis(options)
+        // 网格坐标
+        if (options.gridShow) {
+            this._grid(options)
+        }
 
+        // 极坐标
+        if (options.polarShow) {
+            this._polar(options)
         }
     }
     clear() {
