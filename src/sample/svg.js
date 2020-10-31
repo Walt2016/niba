@@ -40,16 +40,21 @@ let dataModel = {
     radiusDashLine: false,
     radiusDashArray: [5, 5],
     radiusLinecap: 'butt',
-    
+
 
     edgeShow: true,
-    // edgeNumber: 5,
     edgeLineWidth: 1,
     edgeColor: 'red',
     edgeOpacity: 1,
     edgeDashLine: false,
     edgeDashArray: [5, 5],
     edgeLinejoin: 'arcs',
+    edgeAnimationShift: false,
+    edgeAnimationTwinkle: false,
+    edgeText: false,
+    edgeTextColor: 'red',
+    edgeTextFontSize: 12,
+
 
 
     centerShow: false,
@@ -72,6 +77,8 @@ let dataModel = {
     vertexLineWidth: 1,
     vertexDashLine: false,
     vertexDashArray: [5, 5],
+    vertexAnimationShift: false,
+    vertexAnimationTwinkle: false,
     vertexText: false,
     vertexTextColor: 'red',
     vertexTextFontSize: 12,
@@ -83,6 +90,8 @@ let dataModel = {
     gridDashArray: [5, 5],
     gridInterval: 100,
     gridColor: 'black',
+    gridAnimationShift: false,
+    gridRotate:0,
 
 
     polarShow: false,
@@ -91,7 +100,8 @@ let dataModel = {
     polarDashLine: false,
     polarDashArray: [5, 5],
     polarInterval: 100,
-    polarColor: 'black'
+    polarColor: 'black',
+    polarAnimationShift: false
 
     // colorful: false,
 
@@ -118,7 +128,7 @@ let _group = (props) => {
 let group = [{
         shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity']
     },
-    ..._group(['edge', 'radius', 'vertex', 'center', 'grid','polar']),
+    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar']),
     {
         fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
     },

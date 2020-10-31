@@ -2,6 +2,7 @@ import config from '../../config'
 import MidSeg from '../../points/MidSeg'
 import _ from '../../utils/index'
 import Transform from '../../points/Transform'
+import './index.css'
 import {
     ArcSeg
 } from '../../points'
@@ -82,7 +83,7 @@ export default class DrawSVG {
     }
     _regualrOptions(options, prefix) {
         let opt = {};
-        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize', 'interval', 'linecap', 'linejoin'].forEach(t => {
+        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize', 'interval', 'linecap', 'linejoin', 'animationShift', 'animationTwinkle', 'rotate'].forEach(t => {
             if (prefix) {
                 let name = _.camelCase([prefix, t])
                 if (options[name]) {
@@ -104,16 +105,17 @@ export default class DrawSVG {
             'stroke-width': opt.lineWidth || opt.strokeWidth || 1,
             'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
             'stroke-linecap': opt.linecap ? opt.linecap : undefined,
-            'stroke-linejoin': opt.linejoin
+            'stroke-linejoin': opt.linejoin,
+            'style': opt.animationShift ? 'animation:shift 3s infinite linear' : undefined
         }
     }
     // 图形属性
     _shapeProps(opt) {
         return opt.fill ? {
             fill: opt.color || 'red',
-            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity
+            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
         } : {
-            fill: 'transparent'
+            fill: 'transparent',
         }
     }
     // 规则图形
@@ -122,6 +124,14 @@ export default class DrawSVG {
         let props = Object.assign(this._lineProps(opt), this._shapeProps(opt))
 
         points.forEach((t, index) => {
+            // 动画发光效果辅助
+            if (opt.animationTwinkle) {
+                Object.assign(props, {
+                    style: `animation:twinkle 1s infinite linear`, //;transform-origin: ${t[0]}px ${t[1]}px
+                    'transform-origin': `${t[0]}px ${t[1]}px`
+                })
+            }
+
             switch (opt.shape) {
                 case "rect":
                     // 正方形
@@ -158,7 +168,9 @@ export default class DrawSVG {
                     Object.assign(props, {
                         cx: t[0],
                         cy: t[1],
-                        r: opt.radius || 5,
+                        r: opt.radius || 5
+
+                        // filter: 'url(#f3)'
                     })
                     break;
             }
@@ -190,12 +202,17 @@ export default class DrawSVG {
         let line = this._createEle("line", props)
         this._svg.appendChild(line)
     }
-    // _polyLine(){
-
-    // }
     // 网格坐标
     _grid(options) {
         let opt = this._regualrOptions(options, "grid")
+        let props = this._lineProps(opt)
+        let g = this._g(Object.assign(props, {
+            id: 'grid',
+            fill: 'transparent',
+            transform: opt.rotate ? `rotate(${opt.rotate})` : undefined,
+            'transform-origin': `${width/2} ${height/2}`
+        }))
+        this._svg.appendChild(g)
         let interval = opt.interval || 100
         let offsetX = (width / 2) % interval
         let offsetY = (height / 2) % interval
@@ -225,28 +242,31 @@ export default class DrawSVG {
         let d = points.map((t, index) => {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
-        let props = this._lineProps(opt)
-        let grid = this._createEle("path", Object.assign(props, {
+
+        let grid = this._createEle("path", {
             d
-        }))
-        this._svg.appendChild(grid)
+        })
+        g.appendChild(grid)
     }
     // 极坐标
     _polar(options) {
         let opt = this._regualrOptions(options, "polar")
-        let interval = opt.interval || 100
         let props = this._lineProps(opt)
+        let g = this._g(Object.assign(props, {
+            id: 'polar',
+            fill: 'transparent'
+        }))
+        this._svg.appendChild(g)
+        let interval = opt.interval || 100
         let o = [width / 2, height / 2]
 
         for (let i = 0; i < height / interval; i++) {
-            Object.assign(props, {
+            let circle = this._createEle("circle", {
                 cx: o[0],
                 cy: o[1],
-                r: interval * i,
-                fill: 'transparent'
+                r: interval * i
             })
-            let circle = this._createEle("circle", props)
-            this._svg.appendChild(circle)
+            g.appendChild(circle)
         }
 
         let points = [
@@ -255,16 +275,13 @@ export default class DrawSVG {
             [0, height / 2],
             [width, height / 2]
         ]
-
         let d = points.map((t, index) => {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
-        let grid = this._createEle("path", Object.assign(props, {
+        let grid = this._createEle("path", {
             d
-        }))
-        this._svg.appendChild(grid)
-
-
+        })
+        g.appendChild(grid)
     }
     // 图形组成
     _path(options) {
@@ -274,7 +291,7 @@ export default class DrawSVG {
         let d = points.map((t, index) => {
             return (index === 0 ? "M" : "L") + t.join(" ")
         }).concat(["z"]).join(" ")
-        if (options.edgeShow) {
+        if (options.edgeShow) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
             let shapeprops = this._shapeProps(defaultOpt)
@@ -283,7 +300,24 @@ export default class DrawSVG {
                 d
             }))
             this._svg.appendChild(edge)
-        } else {
+
+            // 标注文字
+            if (opt.text) {
+                let midseg = new MidSeg({
+                    points
+                })
+                midseg.points.forEach((t, index) => {
+                    let text = this._createEle("text", {
+                        x: t[0],
+                        y: t[1],
+                        fill: opt.textColor || opt.color || 'black',
+                        textContent: index,
+                        'font-size': opt.textFontSize || 12
+                    })
+                    this._svg.appendChild(text)
+                })
+            }
+        } else { // 无边
             let defaultOpt = this._regualrOptions(options)
             let shapeprops = this._shapeProps(defaultOpt)
             let edge = this._createEle("path", Object.assign(shapeprops, {
@@ -316,7 +350,7 @@ export default class DrawSVG {
         // 分形
         if (options.midSeg) {
             let midseg = new MidSeg({
-                points: options._points,
+                points,
                 offset: options.offset || 0
             })
             let level = options.level - 1
@@ -353,10 +387,10 @@ export default class DrawSVG {
     _defs() {
         return this._createEle("defs")
     }
-    _g() {
-        return this._createEle("g", {
+    _g(options) {
+        return this._createEle("g", Object.assign({
             id: 'shape'
-        })
+        }, options))
     }
     _use() {
         return this._createEle("use", {
