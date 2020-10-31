@@ -41,8 +41,8 @@ export default class Panel extends BaseDom {
                     let el = e.target
                     this._toggle(el, "down")
                     let panel = this._closest(el, ".panel")
-                    let groupItem=this._queryAll(".form-group-item",panel)
-                    this._toggle(groupItem,"close")
+                    let groupItem = this._queryAll(".form-group-item", panel)
+                    this._toggle(groupItem, "close")
                     // let groupItemBody=this._queryAll(".form-group-item-body",panel)
                     // this._toggle(groupItemBody,"close")
                     // let panel_body = this._query(".panel-body", panel)
@@ -55,6 +55,19 @@ export default class Panel extends BaseDom {
 
         )
         panelHeader.appendChild(icon)
+        let iconRight = this._icon({
+            class: 'right',
+            click: (e) => {
+                let el = e.target
+                // this._toggle(el, "down")
+                let panel = this._closest(el, ".panel")
+                this._toggle(panel, "fadeout")
+                let wrapper = this._closest(el, "#wrapper")
+                let btn = this._query("#configBtn", wrapper)
+                this._toggle(btn,"hide")
+            }
+        })
+        panelHeader.appendChild(iconRight)
 
         let toolsWrapper = this._div({
             class: "tools"

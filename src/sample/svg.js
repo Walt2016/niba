@@ -96,7 +96,7 @@ let dataModel = {
     // midSeg: false,
     fractalUse: false,
     fractalType: 'midSeg',
-    fractalLevel: 2,
+    fractalLevel: 3,
     // showController: false,
     // controllerRadius: 5,
     // controllerColor: 'red',

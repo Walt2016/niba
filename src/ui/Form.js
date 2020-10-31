@@ -11,6 +11,19 @@ export default class Form extends Panel {
         })
         let form = this._panelWrap()
         el.appendChild(form)
+        let configBtn = this._div({
+            id: 'configBtn',
+            class: "btn hide",
+            text: 'config',
+            click: (e) => {
+                let el = e.target
+                let wrapper = this._closest(el, "#wrapper")
+                let panel = this._query(".panel", wrapper)
+                this._toggle(panel, "fadeout")
+                this._toggle(el, "hide")
+            }
+        })
+        el.appendChild(configBtn)
         this._appendTo(null, el)
         this.el = el
     }
@@ -273,7 +286,7 @@ export default class Form extends Panel {
         let select = this._createEle("select", field);
         field.options.forEach(t => {
             let opt = new Option(t, t);
-            if (field.value === t.value) {
+            if (field.value === t) {
                 opt.selected = true
             }
             select.options.add(opt);

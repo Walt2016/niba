@@ -16,7 +16,29 @@ body {
     overflow-x: hidden;
 }
 
+#configBtn {
+    position: absolute;
+    bottom: 50px;
+    right: 10px;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    background-color: #333333;
+    line-height: 40px;
+    color: #ffffff;
+    z-index: 1;
+    cursor: pointer;
+    transition: ease-out 1s;
+}
+
+#configBtn.hide {
+    /* display: none; */
+    /* transform: ; */
+    opacity: 0;
+}
+
 #wrapper .panel {
+
     font-size: 10px;
     margin-bottom: 40px;
     width: 500px;
@@ -31,9 +53,16 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    outline: 1px solid #333;
+    /* outline: 1px solid #333; */
     background-color: #dedededd;
-    
+
+    box-shadow: -4px 0px 12px 0px #888888;
+    transition: ease-out 1s;
+    z-index: 2;
+}
+
+#wrapper .panel.fadeout {
+    transform: translate(1000px, 0px);
 }
 
 #wrapper .panel.ui {
@@ -111,7 +140,8 @@ body {
     margin-right: 10px;
     margin-top: 10px;
 }
-#wrapper .panel .panel-footer button:hover{
+
+#wrapper .panel .panel-footer button:hover {
     background-color: #aaa;
 }
 
@@ -120,7 +150,8 @@ body {
     margin-bottom: 4px;
     height: 30px;
 }
-.panel .form-item:first-child{
+
+.panel .form-item:first-child {
     margin-top: 4px;
 }
 
@@ -194,7 +225,7 @@ body {
     overflow-y: auto;
 }
 
-.panel .form-group-item.close .form-group-item-body{
+.panel .form-group-item.close .form-group-item-body {
     height: 0px;
 }
 
@@ -224,7 +255,8 @@ body {
 .icon.right {
     transform: rotate(-45deg);
 }
-.form-group-item.close .icon.right{
+
+.form-group-item.close .icon.right {
     transform: rotate(45deg);
 }
 
@@ -232,7 +264,7 @@ body {
     transform: rotate(135deg);
 }
 
-.tools{
+.tools {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
