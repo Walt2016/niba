@@ -37,8 +37,10 @@ export default class DrawSVG {
             _svg,
             // _svg: _symbol,
             width,
-            height
+            height,
+            props: 'shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
         })
+        // this._path(this)
     }
     _createEle(tag, options) {
         let ele = document.createElementNS('http://www.w3.org/2000/svg', tag)
@@ -83,7 +85,7 @@ export default class DrawSVG {
     }
     _regualrOptions(options, prefix) {
         let opt = {};
-        ['shape', 'radius', 'fill', 'color', 'text', 'opacity', 'lineWidth', 'lineOpactiy', 'dashLine', 'dashArray', 'textColor', 'textFontSize', 'interval', 'linecap', 'linejoin', 'animationShift', 'animationTwinkle', 'rotate'].forEach(t => {
+        this.props.forEach(t => {
             if (prefix) {
                 let name = _.camelCase([prefix, t])
                 if (options[name]) {
@@ -113,7 +115,7 @@ export default class DrawSVG {
     _shapeProps(opt) {
         return opt.fill ? {
             fill: opt.color || 'red',
-            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
+            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity
         } : {
             fill: 'transparent',
         }
@@ -297,7 +299,9 @@ export default class DrawSVG {
             let shapeprops = this._shapeProps(defaultOpt)
             let edgeProps = this._lineProps(opt)
             let edge = this._createEle("path", Object.assign(shapeprops, edgeProps, {
-                d
+                d,
+                transform: options.transform,
+                'transform-origin': `${width/2} ${height/2}`
             }))
             this._svg.appendChild(edge)
 
@@ -348,32 +352,34 @@ export default class DrawSVG {
         }
 
         // 分形
-        if (options.midSeg) {
-            let midseg = new MidSeg({
-                points,
-                offset: options.offset || 0
-            })
-            let level = options.level - 1
+        if (options.fractalUse) {
+            let fractalLevel = options.fractalLevel - 1
+            let fractalOffset = options.fractalOffset || 0
+            switch (options.fractalType) {
+                case "midSeg":
+                    let midseg = new MidSeg({
+                        points,
+                        offset: fractalOffset
+                    })
 
-            if (options._colors) {
-                options.color = options._colors[level % options._colors.length]
+                    if (options._colors) {
+                        options.color = options._colors[fractalLevel % options._colors.length]
+                    }
+                    this._path(Object.assign({}, options, {
+                        _points: midseg.points,
+                        fractalLevel,
+                        fractalUse: fractalLevel > 1,
+                    }))
+                    break;
+                case "zoom":
+                    this._path(Object.assign({}, options, {
+                        _points: points,
+                        fractalLevel,
+                        fractalUse: fractalLevel > 1,
+                        transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
+                    }))
+                    break;
             }
-
-            this._path(Object.assign({}, options, {
-                _points: midseg.points,
-                level,
-                midSeg: level > 1,
-            }))
-        }
-
-        // 网格坐标
-        if (options.gridShow) {
-            this._grid(options)
-        }
-
-        // 极坐标
-        if (options.polarShow) {
-            this._polar(options)
         }
     }
     clear() {
@@ -383,6 +389,21 @@ export default class DrawSVG {
             div.removeChild(div.firstChild);
         }
         return this
+    }
+
+    // 图形
+    _shape(options) {
+        // 图形
+        this._path(options)
+        // 网格坐标
+        if (options.gridShow) {
+            this._grid(options)
+        }
+
+        // 极坐标
+        if (options.polarShow) {
+            this._polar(options)
+        }
     }
     _defs() {
         return this._createEle("defs")

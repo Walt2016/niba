@@ -198,7 +198,8 @@ export default class BaseEntity {
         this.draw()
     }
     drawSVG() {
-        this._draw._path(this)
+        // this._draw._path(this)
+        this._draw._shape(this)
     }
     redrawSVG(options) {
         this.reset().update(options)

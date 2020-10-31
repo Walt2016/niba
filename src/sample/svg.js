@@ -2,11 +2,8 @@ import _ from '../utils/index'
 import DrawSVG from '../draw/svg/index'
 let draw = new DrawSVG()
 let {
-    // ctx,
-    // canvas,
     width,
-    height,
-    appendPath
+    height
 } = draw
 
 import Polygon from '../entity/Polygon'
@@ -20,15 +17,7 @@ let dataModel = {
 
     color: "red",
     lineWidth: 1,
-    midSeg: false,
-    level: 2,
-    // showController: false,
-    // controllerRadius: 5,
-    // controllerColor: 'red',
-    // controllerFill: true,
-    // controllerText: false,
-    // controllerShape: 'circle',
-    offset: 0.5,
+
     opacity: 0.5,
     dashLine: false,
     dashArray: [5, 5],
@@ -91,7 +80,7 @@ let dataModel = {
     gridInterval: 100,
     gridColor: 'black',
     gridAnimationShift: false,
-    gridRotate:0,
+    gridRotate: 0,
 
 
     polarShow: false,
@@ -101,10 +90,22 @@ let dataModel = {
     polarDashArray: [5, 5],
     polarInterval: 100,
     polarColor: 'black',
-    polarAnimationShift: false
+    polarAnimationShift: false,
+
+
+    // midSeg: false,
+    fractalUse: false,
+    fractalType: 'midSeg',
+    fractalLevel: 2,
+    // showController: false,
+    // controllerRadius: 5,
+    // controllerColor: 'red',
+    // controllerFill: true,
+    // controllerText: false,
+    // controllerShape: 'circle',
+    fractalOffset: 0.5,
 
     // colorful: false,
-
     // followMouse:false,
     // animate:false,
     // drag:false,
@@ -128,10 +129,10 @@ let _group = (props) => {
 let group = [{
         shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity']
     },
-    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar']),
-    {
-        fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
-    },
+    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar', 'fractal']),
+    // {
+    //     fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
+    // },
     // {
     //     grid: ['gridShow']
     // }
@@ -143,6 +144,7 @@ let color = ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple"
 let shape = ['circle', 'rect', 'line', 'polygon']
 let linecap = ['butt', 'round', 'square', 'inherit']
 let linejoin = ['arcs', 'bevel', 'miter', 'miter-clip', 'round']
+let fractalType = ['midSeg', 'zoom']
 
 let _options = () => {
     let keys = Object.keys(polygon)
@@ -158,6 +160,9 @@ let _options = () => {
     })
     keys.filter(t => /linejoin/i.test(t)).forEach(t => {
         opt[t] = linejoin
+    })
+    keys.filter(t => /fractalType/i.test(t)).forEach(t => {
+        opt[t] = fractalType
     })
     return opt
 }
