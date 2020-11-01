@@ -4,9 +4,9 @@ body {
     overflow: hidden;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     display: none
-}
+} */
 
 #wrapper {
     display: flex;
@@ -14,7 +14,12 @@ body {
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
+    /* overflow: hidden; */
 }
+
+/* #wrapper:hover {
+    overflow-y: auto
+} */
 
 #configBtn {
     position: absolute;
@@ -53,6 +58,7 @@ body {
     position: absolute;
     top: 0;
     right: 0;
+    /* right: -17px; */
     /* outline: 1px solid #333; */
     background-color: #dedededd;
 
@@ -104,8 +110,25 @@ body {
     /* padding: 10px; */
     /* transition: 0.5s; */
     height: calc(100% - 140px);
+    /* overflow-y: auto; */
+    overflow: hidden;
+}
+
+/* 自定义滚动条 */
+#wrapper .panel .panel-body:hover {
     overflow-y: auto;
 }
+
+#wrapper .panel .panel-body::-webkit-scrollbar {
+    width: 10px;
+    background-color: hsla(0,0%,40%,.2902);
+}
+
+#wrapper .panel .panel-body::-webkit-scrollbar-thumb {
+    background-color: #666666;
+    border-radius: 10px;
+}
+
 
 #wrapper .panel .panel-footer {
     width: 100%;

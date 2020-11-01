@@ -297,9 +297,11 @@ export default class DrawSVG {
         console.log(options)
         let defaultOpt = this._regualrOptions(options)
         let shapeProps = this._shapeProps(defaultOpt)
+        let lineProps = this._lineProps(defaultOpt)
         let g = this._g({
             id: options.fractalUse ? `shape${options.fractalLevel}` : "shape",
-            ...shapeProps
+            ...shapeProps,
+            ...lineProps
         })
         this._svg.appendChild(g)
         let points = options._points || []

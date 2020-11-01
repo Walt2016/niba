@@ -14,13 +14,12 @@ let dataModel = {
     n: 6,
     angle: 0,
     fill: false,
-
     color: "red",
     lineWidth: 1,
-
     opacity: 0.5,
     dashLine: false,
     dashArray: [5, 5],
+    linejoin: 'arcs',
 
     radiusShow: false,
     radiusLineWidth: 1,
@@ -100,7 +99,7 @@ let dataModel = {
     fractalOffset: 0.5,
 
 
-    amimationRotate:false
+    amimationRotate: false
 
     // colorful: false,
     // followMouse:false,
@@ -124,9 +123,9 @@ let _group = (props) => {
 }
 
 let group = [{
-        shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity']
+        shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity', 'dashLine', 'dashArray','linejoin']
     },
-    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar', 'fractal','amimation']),
+    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar', 'fractal', 'amimation']),
 ]
 
 // polygon.draw(ctx)
@@ -140,19 +139,19 @@ let fractalType = ['midSeg', 'zoom']
 let _options = () => {
     let keys = Object.keys(polygon)
     let opt = {}
-    keys.filter(t => /color/i.test(t)).forEach(t => {
+    keys.filter(t => /^color/i.test(t)).forEach(t => {
         opt[t] = color
     })
-    keys.filter(t => /shape/i.test(t)).forEach(t => {
+    keys.filter(t => /^shape/i.test(t)).forEach(t => {
         opt[t] = shape
     })
-    keys.filter(t => /linecap/i.test(t)).forEach(t => {
+    keys.filter(t => /^linecap/i.test(t)).forEach(t => {
         opt[t] = linecap
     })
-    keys.filter(t => /linejoin/i.test(t)).forEach(t => {
+    keys.filter(t => /^linejoin/i.test(t)).forEach(t => {
         opt[t] = linejoin
     })
-    keys.filter(t => /fractalType/i.test(t)).forEach(t => {
+    keys.filter(t => /^fractalType/i.test(t)).forEach(t => {
         opt[t] = fractalType
     })
     return opt
