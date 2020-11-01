@@ -97,13 +97,10 @@ let dataModel = {
     fractalUse: false,
     fractalType: 'midSeg',
     fractalLevel: 3,
-    // showController: false,
-    // controllerRadius: 5,
-    // controllerColor: 'red',
-    // controllerFill: true,
-    // controllerText: false,
-    // controllerShape: 'circle',
     fractalOffset: 0.5,
+
+
+    amimationRotate:false
 
     // colorful: false,
     // followMouse:false,
@@ -129,13 +126,7 @@ let _group = (props) => {
 let group = [{
         shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity']
     },
-    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar', 'fractal']),
-    // {
-    //     fractal: ['midSeg', 'level', 'offset'] //, 'colorful'
-    // },
-    // {
-    //     grid: ['gridShow']
-    // }
+    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar', 'fractal','amimation']),
 ]
 
 // polygon.draw(ctx)

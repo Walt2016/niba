@@ -121,9 +121,16 @@ export default class DrawSVG {
         }
     }
     // 规则图形
-    _regularShape(name, points, options) {
+    _regularShape(name, points, options, root = this._svg) {
         let opt = this._regualrOptions(options, name)
-        let props = Object.assign(this._lineProps(opt), this._shapeProps(opt))
+        let defaultProps = Object.assign(this._lineProps(opt), this._shapeProps(opt))
+        let g = this._g({
+            id: name,
+            ...defaultProps
+        })
+        root.appendChild(g)
+
+        let props = {}
 
         points.forEach((t, index) => {
             // 动画发光效果辅助
@@ -177,7 +184,7 @@ export default class DrawSVG {
                     break;
             }
             let shape = this._createEle(opt.shape, props)
-            this._svg.appendChild(shape)
+            g.appendChild(shape)
 
             // 标注文字
             if (opt.text) {
@@ -188,7 +195,7 @@ export default class DrawSVG {
                     textContent: index,
                     'font-size': opt.textFontSize || 12
                 })
-                this._svg.appendChild(text)
+                g.appendChild(text)
             }
         })
     }
@@ -288,6 +295,13 @@ export default class DrawSVG {
     // 图形组成
     _path(options) {
         console.log(options)
+        let defaultOpt = this._regualrOptions(options)
+        let shapeProps = this._shapeProps(defaultOpt)
+        let g = this._g({
+            id: options.fractalUse ? `shape${options.fractalLevel}` : "shape",
+            ...shapeProps
+        })
+        this._svg.appendChild(g)
         let points = options._points || []
         // 边
         let d = points.map((t, index) => {
@@ -296,38 +310,40 @@ export default class DrawSVG {
         if (options.edgeShow) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
-            let shapeprops = this._shapeProps(defaultOpt)
-            let edgeProps = this._lineProps(opt)
-            let edge = this._createEle("path", Object.assign(shapeprops, edgeProps, {
+            let edgeShapeProps = this._shapeProps(defaultOpt)
+            let edgeLineProps = this._lineProps(opt)
+            let edge = this._createEle("path", Object.assign(edgeShapeProps, edgeLineProps, {
                 d,
                 transform: options.transform,
                 'transform-origin': `${width/2} ${height/2}`
             }))
-            this._svg.appendChild(edge)
+            g.appendChild(edge)
 
             // 标注文字
             if (opt.text) {
                 let midseg = new MidSeg({
                     points
                 })
+                let groupEdgeText = this._g({
+                    id: 'edgeText',
+                    fill: opt.textColor || opt.color || 'black',
+                    'font-size': opt.textFontSize || 12
+                })
+                g.appendChild(groupEdgeText)
                 midseg.points.forEach((t, index) => {
                     let text = this._createEle("text", {
                         x: t[0],
                         y: t[1],
-                        fill: opt.textColor || opt.color || 'black',
                         textContent: index,
-                        'font-size': opt.textFontSize || 12
                     })
-                    this._svg.appendChild(text)
+                    groupEdgeText.appendChild(text)
                 })
             }
         } else { // 无边
-            let defaultOpt = this._regualrOptions(options)
-            let shapeprops = this._shapeProps(defaultOpt)
-            let edge = this._createEle("path", Object.assign(shapeprops, {
+            let edge = this._createEle("path", {
                 d
-            }))
-            this._svg.appendChild(edge)
+            })
+            g.appendChild(edge)
         }
         // 半径
         if (options.radiusShow) {
@@ -336,19 +352,24 @@ export default class DrawSVG {
             }).join(" ")
             let opt = this._regualrOptions(options, "radius")
             let radiusProps = this._lineProps(opt)
-            let radius = this._createEle("path", Object.assign(radiusProps, {
+            let radius = this._createEle("path", {
                 d
-            }))
-            this._svg.appendChild(radius)
+            })
+            let groupRadius = this._g({
+                id: 'radius',
+                ...radiusProps
+            })
+            groupRadius.appendChild(radius)
+            g.appendChild(groupRadius)
         }
 
         // 顶点
         if (options.vertexShow) {
-            this._regularShape('vertex', points, options)
+            this._regularShape('vertex', points, options, g)
         }
         // 圆心
         if (options.centerShow) {
-            this._regularShape('center', [options.o], options)
+            this._regularShape('center', [options.o], options, g)
         }
 
         // 分形
