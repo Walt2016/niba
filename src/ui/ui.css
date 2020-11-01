@@ -153,15 +153,16 @@ body {
 
 #wrapper .panel .panel-footer button {
     padding: 0px;
-    width: 80px;
+    width: 60px;
     height: 30px;
-    line-height: 30px;
+    line-height: 32px;
     font-size: 14px;
     background-color: #ccc;
     outline: 0;
     border: 1px solid #333;
     margin-right: 10px;
     margin-top: 10px;
+    border-radius: 4px;
 }
 
 #wrapper .panel .panel-footer button:hover {

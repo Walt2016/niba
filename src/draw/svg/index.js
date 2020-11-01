@@ -38,7 +38,7 @@ export default class DrawSVG {
             // _svg: _symbol,
             width,
             height,
-            props: 'shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
         })
         // this._path(this)
     }
@@ -119,6 +119,44 @@ export default class DrawSVG {
         } : {
             fill: 'transparent',
         }
+    }
+    // 动画属性
+    _animationProps(opt, t = opt.o || [width / 2, height / 2]) {
+        // let opt = this._regualrOptions(options, "animation")
+        // let t = opt.o || [width / 2, height / 2]
+        return opt.use ? {
+            'style': `animation:${opt.name} ${opt.duration||1}s ${opt.iterationCount||'infinite'} linear`,
+            'transform-origin': `${t[0]}px ${t[1]}px`
+            // 'style': opt.animationShift ? 'animation:shift 3s infinite linear' : undefined
+        } : {}
+    }
+    // 变形属性
+    _transformProps(opt, t = opt.o || [width / 2, height / 2]) {
+        if (opt.use) {
+            let transform = ""
+            switch (opt.name) {
+                case "skew":
+                    transform = `${opt.name}X(${opt.propA})${opt.name}Y(${opt.propB})` //,${opt.propB}
+                    break;
+                case "rotate":
+                    transform = `${opt.name}(${opt.propA})`
+                    break;
+                default:
+                    transform = `${opt.name}(${opt.propA},${opt.propB})`
+
+            }
+
+            return {
+                transform,
+                'transform-origin': `${t[0]}px ${t[1]}px`
+            }
+        }
+
+        // return opt.use ? {
+        //     // transform: 'scale(2,2)',
+        //     transform: `${opt.name}(${opt.propA},${opt.propB})`,
+        //     'transform-origin': `${t[0]}px ${t[1]}px`
+        // } : {}
     }
     // 规则图形
     _regularShape(name, points, options, root = this._svg) {
@@ -298,11 +336,16 @@ export default class DrawSVG {
         let defaultOpt = this._regualrOptions(options)
         let shapeProps = this._shapeProps(defaultOpt)
         let lineProps = this._lineProps(defaultOpt)
+        let animationProps = this._animationProps(this._regualrOptions(options, "animation"))
+        let transformProps = this._transformProps(this._regualrOptions(options, "transform"))
         let g = this._g({
             id: options.fractalUse ? `shape${options.fractalLevel}` : "shape",
             ...shapeProps,
-            ...lineProps
+            ...lineProps,
+            ...animationProps,
+            ...transformProps
         })
+
         this._svg.appendChild(g)
         let points = options._points || []
         // 边
