@@ -38,7 +38,7 @@ export default class DrawSVG {
             // _svg: _symbol,
             width,
             height,
-            props: 'propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
         })
         // this._path(this)
     }
@@ -108,7 +108,8 @@ export default class DrawSVG {
             'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
             'stroke-linecap': opt.linecap ? opt.linecap : undefined,
             'stroke-linejoin': opt.linejoin,
-            'style': opt.animationShift ? 'animation:shift 3s infinite linear' : undefined
+            'style': opt.animationShift ? 'animation:shift 3s infinite linear' : undefined,
+            'marker-end': 'url(#markerArrow)'
         }
     }
     // 图形属性

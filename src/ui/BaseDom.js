@@ -158,6 +158,12 @@ export default class BaseDom {
                     case "click":
                         ele.addEventListener("click", options[key], false)
                         break;
+                    case "input":
+                        // debugger input
+                        ele.oninput = options[key]
+                        // ele.addEventListener("input", options[key], false)
+                        // ele.addEventListener("change", options[key], false)
+                        break;
                     default:
                         ele.setAttribute(key, options[key])
                         break;

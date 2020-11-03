@@ -37,6 +37,14 @@ export default class Form extends Panel {
             title
         } = options || this
         let tools = this._tools(btns.length > 0 ? btns : btn, fields)
+        this['input'] = (e) => {
+            console.log(e)
+            let btn = btns.filter(t => t.name === "submit")[0]
+            // debugger
+            let dataModel = this._dataModel(fields, form)
+            btn && btn.click(dataModel)
+            // tools.fi
+        }
 
 
         let form = this._panel({
@@ -53,6 +61,9 @@ export default class Form extends Panel {
     _form(options) {
         let {
             fields = [],
+                input = (e) => {
+                    console.log(e)
+                }
         } = options || this
 
         let form = this._div({
@@ -60,7 +71,10 @@ export default class Form extends Panel {
         })
 
         fields.forEach(t => {
-            form.appendChild(this._formItem(t))
+            form.appendChild(this._formItem({
+                ...t,
+                input
+            }))
         })
         return form
     }
@@ -89,7 +103,10 @@ export default class Form extends Panel {
     // 表单分组
     _group() {
         let {
-            group
+            group,
+            input = (e) => {
+                console.log(e)
+            }
         } = this
         let formGroupWrap = this._div({
             class: "form-group-wrap"
@@ -125,16 +142,16 @@ export default class Form extends Panel {
             formGroup.appendChild(formGroupItemBody)
 
             t.fields.map(t => {
-                formGroupItemBody.appendChild(this._formItem(t))
+                formGroupItemBody.appendChild(this._formItem({
+                    ...t,
+                    input
+                }))
             })
             // 计算高度
             // let height = (35 * t.fields.length) + 'px'
             // formGroupItemBody.style.height = height
             // formGroupItemBody.setAttribute("height", height)
-
-
             formGroupWrap.appendChild(formGroup)
-
         })
         return formGroupWrap
     }
@@ -184,19 +201,19 @@ export default class Form extends Panel {
             case "number":
                 let d = value.toString().split(".")[1]
                 let step = Math.pow(10, d ? -1 * d.toString().length : 0)
-                itemDiv = this._inputNumber({
+                itemDiv = this._inputNumber(Object.assign({
                     class: 'form-item-inputnumber',
                     value,
                     name: key,
                     step
-                })
+                }, field))
                 break;
             default:
-                itemDiv = this._input({
+                itemDiv = this._input(Object.assign({
                     class: 'form-item-input',
                     value,
                     name: key
-                })
+                }, field))
         }
         formItem.appendChild(itemDiv)
         if (btn) {

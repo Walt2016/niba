@@ -30,6 +30,7 @@ let dataModel = {
     radiusDashLine: false,
     radiusDashArray: [5, 5],
     radiusLinecap: 'butt',
+    rediusMarkerArrow: false,
 
     // 边
     edgeShow: true,
@@ -110,7 +111,12 @@ let dataModel = {
     transformUse: false,
     transformName: 'scale',
     transformPropA: 2,
-    transformPropB: 2
+    transformPropB: 2,
+
+    // 坐标轴
+    axisXShow: false,
+    axisYShow: false
+
 
 
 
@@ -180,23 +186,23 @@ let ui = new UI.Form({
                 timmer && clearTimeout(timmer)
             }
         },
-        {
-            text: 'rotate',
-            name: 'rotate',
-            click: (e) => {
-                polygon.redrawSVG(e)
-                let edge = document.querySelector("[name='angle']")
-                let btn = document.querySelector("[name='rotate']")
-                timmer && clearTimeout(timmer)
-                timmer = setTimeout(() => {
-                    edge.value = Number(edge.value) + Number(edge.getAttribute("step"))
-                    if (edge.value > 360) {
-                        edge.value = 0
-                    }
-                    btn.click()
-                }, 17)
-            }
-        },
+        // {
+        //     text: 'rotate',
+        //     name: 'rotate',
+        //     click: (e) => {
+        //         polygon.redrawSVG(e)
+        //         let edge = document.querySelector("[name='angle']")
+        //         let btn = document.querySelector("[name='rotate']")
+        //         timmer && clearTimeout(timmer)
+        //         timmer = setTimeout(() => {
+        //             edge.value = Number(edge.value) + Number(edge.getAttribute("step"))
+        //             if (edge.value > 360) {
+        //                 edge.value = 0
+        //             }
+        //             btn.click()
+        //         }, 17)
+        //     }
+        // },
         {
             text: 'reset',
             name: 'reset'
