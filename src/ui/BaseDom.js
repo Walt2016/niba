@@ -60,7 +60,7 @@ export default class BaseDom {
     }
 
     // 数据模型
-    _dataModel(fields, form) {
+    _dataModel(fields = this.fields, form = this.form) {
         let dataModel = {}
         if (fields) {
             fields.forEach(t => {

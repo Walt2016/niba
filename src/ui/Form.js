@@ -38,11 +38,15 @@ export default class Form extends Panel {
         } = options || this
         let tools = this._tools(btns.length > 0 ? btns : btn, fields)
         this['input'] = (e) => {
+            // debugger
             console.log(e)
             let btn = btns.filter(t => t.name === "submit")[0]
             // debugger
             let dataModel = this._dataModel(fields, form)
             btn && btn.click(dataModel)
+            // this.data._draw._shape(dataModel)
+            // this.data.drawSVG(dataModel)
+            
             // tools.fi
         }
 
@@ -113,7 +117,7 @@ export default class Form extends Panel {
         })
         group.forEach(t => {
             let formGroup = this._div({
-                class: "form-group-item",
+                class: "form-group-item close",
             })
             let formGroupItemHeader = this._div({
                 class: "form-group-item-header",

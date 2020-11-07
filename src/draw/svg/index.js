@@ -445,6 +445,26 @@ export default class DrawSVG {
                         fractalUse: fractalLevel > 1,
                         transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
                     }))
+                    break
+                case "reproduce":
+                    points.forEach(t => {
+                        let seg = new ArcSeg({
+                            ...options,
+                            o: t
+                            // r: opt.radius,
+                            // n: options.n
+                        })
+
+                        this._path(Object.assign({}, options, {
+                            _points: seg.points,
+                            fractalLevel,
+                            fractalUse: fractalLevel > 1,
+                            transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
+                        }))
+
+
+                    })
+
                     break;
             }
         }
