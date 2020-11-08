@@ -1,5 +1,5 @@
 //圆弧切割 arc seg
-// import sort from '../sort'
+import Sort from '../sort/index'
 
 // import {
 //     _.sin,
@@ -26,6 +26,9 @@ export default class ArcSeg extends PolarSeg {
 
         this.points = this.seg()
         this.phi = 0
+        if (options.sort && options.sort !== "normal") {
+            this.points = Sort[options.sort](this.points)
+        }
     }
 
     seg() {

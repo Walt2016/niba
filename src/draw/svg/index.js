@@ -108,8 +108,8 @@ export default class DrawSVG {
             'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
             'stroke-linecap': opt.linecap ? opt.linecap : undefined,
             'stroke-linejoin': opt.linejoin,
-            'style': opt.animationShift ? 'animation:shift 3s infinite linear' : undefined,
-            'marker-end': 'url(#markerArrow)'
+            'style': opt.animationShift ? 'animation:shift 3s infinite linear' : undefined
+            // 'marker-end': 'url(#markerArrow)'
         }
     }
     // 图形属性
@@ -222,7 +222,7 @@ export default class DrawSVG {
                     })
                     break;
             }
-            let shape = this._createEle(opt.shape, props)
+            let shape = this._createEle(opt.shape || 'circle', props)
             g.appendChild(shape)
 
             // 标注文字
@@ -416,6 +416,12 @@ export default class DrawSVG {
         // 圆心
         if (options.centerShow) {
             this._regularShape('center', [options.o], options, g)
+        }
+        if (options.excircleShow) {
+            this._regularShape('excircle', [options.o], {
+                ...options,
+                'excircleRadius': options.r
+            }, g)
         }
 
         // 分形

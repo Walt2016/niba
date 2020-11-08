@@ -21,6 +21,7 @@ let dataModel = {
     dashLine: false,
     dashArray: [5, 5],
     linejoin: 'arcs',
+    sort: 'normal',
 
     // 半径
     radiusShow: false,
@@ -74,6 +75,14 @@ let dataModel = {
     vertexTextColor: 'red',
     vertexTextFontSize: 12,
 
+    // 旁切圆
+    excircleShow: false,
+    excircleLineWidth: 1,
+    excircleOpacity: 0.5,
+    excircleDashLine: false,
+    excircleDashArray: [5, 5],
+    excircleColor: 'red',
+
     // 网格坐标
     gridShow: false,
     gridLineWidth: 1,
@@ -117,9 +126,7 @@ let dataModel = {
 
     // 坐标轴
     axisXShow: false,
-    axisYShow: false
-
-
+    axisYShow: false,
 
 
 
@@ -145,9 +152,9 @@ let _group = (props) => {
 }
 
 let group = [{
-        shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity', 'dashLine', 'dashArray', 'linejoin']
+        shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity', 'dashLine', 'dashArray', 'linejoin', 'sort']
     },
-    ..._group(['edge', 'radius', 'vertex', 'center', 'grid', 'polar', 'fractal', 'animation', 'transform']),
+    ..._group(['edge', 'radius', 'vertex', 'center', 'excircle', 'grid', 'polar', 'fractal', 'animation', 'transform']),
 ]
 
 // polygon.draw(ctx)
@@ -159,8 +166,10 @@ let optionsConfig = {
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
     fractalType: ['midSeg', 'zoom', 'reproduce'],
     animationName: ['rotate', 'twinkle'],
-    transformName: ['scale', 'translate', 'rotate', 'skew']
+    transformName: ['scale', 'translate', 'rotate', 'skew'],
+    sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle']
 }
+
 
 let _options = () => {
     let keys = Object.keys(polygon)
