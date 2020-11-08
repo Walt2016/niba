@@ -420,10 +420,30 @@ export default class DrawSVG {
 
         // 分形
         if (options.fractalUse) {
-            let fractalLevel = options.fractalLevel - 1
-            let fractalOffset = options.fractalOffset || 0
-            switch (options.fractalType) {
-                case "midSeg":
+            this._fractal(options)
+        }
+    }
+    clear() {
+        let div = this._svg
+        while (div.hasChildNodes()) //当div下还存在子节点时 循环继续
+        {
+            div.removeChild(div.firstChild);
+        }
+        return this
+    }
+    // 分形
+    _fractal(options) {
+        let {
+            fractalLevel,
+            fractalOffset = 0,
+            fractalTimerUse,
+            fractalTimerDelay = 500
+        } = options
+        fractalLevel = fractalLevel - 1
+        let points = options._points || []
+        switch (options.fractalType) {
+            case "midSeg":
+                let fn = () => {
                     let midseg = new MidSeg({
                         points,
                         offset: fractalOffset
@@ -437,45 +457,43 @@ export default class DrawSVG {
                         fractalLevel,
                         fractalUse: fractalLevel > 1,
                     }))
-                    break;
-                case "zoom":
-                    this._path(Object.assign({}, options, {
-                        _points: points,
-                        fractalLevel,
-                        fractalUse: fractalLevel > 1,
-                        transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
-                    }))
-                    break
-                case "reproduce":
-                    points.forEach(t => {
+                }
+                fn()
+                // fractalTimerUse ? setTimeout(fn, fractalTimerDelay * (fractalLevel + 1)) : fn()
+
+                break;
+            case "zoom":
+                this._path(Object.assign({}, options, {
+                    _points: points,
+                    fractalLevel,
+                    fractalUse: fractalLevel > 1,
+                    transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
+                }))
+                break
+            case "reproduce":
+                if (fractalLevel > 3) {
+                    alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
+                    return
+                }
+                points.forEach((t, index) => {
+                    let fn = () => {
                         let seg = new ArcSeg({
                             ...options,
-                            o: t
-                            // r: opt.radius,
+                            o: t,
+                            r: options.r * Math.pow(fractalOffset, fractalLevel),
                             // n: options.n
                         })
-
                         this._path(Object.assign({}, options, {
                             _points: seg.points,
                             fractalLevel,
-                            fractalUse: fractalLevel > 1,
-                            transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
+                            fractalUse: fractalLevel > 1
                         }))
-
-
-                    })
-
-                    break;
-            }
+                    }
+                    fractalTimerUse ? setTimeout(fn, fractalTimerDelay * (index + 1)) : fn()
+                })
+                break;
         }
-    }
-    clear() {
-        let div = this._svg
-        while (div.hasChildNodes()) //当div下还存在子节点时 循环继续
-        {
-            div.removeChild(div.firstChild);
-        }
-        return this
+
     }
 
     // 图形

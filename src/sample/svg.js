@@ -100,6 +100,8 @@ let dataModel = {
     fractalType: 'midSeg',
     fractalLevel: 3,
     fractalOffset: 0.5,
+    fractalTimerUse: false,
+    fractalTimerDelay: 500,
 
     // 动画
     animationUse: false,
@@ -155,7 +157,7 @@ let optionsConfig = {
     shape: ['circle', 'rect', 'line', 'polygon'],
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
-    fractalType: ['midSeg', 'zoom','reproduce'],
+    fractalType: ['midSeg', 'zoom', 'reproduce'],
     animationName: ['rotate', 'twinkle'],
     transformName: ['scale', 'translate', 'rotate', 'skew']
 }
