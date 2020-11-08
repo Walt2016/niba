@@ -8,6 +8,7 @@ let {
 
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
+import Group from '../draw/svg/group'
 let dataModel = {
     // 全局
     o: [width / 2, height / 2],
@@ -141,52 +142,16 @@ let dataModel = {
 
 // debugger
 let polygon = new Polygon(dataModel, draw)
-
-let _groupItem = (name) => {
-    return {
-        [name]: Object.keys(polygon).filter(t => t.indexOf(name) === 0)
-    }
-}
-let _group = (props) => {
-    return props.map(t => _groupItem(t))
-}
-
-let group = [{
-        shape: ['o', 'r', 'n', 'angle', 'fill', 'color', 'opacity', 'dashLine', 'dashArray', 'linejoin', 'sort']
-    },
-    ..._group(['edge', 'radius', 'vertex', 'center', 'excircle', 'grid', 'polar', 'fractal', 'animation', 'transform']),
-]
+let group = Group._group(polygon)
+let options=Group._options(polygon)
 
 // polygon.draw(ctx)
 polygon.drawSVG()
-let optionsConfig = {
-    color: ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple", 'lime'],
-    shape: ['circle', 'rect', 'line', 'polygon'],
-    linecap: ['butt', 'round', 'square', 'inherit'],
-    linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
-    fractalType: ['midSeg', 'zoom', 'reproduce'],
-    animationName: ['rotate', 'twinkle'],
-    transformName: ['scale', 'translate', 'rotate', 'skew'],
-    sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle']
-}
-
-
-let _options = () => {
-    let keys = Object.keys(polygon)
-    let opt = {}
-    let regs = Object.keys(optionsConfig)
-    regs.forEach(reg => {
-        keys.filter(t => (new RegExp(reg, 'i')).test(t)).forEach(t => {
-            opt[t] = optionsConfig[reg]
-        })
-    })
-    return opt
-}
 let timmer
 let v = Math.random()
 let ui = new UI.Form({
     data: polygon,
-    options: _options(),
+    options,
     group,
     btns: [{
             text: "apply",
