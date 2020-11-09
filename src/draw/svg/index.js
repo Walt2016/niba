@@ -38,7 +38,7 @@ export default class DrawSVG {
             // _svg: _symbol,
             width,
             height,
-            props: 'markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
         })
         // this._path(this)
     }
@@ -170,6 +170,8 @@ export default class DrawSVG {
         root.appendChild(g)
 
         let props = {}
+        let colors = _.colorCircle(points.length, 0.5)
+
 
         points.forEach((t, index) => {
             // 动画发光效果辅助
@@ -177,6 +179,13 @@ export default class DrawSVG {
                 Object.assign(props, {
                     style: `animation:twinkle 1s infinite linear`, //;transform-origin: ${t[0]}px ${t[1]}px
                     'transform-origin': `${t[0]}px ${t[1]}px`
+                })
+            }
+            // debugger
+            if (opt.colorful) {
+                Object.assign(props, {
+                    fill: colors[index],
+                    storke: colors[index],
                 })
             }
 

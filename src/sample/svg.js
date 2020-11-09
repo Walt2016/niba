@@ -47,6 +47,7 @@ let dataModel = {
     edgeText: false,
     edgeTextColor: 'red',
     edgeTextFontSize: 12,
+    // edgeColorful: false,
 
 
     // 中心点
@@ -75,6 +76,7 @@ let dataModel = {
     vertexText: false,
     vertexTextColor: 'red',
     vertexTextFontSize: 12,
+    vertexColorful: false,
 
     // 旁切圆
     excircleShow: false,
@@ -143,7 +145,7 @@ let dataModel = {
 // debugger
 let polygon = new Polygon(dataModel, draw)
 let group = Group._group(polygon)
-let options=Group._options(polygon)
+let options = Group._options(polygon)
 
 // polygon.draw(ctx)
 polygon.drawSVG()

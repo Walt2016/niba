@@ -1,25 +1,26 @@
 // 颜色
-
 import _ from '../utils/index'
-
 export default class Colors extends Array {
-    constructor(options = {
-        color: '#000000',
-        alpha: 1,
-        n: 5
-    }) {
+    constructor() {
         super()
-        let {
-            color,
-            alpha,
-            n
-        } = options
-        let colors = this.genColors(color, alpha, n)
-
-        colors.forEach(t => {
-            this.push(t)
-        })
     }
+    // constructor(options = {
+    //     color: '#000000',
+    //     alpha: 1,
+    //     n: 5
+    // }) {
+    //     super()
+    //     let {
+    //         color,
+    //         alpha,
+    //         n
+    //     } = options
+    //     let colors = this.genColors(color, alpha, n)
+
+    //     colors.forEach(t => {
+    //         this.push(t)
+    //     })
+    // }
     genColors(color, alpha, n) {
         let colors = []
         for (let i = 0; i < n; i++) {
@@ -80,13 +81,13 @@ export default class Colors extends Array {
     //#ffffff
     isHex6(color) {
         return /^#([0-9a-fA-f]{6})$/.test(color);
-    };
+    }
     isRgba(color) {
         return /^[rR][gG][Bb][Aa]?[\(]([\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),){2}[\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),?[\s]*(0\.\d{1,2}|1|0)?[\)]{1}$/g.test(color)
     }
     rgbaWrapper(rgbaArr) { //[1,1,1,1]
         return (rgbaArr.length === 4 ? 'rgba(' : 'rgb(') + rgbaArr + ')'
-    };
+    }
     rgbaArr(color) { //rgba(0,0,0,0.1)
         if (this.isRgba(color)) {
             return color.match(/0\.\d{1,2}|\d{1,3}/g).map(function (t) {
@@ -156,7 +157,7 @@ export default class Colors extends Array {
     dark(color, level) {
         color = color ? rgbaArr(color) : this.color;
         level = level || 0.5;
-        return rgbaWrapper(color.map(function (t) {
+        return this.rgbaWrapper(color.map(function (t) {
             return t * (1 - level) << 0
         }))
     }
@@ -201,7 +202,7 @@ export default class Colors extends Array {
                     return t / len << 0
                 }
             })
-            return rgbaWrapper(_mix);
+            return this.rgbaWrapper(_mix);
         } else {
             var len = arguments.length,
                 arr = [];
@@ -236,7 +237,7 @@ export default class Colors extends Array {
         if (isRgba(color)) return color;
         var arr = rgbaArr(color);
         if (alpha) arr[3] = alpha;
-        return rgbaWrapper(arr);
+        return this.rgbaWrapper(arr);
     }
     //互补色
     complementary(color) {
@@ -244,7 +245,7 @@ export default class Colors extends Array {
             max = _max(arr),
             min = _min(arr),
             sum = max + min;
-        return rgbaWrapper(arr.map(function (t) {
+        return this.rgbaWrapper(arr.map(function (t) {
             return sum - t
         }));
     }
@@ -259,7 +260,7 @@ export default class Colors extends Array {
             r = _.cos(a) * 127 + 128 << 0;
             g = _.cos(a + 120) * 127 + 128 << 0;
             b = _.cos(a + 240) * 127 + 128 << 0;
-            arr[arr.length] = rgbaWrapper(_.isUndefined(alpha) ? [r, g, b] : [r, g, b, alpha]);
+            arr[arr.length] = this.rgbaWrapper(_.isUndefined(alpha) ? [r, g, b] : [r, g, b, alpha]);
         }
         return arr;
     }
@@ -272,7 +273,7 @@ export default class Colors extends Array {
             colorArr = [];
         for (var i = 0; i <= step; i++) {
             var k = _.Easing[easing](i / step);
-            colorArr[colorArr.length] = rgbaWrapper(end.map(function (t, i) {
+            colorArr[colorArr.length] = this.rgbaWrapper(end.map(function (t, i) {
                 return i > 2 ? +(start[i] + (t - start[i]) * k).toFixed(2) : start[i] + (t - start[i]) * k << 0
             }))
         }
@@ -281,26 +282,26 @@ export default class Colors extends Array {
     //深色  随机深色(rgb两位小于 80)，指定颜色加深
     dark(level) {
         var n = Math.random() * 3 << 0;
-        return rgbaWrapper([255, 255, 255].map(function (t, i) {
+        return this.rgbaWrapper([255, 255, 255].map(function (t, i) {
             return i !== n ? Math.random() * 80 << 0 : t * Math.random() << 0;
         }));
     }
     deepdark() {
         var n = Math.random() * 3 << 0;
-        return rgbaWrapper([255, 255, 255].map(function (t, i) {
+        return this.rgbaWrapper([255, 255, 255].map(function (t, i) {
             return i !== n ? Math.random() * 20 << 0 : t * Math.random() << 0;
         }));
     }
     //浅色  
     light(level) {
         var n = Math.random() * 3 << 0;
-        return rgbaWrapper([255, 255, 255].map(function (t, i) {
+        return this.rgbaWrapper([255, 255, 255].map(function (t, i) {
             return i !== n ? 120 + Math.random() * 136 << 0 : t * Math.random() << 0;
         }));
     }
     // 灰度值的心理学公式  值越小越深 <192为深色
     grayLevel(color) {
-        color = color ? rgbaArr(color) : this.color;
+        color = color ? this.rgbaArr(color) : this.color;
         return 0.30 * color[0] + 0.59 * color[1] + 0.11 * color[2]
     }
     isDark(color) {

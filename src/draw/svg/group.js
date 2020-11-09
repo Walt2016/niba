@@ -49,9 +49,13 @@ const _options = (options) => {
     let keys = Object.keys(options)
     let opt = {}
     let regs = Object.keys(optionsConfig)
-    regs.forEach(reg => {
-        keys.filter(t => (new RegExp(reg, 'i')).test(t)).forEach(t => {
-            opt[t] = optionsConfig[reg]
+    regs.forEach(r => {
+        // let reg=new RegExp(r, 'i')
+        let reg = new RegExp(`(${groupConfig.group.map(t => t + r).concat([r]).join("|")})$`, 'i')
+        // debugger
+        console.log(reg)
+        keys.filter(t => reg.test(t)).forEach(t => {
+            opt[t] = optionsConfig[r]
         })
     })
     return opt
