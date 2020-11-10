@@ -615,8 +615,7 @@ export default class DrawSVG {
 
     // 图形
     _shape(options) {
-        // 图形
-        this._path(options)
+
         // 网格坐标
         if (options.gridShow) {
             this._grid(options)
@@ -636,6 +635,9 @@ export default class DrawSVG {
         if (options.axisYShow) {
             this._axisY(options)
         }
+
+        // 图形
+        this._path(options)
     }
     _defs() {
         return this._createEle("defs")
