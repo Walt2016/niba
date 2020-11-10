@@ -114,6 +114,7 @@ let dataModel = {
     fractalOffset: 0.5,
     fractalTimerUse: false,
     fractalTimerDelay: 500,
+    fractalColorful: false,
 
     // 动画
     animationUse: false,

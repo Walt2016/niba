@@ -15,7 +15,8 @@ const config = {
     filename: '[name]_bundle.js'
     // filename: 'bundle-[hash:5].js' // 带hash值得js
   },
-  devtool:'eval-source-map' ,
+  devtool: 'eval-source-map',
+  // devtool:process.env.NODE_ENV === "development"?'eval-source-map':'' ,
   module: {
     rules: [
       // { // loader js

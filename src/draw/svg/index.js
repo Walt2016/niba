@@ -171,8 +171,6 @@ export default class DrawSVG {
 
         let props = {}
         let colors = _.colorCircle(points.length, 0.5)
-
-
         points.forEach((t, index) => {
             // 动画发光效果辅助
             if (opt.animationTwinkle) {
@@ -185,7 +183,7 @@ export default class DrawSVG {
             if (opt.colorful) {
                 Object.assign(props, {
                     fill: colors[index],
-                    storke: colors[index],
+                    stroke: colors[index],
                 })
             }
 
@@ -435,7 +433,10 @@ export default class DrawSVG {
 
         // 分形
         if (options.fractalUse) {
-            this._fractal(options)
+            let colors = _.colorCircle(points.length, 0.5)
+            this._fractal(Object.assign(options, {
+                _colors: colors
+            }))
         }
     }
     clear() {
@@ -452,10 +453,19 @@ export default class DrawSVG {
             fractalLevel,
             fractalOffset = 0,
             fractalTimerUse,
-            fractalTimerDelay = 500
+            fractalTimerDelay = 500,
+            fractalColorful
         } = options
         fractalLevel = fractalLevel - 1
         let points = options._points || []
+        if (fractalColorful && options._colors) {
+            let color = options._colors[fractalLevel % options._colors.length]
+            Object.assign(options, {
+                color,
+                fill: color,
+                'stroke-color': color
+            })
+        }
         switch (options.fractalType) {
             case "midSeg":
                 let fn = () => {
@@ -464,9 +474,7 @@ export default class DrawSVG {
                         offset: fractalOffset
                     })
 
-                    if (options._colors) {
-                        options.color = options._colors[fractalLevel % options._colors.length]
-                    }
+
                     this._path(Object.assign({}, options, {
                         _points: midseg.points,
                         fractalLevel,
