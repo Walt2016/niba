@@ -414,11 +414,21 @@ export default class DrawSVG {
         }, g)
     }
     // 路径
-    _d(points) {
-        return points.map((t, index) => {
-            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-        }).join(" ")
-
+    _d(points, z) {
+        // let p = points.map((t, index) => {
+        //     return (index % 2 === 0 ? "M" : "L") + t.join(" ")
+        // }).join(" ")
+        if (z) {
+            // p.concat(["z"])
+            return points.map((t, index) => {
+                return (index === 0 ? "M" : "L") + t.join(" ")
+            }).concat(["z"]).join(" ")
+        } else {
+            return points.map((t, index) => {
+                return (index % 2 === 0 ? "M" : "L") + t.join(" ")
+            }).join(" ")
+        }
+        // return points.join(" ")
     }
 
     // 图形组成
@@ -440,9 +450,10 @@ export default class DrawSVG {
         this._svg.appendChild(g)
         let points = options._points || []
         // 边
-        let d = points.map((t, index) => {
-            return (index === 0 ? "M" : "L") + t.join(" ")
-        }).concat(["z"]).join(" ")
+        // let d = points.map((t, index) => {
+        //     return (index === 0 ? "M" : "L") + t.join(" ")
+        // }).concat(["z"]).join(" ")
+        let d = this._d(points, true)
         if (options.edgeShow) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
