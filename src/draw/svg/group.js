@@ -1,7 +1,7 @@
 // 分组 和选项
 
 const groupConfig = {
-    group: ['pattern','axis', 'edge', 'radius', 'vertex', 'center', 'excircle', 'grid', 'polar', 'fractal', 'animation', 'transform'],
+    group: ['edge', 'radius', 'vertex', 'center', 'excircle', 'axisX', 'axisY', 'grid', 'polar', 'fractal', 'animation', 'transform', 'pattern'],
     other: 'shape'
 }
 const _group = (options) => {
@@ -29,9 +29,8 @@ const optionsConfig = {
     animationName: ['rotate', 'twinkle'],
     transformName: ['scale', 'translate', 'rotate', 'skew'],
     sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle'],
-    patternUnits:['objextBoundingBox','userSpaceOnUse']
+    patternUnits: ['objextBoundingBox', 'userSpaceOnUse']
 }
-
 
 const _options = (options) => {
     let keys = Object.keys(options)

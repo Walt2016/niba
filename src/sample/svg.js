@@ -21,6 +21,7 @@ let dataModel = {
     opacity: 0.5,
     dashLine: false,
     dashArray: [5, 5],
+    dashAnimation: false,
     linejoin: 'arcs',
     sort: 'normal',
 
@@ -31,6 +32,7 @@ let dataModel = {
     radiusOpacity: 1,
     radiusDashLine: false,
     radiusDashArray: [5, 5],
+    radiusDashAnimation: false,
     radiusLinecap: 'butt',
     rediusMarkerArrow: false,
 
@@ -42,7 +44,7 @@ let dataModel = {
     edgeDashLine: false,
     edgeDashArray: [5, 5],
     edgeLinejoin: 'arcs',
-    edgeAnimationShift: false,
+    edgeDashAnimation: false,
     edgeAnimationTwinkle: false,
     edgeText: false,
     edgeTextColor: 'red',
@@ -60,6 +62,7 @@ let dataModel = {
     centerLineWidth: 1,
     centerDashLine: false,
     centerDashArray: [5, 5],
+    centerDashAnimation: false,
 
     // 顶点
     vertexShow: false,
@@ -71,12 +74,13 @@ let dataModel = {
     vertexLineWidth: 1,
     vertexDashLine: false,
     vertexDashArray: [5, 5],
-    vertexAnimationShift: false,
+    vertexDashAnimation: false,
     vertexAnimationTwinkle: false,
     vertexText: false,
     vertexTextColor: 'red',
     vertexTextFontSize: 12,
     vertexColorful: false,
+    vertexColorfulOpacity:0.5,
 
     // 旁切圆
     excircleShow: false,
@@ -84,7 +88,9 @@ let dataModel = {
     excircleOpacity: 0.5,
     excircleDashLine: false,
     excircleDashArray: [5, 5],
+    excircleDashAnimation: false,
     excircleColor: 'red',
+    
 
     // 网格坐标
     gridShow: false,
@@ -92,9 +98,9 @@ let dataModel = {
     gridOpacity: 0.5,
     gridDashLine: false,
     gridDashArray: [5, 5],
+    gridDashAnimation: false,
     gridInterval: 100,
     gridColor: 'black',
-    gridAnimationShift: false,
     gridRotate: 0,
 
     // 极坐标
@@ -103,9 +109,11 @@ let dataModel = {
     polarOpacity: 0.5,
     polarDashLine: false,
     polarDashArray: [5, 5],
+    polarDashAnimation: false,
     polarInterval: 100,
     polarColor: 'black',
-    polarAnimationShift: false,
+
+    
 
     // 分形
     fractalUse: false,
@@ -115,6 +123,7 @@ let dataModel = {
     fractalTimerUse: false,
     fractalTimerDelay: 500,
     fractalColorful: false,
+    fractalColorfulOpacity:0.5,
 
     // 动画
     animationUse: false,
@@ -130,7 +139,20 @@ let dataModel = {
 
     // 坐标轴
     axisXShow: false,
+    axisXLineWidth: 1,
+    axisXColor: 'black',
+    axisXOpacity: 0.5,
+    axisXDashLine: false,
+    axisXDashArray: [5, 5],
+    axisXDashAnimation: false,
+
     axisYShow: false,
+    axisYLineWidth: 1,
+    axisYColor: 'black',
+    axisYOpacity: 0.5,
+    axisYDashLine: false,
+    axisYDashArray: [5, 5],
+    axisYDashAnimation: false,
 
     // 背景
     patternShow:false,

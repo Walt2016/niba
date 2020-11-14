@@ -169,10 +169,10 @@ export default class BaseDom {
                     case "value":
                         ele[key] = options[key]
                         break;
-                    case "click":  // 点击事件
+                    case "click": // 点击事件
                         ele.addEventListener("click", options[key], false)
                         break;
-                    case "input":  // 输入事件
+                    case "input": // 输入事件
                         ele.oninput = options[key]
                         break;
                     case "options": // 下拉选项
@@ -276,9 +276,7 @@ export default class BaseDom {
                     if (/\[.*?\]/.test(value)) {
                         return JSON.parse(value)
                     } else {
-                        return value.split(",").map(t => {
-                            return Number(t)
-                        })
+                        return value.split(",").map(t => +t)
                     }
 
                     break;
@@ -288,7 +286,6 @@ export default class BaseDom {
                 case "select":
                 default:
                     return value
-
             }
         }
 
@@ -296,9 +293,7 @@ export default class BaseDom {
     _set(key, value) {
         let field = this.fields.filter(t => t.key === key)[0]
         if (field) {
-
             let formitem = this._query("[name='" + field.key + "']")
-
             switch (field.type) {
                 case "number":
                     formitem.value = Number(value)

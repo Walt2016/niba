@@ -45,6 +45,8 @@ export default class Form extends Panel {
             // debugger
             let dataModel = this._dataModel(fields, form)
             btn && btn.click(dataModel)
+            // 保存local
+            localStorage.setItem("dataModel", JSON.stringify(dataModel))
             // this.data._draw._shape(dataModel)
             // this.data.drawSVG(dataModel)
 
@@ -119,7 +121,7 @@ export default class Form extends Panel {
         group.forEach(t => {
             let formGroup = this._div({
                 class: "form-group-item close",
-            })
+            }, formGroupWrap)
             let formGroupItemHeader = this._div({
                 class: "form-group-item-header",
                 text: t.label,
@@ -132,47 +134,46 @@ export default class Form extends Panel {
 
                 }
             }, formGroup)
-            // formGroup.appendChild(formGroupItemHeader)
-            let icon = this._icon({
+
+            this._icon({
                 class: "right",
                 click: (e) => {
 
                 }
             }, formGroupItemHeader)
-            // formGroupItemHeader.appendChild(icon)
 
             let formGroupItemBody = this._div({
                 class: "form-group-item-body"
             }, formGroup)
-            // formGroup.appendChild(formGroupItemBody)
 
-            t.fields.map(t => {
-                formGroupItemBody.appendChild(this._formItem({
+            t.fields.forEach(t => {
+                this._formItem({
                     ...t,
-                    input
-                }))
+                    input,
+                    form: formGroupWrap
+                }, formGroupItemBody)
             })
             // 计算高度
             // let height = (35 * t.fields.length) + 'px'
             // formGroupItemBody.style.height = height
             // formGroupItemBody.setAttribute("height", height)
-            formGroupWrap.appendChild(formGroup)
         })
         return formGroupWrap
     }
 
     // 表单单元
-    _formItem(field = {}, form) {
+    _formItem(field = {}, parent) {
         let {
             label,
             key,
             value,
             type,
-            btn
+            btn,
+            form
         } = field
         let formItem = this._div({
             class: "form-item"
-        })
+        }, parent)
         this._div({
             class: "form-item-label",
             text: label
@@ -224,13 +225,12 @@ export default class Form extends Panel {
         }
 
         if (btn) {
-            formItem.appendChild(this._btn({
+            this._btn({
                 ...btn,
                 form
-            }))
+            }, formItem)
         }
         return formItem
-
     }
 
     // 按钮
@@ -240,13 +240,13 @@ export default class Form extends Panel {
         form,
         name,
         fields
-    }) {
+    }, parent) {
         let btn = this._createEle("button", {
             type: "button",
             form,
             name,
             innerText: text
-        })
+        }, parent)
 
         btn.onclick = (e) => {
             let form = this._closest(e.target, ".panel").id

@@ -5,7 +5,8 @@ const firstCapital = (t) => {
 //小驼峰
 const camelCase = (arr) => {
     return arr.map((t, index) => {
-        return index === 0 ? t.toLowerCase() : firstCapital(t)
+        return index === 0 ? t : firstCapital(t)
+        // return index === 0 ? t.toLowerCase() : firstCapital(t)
     }).join("")
 }
 
