@@ -11,19 +11,25 @@ export default class BaseDom {
         this.setData(options.data)
         console.log(this)
     }
-    // 接口
+    // 渲染接口
     render() {}
     setData(data) {
-        if (_.type(data) === "object") {
-            this.fields = this.dataToFields(data, this.options, this.labels)
-            if (this.group) {
-                this.group = this._groupFields(this.group, this.fields)
-            }
-        }
+        // 解析字段
+        this.parser(data)
+        // 渲染
         this.render()
     }
+    // 解析
+    parser(data = this.data) {
+        if (_.type(data) === "object") {
+            this.fields = this.parseFields(data, this.options, this.labels)
+            if (this.group) {
+                this.group = this.groupFields(this.group, this.fields)
+            }
+        }
+    }
     // 入参转换 dataModel 数据 options 参数  labels参数字典
-    dataToFields(data = {}, options = {}, labels = {}) {
+    parseFields(data = {}, options = {}, labels = {}) {
         let fields = []
         for (let key in data) {
             let label = labels[key] ? labels[key] : key;
@@ -48,14 +54,15 @@ export default class BaseDom {
         return fields
     }
     // 字段分组
-    _groupFields(group, fields) {
+    groupFields(group, fields) {
         return group.map(item => {
             for (let key in item) {
                 return {
                     label: key,
                     fields: item[key].map(t => {
                         let field = fields.filter(f => f.key.toLocaleLowerCase() === t.toLocaleLowerCase())[0]
-                        let label = field.label.replace(new RegExp(key + "(\\w+)", 'i'), (a, b) => b)
+                        // 显示去掉分组前缀
+                        let label = field.label.replace(new RegExp(key + "(\\w+)", 'i'), '$1')
                         return {
                             ...field,
                             label
@@ -68,13 +75,13 @@ export default class BaseDom {
 
     // 数据模型
     _dataModel(fields = this.fields, form = this.form) {
-        let dataModel = {}
+        let model = {}
         if (fields) {
             fields.forEach(t => {
-                dataModel[t.key] = this._get(t, form)
+                model[t.key] = this._get(t, form)
             })
         }
-        return dataModel
+        return model
     }
 
     // 随机数
@@ -147,7 +154,7 @@ export default class BaseDom {
         el.appendChild(form)
     }
 
-    _createEle(tag, options) {
+    _createEle(tag, options, parent) {
         let ele = document.createElement(tag)
         for (let key in options) {
             if (options[key] !== undefined) {
@@ -178,22 +185,22 @@ export default class BaseDom {
                 }
             }
         }
+        parent && parent.appendChild(ele)
         return ele
     }
 
-    _div(options) {
-        let div = this._createEle("div", Object.assign(options, {
+    _div(options, parent) {
+        return this._createEle("div", {
+            ...options,
             innerText: options["text"]
-        }))
-        return div
+        }, parent)
     }
 
-    _icon(options) {
-        let icon = this._createEle("i",
-            Object.assign(options, {
-                class: 'icon ' + options.class
-            }))
-        return icon
+    _icon(options, parent) {
+        return this._createEle("i", {
+            ...options,
+            class: 'icon ' + options.class
+        }, parent)
     }
 
     //允许一次加多个样式

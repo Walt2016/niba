@@ -1,4 +1,5 @@
 import Panel from "./Panel";
+import SliderBar from "./Sliderbar"
 
 export default class Form extends Panel {
     constructor(options) {
@@ -46,7 +47,7 @@ export default class Form extends Panel {
             btn && btn.click(dataModel)
             // this.data._draw._shape(dataModel)
             // this.data.drawSVG(dataModel)
-            
+
             // tools.fi
         }
 
@@ -175,9 +176,9 @@ export default class Form extends Panel {
         let labelDiv = this._div({
             class: "form-item-label",
             text: label
-        })
+        }, formItem)
 
-        formItem.appendChild(labelDiv)
+        // formItem.appendChild(labelDiv)
         let itemDiv
 
         switch (type) {
@@ -186,21 +187,21 @@ export default class Form extends Panel {
                     class: 'form-item-textarea',
                     value,
                     name: key
-                }, field))
+                }, field), formItem)
                 break;
             case "trueorfalse":
             case "boolean":
                 itemDiv = this._trueorfalse(Object.assign({
                     class: 'form-item-select',
                     name: key
-                }, field))
+                }, field), formItem)
                 break;
             case "select":
                 itemDiv = this._select(Object.assign({
                     class: 'form-item-select',
                     value,
                     name: key
-                }, field))
+                }, field), formItem)
                 break
             case "number":
                 let d = value.toString().split(".")[1]
@@ -210,16 +211,16 @@ export default class Form extends Panel {
                     value,
                     name: key,
                     step
-                }, field))
+                }, field), formItem)
                 break;
             default:
                 itemDiv = this._input(Object.assign({
                     class: 'form-item-input',
                     value,
                     name: key
-                }, field))
+                }, field), formItem)
         }
-        formItem.appendChild(itemDiv)
+        // formItem.appendChild(itemDiv)
         if (btn) {
             formItem.appendChild(_btn(Object.assign(btn, {
                 form
@@ -303,8 +304,8 @@ export default class Form extends Panel {
     }
 
     // 下拉选项
-    _select(field) {
-        let select = this._createEle("select", field);
+    _select(field, parent) {
+        let select = this._createEle("select", field, parent);
         field.options.forEach(t => {
             let opt = new Option(t, t);
             if (field.value === t) {
@@ -315,15 +316,29 @@ export default class Form extends Panel {
         return select
     }
     // 数字
-    _inputNumber(field) {
-        return this._input(Object.assign(field, {
-            type: 'number',
-            // step: 1
-        }))
+    _inputNumber(field, parent) {
+        return this._input({
+            ...field,
+            type: 'number'
+        }, parent)
+        // let 
+        // let div = this._div({
+        //     class: 'inputnumber-wrap'
+        // }, parent)
+        // let input = this._input({
+        //     ...field,
+        //     type: 'number'
+        // }, div)
+        // let slider = new SliderBar({
+        //     el: div
+        // }, div)
+        // // div.appendChild(input)
+        // // div.appendChild(slider)
+        // return div
     }
 
     // 输入框
-    _input(field) {
+    _input(field, parent) {
         let {
             value,
             type = 'text'
@@ -337,31 +352,29 @@ export default class Form extends Panel {
                 value = JSON.stringify(value)
                 break;
         }
-        let input = this._createEle("input", Object.assign(field, {
+        let input = this._createEle("input", {
+            ...field,
             type,
             value
-        }))
+        }, parent)
         return input
     }
 
     // 文本框
-    _textarea(field) {
-        return this._createEle("textarea",
-            Object.assign(field, {
-                innerHTML: text,
-                value: value ? JSON.stringify(value) : ""
-            })
-        )
+    _textarea(field, parent) {
+        return this._createEle("textarea", {
+            ...field,
+            innerHTML: text,
+            value: value ? JSON.stringify(value) : ""
+        }, parent)
     }
 
     // 是否
-    _trueorfalse(field) {
-        let checkbox = this._createEle("input",
-            Object.assign(field, {
-                type: "checkbox",
-                checked: field.value ? true : undefined
-            })
-        );
-        return checkbox
+    _trueorfalse(field, parent) {
+        return this._createEle("input", {
+            ...field,
+            type: "checkbox",
+            checked: field.value ? true : undefined
+        }, parent);
     }
 }

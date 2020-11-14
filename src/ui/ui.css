@@ -121,7 +121,7 @@ body {
 
 #wrapper .panel .panel-body::-webkit-scrollbar {
     width: 10px;
-    background-color: hsla(0,0%,40%,.2902);
+    background-color: hsla(0, 0%, 40%, .2902);
 }
 
 #wrapper .panel .panel-body::-webkit-scrollbar-thumb {
@@ -294,4 +294,48 @@ body {
     justify-content: flex-start;
     align-items: center;
     padding: 10px;
+}
+
+/* 进度条 */
+.sliderbar {
+    /* width: 500px; */
+    width: 100px;
+    /* height: 80px;
+    margin: 100px auto; */
+    position: relative;
+}
+
+.sliderbar .bar {
+    /* width: 500px; */
+    width: 100%;
+    height: 12px;
+    border-radius: 10px;
+    background: #e4e7ed;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    cursor: pointer;
+}
+
+.sliderbar .progress {
+    width: 0;
+    height: 12px;
+    border-radius: 10px;
+    background: #409eff;
+}
+
+.sliderbar .dot {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border: 1px solid #409eff;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    margin: auto 0;
+    border-radius: 50%;
+    cursor: pointer;
 }
