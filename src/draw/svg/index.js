@@ -518,7 +518,7 @@ export default class DrawSVG {
 
         // 分形
         if (options.fractalUse) {
-            let colors = _.colorCircle(points.length, opt.colorfulOpacity || 1)
+            let colors = _.colorCircle(points.length, options.fractalColorfulOpacity || 1)
             this._fractal(Object.assign(options, {
                 _colors: colors
             }))
