@@ -153,7 +153,7 @@ export default class BaseDom {
         el = el ? this._query(el) : document.body
         el.appendChild(form)
     }
-
+    // 创建Dom
     _createEle(tag, options, parent) {
         let ele = document.createElement(tag)
         for (let key in options) {
@@ -169,15 +169,21 @@ export default class BaseDom {
                     case "value":
                         ele[key] = options[key]
                         break;
-                    case "click":
+                    case "click":  // 点击事件
                         ele.addEventListener("click", options[key], false)
                         break;
-                    case "input":
-                        // debugger input
+                    case "input":  // 输入事件
                         ele.oninput = options[key]
-                        // ele.addEventListener("input", options[key], false)
-                        // ele.addEventListener("change", options[key], false)
                         break;
+                    case "options": // 下拉选项
+                        options[key].forEach(t => {
+                            let opt = new Option(t, t);
+                            if (options.value === t) {
+                                opt.selected = true
+                            }
+                            ele[key].add(opt);
+                        })
+                        break
                     default:
                         ele.setAttribute(key, options[key])
                         break;

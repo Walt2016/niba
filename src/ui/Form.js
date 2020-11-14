@@ -131,20 +131,20 @@ export default class Form extends Panel {
                     // iteml_body.style.height = iteml_body.style.height === '0px' ? iteml_body.getAttribute("height") : "0px"
 
                 }
-            })
-            formGroup.appendChild(formGroupItemHeader)
+            }, formGroup)
+            // formGroup.appendChild(formGroupItemHeader)
             let icon = this._icon({
                 class: "right",
                 click: (e) => {
 
                 }
-            })
-            formGroupItemHeader.appendChild(icon)
+            }, formGroupItemHeader)
+            // formGroupItemHeader.appendChild(icon)
 
             let formGroupItemBody = this._div({
                 class: "form-group-item-body"
-            })
-            formGroup.appendChild(formGroupItemBody)
+            }, formGroup)
+            // formGroup.appendChild(formGroupItemBody)
 
             t.fields.map(t => {
                 formGroupItemBody.appendChild(this._formItem({
@@ -173,58 +173,61 @@ export default class Form extends Panel {
         let formItem = this._div({
             class: "form-item"
         })
-        let labelDiv = this._div({
+        this._div({
             class: "form-item-label",
             text: label
         }, formItem)
 
-        // formItem.appendChild(labelDiv)
-        let itemDiv
-
         switch (type) {
             case "textarea":
-                itemDiv = this._textarea(Object.assign({
+                this._textarea({
                     class: 'form-item-textarea',
                     value,
-                    name: key
-                }, field), formItem)
+                    name: key,
+                    ...field
+                }, formItem)
                 break;
             case "trueorfalse":
             case "boolean":
-                itemDiv = this._trueorfalse(Object.assign({
+                this._trueorfalse({
                     class: 'form-item-select',
-                    name: key
-                }, field), formItem)
+                    name: key,
+                    ...field
+                }, formItem)
                 break;
             case "select":
-                itemDiv = this._select(Object.assign({
+                this._select({
                     class: 'form-item-select',
                     value,
-                    name: key
-                }, field), formItem)
+                    name: key,
+                    ...field
+                }, formItem)
                 break
             case "number":
                 let d = value.toString().split(".")[1]
                 let step = Math.pow(10, d ? -1 * d.toString().length : 0)
-                itemDiv = this._inputNumber(Object.assign({
+                this._inputNumber({
                     class: 'form-item-inputnumber',
                     value,
                     name: key,
-                    step
-                }, field), formItem)
+                    step,
+                    ...field
+                }, formItem)
                 break;
             default:
-                itemDiv = this._input(Object.assign({
+                this._input({
                     class: 'form-item-input',
                     value,
-                    name: key
-                }, field), formItem)
+                    name: key,
+                    ...field
+                }, formItem)
         }
-        // formItem.appendChild(itemDiv)
+
         if (btn) {
-            formItem.appendChild(_btn(Object.assign(btn, {
+            formItem.appendChild(this._btn({
+                ...btn,
                 form
-            })))
+            }))
         }
         return formItem
 
@@ -305,15 +308,7 @@ export default class Form extends Panel {
 
     // 下拉选项
     _select(field, parent) {
-        let select = this._createEle("select", field, parent);
-        field.options.forEach(t => {
-            let opt = new Option(t, t);
-            if (field.value === t) {
-                opt.selected = true
-            }
-            select.options.add(opt);
-        })
-        return select
+        return this._createEle("select", field, parent);
     }
     // 数字
     _inputNumber(field, parent) {
@@ -352,12 +347,11 @@ export default class Form extends Panel {
                 value = JSON.stringify(value)
                 break;
         }
-        let input = this._createEle("input", {
+        return this._createEle("input", {
             ...field,
             type,
             value
         }, parent)
-        return input
     }
 
     // 文本框
