@@ -132,6 +132,10 @@ let dataModel = {
     axisXShow: false,
     axisYShow: false,
 
+    // 背景
+    patternShow:false,
+    patternUnits:'objectBoundingBox'
+
 
 
     // colorful: false,

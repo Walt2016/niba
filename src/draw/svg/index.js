@@ -22,25 +22,12 @@ export default class DrawSVG {
     init(options) {
         let _svg = this.svgWrappper()
         document.body.appendChild(_svg);
-        // let defs = this._defs()
-        // _svg.appendChild(defs)
-        // let g = this._g()
-        // defs.appendChild(g)
-        // let _symbol=this._symbol()
-        // _svg.appendChild(_symbol)
-        // setTimeout(()=>{
-        // let use = this._use()
-        // _svg.appendChild(use)
-        // },2000)
-
         Object.assign(this, {
             _svg,
-            // _svg: _symbol,
             width,
             height,
             props: 'colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,animationShift,animationTwinkle,rotate,level,offset,type,use'.split(",")
         })
-        // this._path(this)
     }
     _createEle(tag, options) {
         let ele = document.createElementNS('http://www.w3.org/2000/svg', tag)
@@ -69,6 +56,7 @@ export default class DrawSVG {
         }
         return ele
     }
+    // svg包围
     svgWrappper(svgDom) {
         let svg = this._createEle("svg", {
             width,
@@ -83,6 +71,7 @@ export default class DrawSVG {
         }
         return svg
     }
+    // 规则参数
     _regualrOptions(options, prefix) {
         let opt = {};
         this.props.forEach(t => {
@@ -245,6 +234,7 @@ export default class DrawSVG {
             }
         })
     }
+    // 线段
     _line(points, options, g = this._svg) {
         let props = {
             x1: points[0][0],
@@ -338,6 +328,7 @@ export default class DrawSVG {
         })
         g.appendChild(grid)
     }
+    // 箭头
     _marker() {
         let defs = this._defs()
         this._svg.appendChild(defs)
@@ -412,6 +403,39 @@ export default class DrawSVG {
         this._line(points, {
             'marker-end': 'url(#markerArrow)'
         }, g)
+    }
+    // 图案
+    _pattern(options) {
+        let defs = this._defs()
+        this._svg.appendChild(defs)
+        let pattern = this._createEle("pattern", {
+            id: "pattern",
+            x: 100,
+            y: 100,
+            width: 0.2,
+            height: 0.2,
+            patternUnits: options.patternUnits || "objextBoundingBox"
+        })
+
+        defs.appendChild(pattern)
+        let circle = this._createEle("circle", {
+            x: 10,
+            y: 10,
+            fill: 'red',
+            r: 5
+
+        })
+        pattern.appendChild(circle)
+        // <rect x="100" y="100" width="400" height="300" fill="url(#grid)" stroke="blue"></rect>
+        let rect=this._createEle("rect",{
+            x:0,
+            y:0,
+            width,
+            height,
+            fill:"url(#pattern)",
+            stroke:"blue"
+        })
+        this._svg.appendChild(rect)
     }
     // 路径
     _d(points, z) {
@@ -615,6 +639,10 @@ export default class DrawSVG {
 
     // 图形
     _shape(options) {
+        // 背景图案
+        if(options.patternShow){
+            this._pattern(options)
+        }
 
         // 网格坐标
         if (options.gridShow) {

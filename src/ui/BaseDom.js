@@ -1,7 +1,13 @@
 import _ from '../utils/index'
 export default class BaseDom {
     constructor(options) {
-        Object.assign(this, options)
+        Object.assign(this, {
+            labels: {
+                o: 'center',
+                r: 'radius',
+                n: 'edge'
+            }
+        }, options)
         this.setData(options.data)
         console.log(this)
     }
@@ -10,26 +16,22 @@ export default class BaseDom {
     setData(data) {
         if (_.type(data) === "object") {
             this.fields = this.dataToFields(data, this.options, this.labels)
-            if (this.group)
+            if (this.group) {
                 this.group = this._groupFields(this.group, this.fields)
+            }
         }
         this.render()
     }
-    // 入参转换 data 数据 options 参数  labels参数字典
-    dataToFields(obj = {}, options = {}, labels = {}) {
-        Object.assign(labels, {
-            o: 'center',
-            r: 'radius',
-            n: 'edge'
-        })
+    // 入参转换 dataModel 数据 options 参数  labels参数字典
+    dataToFields(data = {}, options = {}, labels = {}) {
         let fields = []
-        for (let key in obj) {
+        for (let key in data) {
             let label = labels[key] ? labels[key] : key;
             if (options[key]) {
                 fields[fields.length] = {
                     key,
                     label,
-                    value: obj[key],
+                    value: data[key],
                     type: "select",
                     options: options[key]
                 }
@@ -37,8 +39,8 @@ export default class BaseDom {
                 fields[fields.length] = {
                     key,
                     label,
-                    value: obj[key],
-                    type: _.type(obj[key])
+                    value: data[key],
+                    type: _.type(data[key])
                 }
             }
 
@@ -52,7 +54,12 @@ export default class BaseDom {
                 return {
                     label: key,
                     fields: item[key].map(t => {
-                        return fields.filter(f => f.key.toLocaleLowerCase() === t.toLocaleLowerCase())[0]
+                        let field = fields.filter(f => f.key.toLocaleLowerCase() === t.toLocaleLowerCase())[0]
+                        let label = field.label.replace(new RegExp(key + "(\\w+)", 'i'), (a, b) => b)
+                        return {
+                            ...field,
+                            label
+                        }
                     })
                 }
             }

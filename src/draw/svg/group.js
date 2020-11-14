@@ -1,20 +1,7 @@
-// let _groupItem = (name) => {
-//     return {
-//         [name]: Object.keys(polygon).filter(t => t.indexOf(name) === 0)
-//     }
-// }
-
-// let _groupItem = (keys, name) => {
-//     return {
-//         [name]: keys.filter(t => t.indexOf(name) === 0)
-//     }
-// }
-// let _group = (props) => {
-//     return props.map(t => _groupItem(t))
-// }
+// 分组 和选项
 
 const groupConfig = {
-    group: ['axis', 'edge', 'radius', 'vertex', 'center', 'excircle', 'grid', 'polar', 'fractal', 'animation', 'transform'],
+    group: ['pattern','axis', 'edge', 'radius', 'vertex', 'center', 'excircle', 'grid', 'polar', 'fractal', 'animation', 'transform'],
     other: 'shape'
 }
 const _group = (options) => {
@@ -41,7 +28,8 @@ const optionsConfig = {
     fractalType: ['midSeg', 'zoom', 'reproduce'],
     animationName: ['rotate', 'twinkle'],
     transformName: ['scale', 'translate', 'rotate', 'skew'],
-    sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle']
+    sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle'],
+    patternUnits:['objextBoundingBox','userSpaceOnUse']
 }
 
 
