@@ -26,7 +26,7 @@ export default class DrawSVG {
             _svg,
             width,
             height,
-            props: 'colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         })
     }
     _createEle(tag, options, parent) {
@@ -354,15 +354,13 @@ export default class DrawSVG {
             fill: 'transparent'
         }, this._svg)
 
-        let offset = 150
+        // let offset = 150
+        let offset = (width - 10 * 50) / 2
         let points = [
             [0 + offset, height / 2],
             [width - offset, height / 2]
         ]
-        this._line(points, {
-            ...opt,
-            'marker-end': 'url(#markerArrow)'
-        }, g)
+        this._axis(points, opt, g)
     }
     // y轴
     _axisY(options) {
@@ -373,15 +371,29 @@ export default class DrawSVG {
             id: 'axisY',
             fill: 'transparent'
         }, this._svg)
-        let offset = 150
+        // let offset = 150
+        let offset = (height - 10 * 50) / 2
         let points = [
             [width / 2, 0 + offset],
             [width / 2, height - offset]
         ]
+        this._axis(points, opt, g)
+    }
+    // 坐标轴
+    _axis(points, opt, g) {
         this._line(points, {
             ...opt,
             'marker-end': 'url(#markerArrow)'
         }, g)
+        // 刻度
+        if (opt.sticks) {
+            this._line(points, {
+                ...opt,
+                lineWidth: 10,
+                dashLine: true,
+                dashArray: [1, 50]
+            }, g)
+        }
     }
     // 图案
     _pattern(options) {
