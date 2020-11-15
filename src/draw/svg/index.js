@@ -499,18 +499,7 @@ export default class DrawSVG {
         }
         // 半径
         if (options.radiusShow) {
-            let d = points.map((t, index) => {
-                return `M${options.o.join(" ")} L${t.join(" ")}`
-            }).join(" ")
-            let opt = this._regualrOptions(options, "radius")
-            let radiusProps = this._lineProps(opt)
-            let groupRadius = this._g({
-                id: 'radius',
-                ...radiusProps
-            }, g)
-            this._createEle("path", {
-                d
-            }, groupRadius)
+            this._radius(points, options, g)
         }
 
         // 顶点
@@ -521,6 +510,7 @@ export default class DrawSVG {
         if (options.centerShow) {
             this._regularShape('center', [options.o], options, g)
         }
+        // 旁切圆
         if (options.excircleShow) {
             this._regularShape('excircle', [options.o], {
                 ...options,
@@ -544,6 +534,22 @@ export default class DrawSVG {
         }
         return this
     }
+    // 半径
+    _radius(points, options, g) {
+        let d = points.map((t, index) => {
+            return `M${options.o.join(" ")} L${t.join(" ")}`
+        }).join(" ")
+        let opt = this._regualrOptions(options, "radius")
+        let radiusProps = this._lineProps(opt)
+        let groupRadius = this._g({
+            id: 'radius',
+            ...radiusProps
+        }, g)
+        this._createEle("path", {
+            d
+        }, groupRadius)
+    }
+
     // 分形
     _fractal(options) {
         let {
@@ -595,13 +601,17 @@ export default class DrawSVG {
                 }
                 points.forEach((t, index) => {
                     let fn = () => {
+                        let o = t
+                        let r = options.r * Math.pow(fractalOffset, fractalLevel)
                         let seg = new ArcSeg({
                             ...options,
-                            o: t,
-                            r: options.r * Math.pow(fractalOffset, fractalLevel),
+                            o,
+                            r,
                             // n: options.n
                         })
                         this._path(Object.assign({}, options, {
+                            o,
+                            r,
                             _points: seg.points,
                             fractalLevel,
                             fractalUse: fractalLevel > 1

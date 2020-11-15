@@ -29,7 +29,8 @@ const optionsConfig = {
     animationName: ['rotate', 'twinkle'],
     transformName: ['scale', 'translate', 'rotate', 'skew'],
     sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle'],
-    patternUnits: ['objextBoundingBox', 'userSpaceOnUse']
+    patternUnits: ['objextBoundingBox', 'userSpaceOnUse'],
+    segType:['equiangular','randomTop']
 }
 
 const _options = (options) => {

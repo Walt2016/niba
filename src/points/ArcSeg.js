@@ -1,16 +1,10 @@
 //圆弧切割 arc seg
-import ArraySort from '../utils/arraySort'
-
-// import {
-//     _.sin,
-//     _.cos,
-//     _.polar
-// } from '../utils'
-import _ from '../utils/index'
 import PolarSeg from './PolarSeg';
+import ArraySort from '../utils/arraySort'
+import _ from '../utils/index'
 
 //顶点 vertices
-//分割点
+//分割点 
 // 参数：[x,y],[r1,r2],n
 //半径 r,r1~r2  , [r1,r2,r3]
 //optionsions{o:[xy],r:[r1,r2],n:n,rn:"random"}
@@ -19,15 +13,20 @@ import PolarSeg from './PolarSeg';
 export default class ArcSeg extends PolarSeg {
     constructor(options) {
         super(options)
-        if (options.angle) {
-            this.a1 = options.angle
-            this.a2 = 360 + this.a1
+        let {
+            angle,
+            sort
+        } = options
+        if (angle) {
+            this.a1 = angle
+            this.a2 = 360 + angle
         }
 
         this.points = this.seg()
         this.phi = 0
-        if (options.sort && options.sort !== "normal") {
-            this.points = ArraySort[options.sort](this.points)
+        // 排序
+        if (sort && sort !== "normal") {
+            this.points = ArraySort[sort](this.points)
         }
     }
 
@@ -37,18 +36,43 @@ export default class ArcSeg extends PolarSeg {
             r,
             n,
             a1 = 0,
-            a2 = 360
+            a2 = 360,
+            phi = 0,
+            segType = "equiangular"
         } = this
         let points = [];
-        for (let i = 0; i < n; i++) {
-            // a = i * 2 * Math.PI / n + (a1 / 2 * Math.PI) //等角
-            // points[i] = [o[0] + r * Math.cos(a), o[1] + r * Math.sin(a)]
-            let a = a1 + i * (a2 - a1) / n
-            // points[points.length] = [o[0] + r * _.cos(a), o[1] + r * _.sin(a)]
-            let r2 = r + 0.5 * r * _.sin(this.phi)
-            points[i] = _.polar(o, r2, a)
+        // 圆弧等角切割点 Arc equiangular cutting
+        switch (segType) {
+            case "randomTop": //随机角  方向性 ,上下左右
+                for (let i = 0; i < n; i++) {
+                    let a = 1.25 * 180 + 0.5 * 180 * Math.random()
+                    points[i] = _.polar(o, r, a)
+                }
+                break;
+            case "equiangular": //360度等角切分
+            default:
+                for (let i = 0; i < n; i++) {
+                    // a = i * 2 * Math.PI / n + (a1 / 2 * Math.PI) //等角
+                    // points[i] = [o[0] + r * Math.cos(a), o[1] + r * Math.sin(a)]
+                    let a = a1 + i * (a2 - a1) / n
+                    points[i] = _.polar(o, r, a)
+                    // points[points.length] = [o[0] + r * _.cos(a), o[1] + r * _.sin(a)]
+                    // let r2 = r + 0.5 * r * _.sin(phi)
+                    // points[i] = _.polar(o, r2, a)
+                    // phi += 360 / n
+                }
         }
-        this.phi++
+
+        // for (let i = 0; i < n; i++) {
+        //     // a = i * 2 * Math.PI / n + (a1 / 2 * Math.PI) //等角
+        //     // points[i] = [o[0] + r * Math.cos(a), o[1] + r * Math.sin(a)]
+        //     let a = a1 + i * (a2 - a1) / n
+        //     // points[points.length] = [o[0] + r * _.cos(a), o[1] + r * _.sin(a)]
+        //     let r2 = r + 0.5 * r * _.sin(phi)
+        //     points[i] = _.polar(o, r2, a)
+        //     // phi += 360 / n
+        // }
+
         return points
     }
 

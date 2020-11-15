@@ -24,6 +24,7 @@ let dataModel = {
     dashAnimation: false,
     linejoin: 'arcs',
     sort: 'normal',
+    segType:'equiangular',
 
     // 半径
     radiusShow: false,
@@ -84,6 +85,7 @@ let dataModel = {
 
     // 旁切圆
     excircleShow: false,
+    excircleFill: false,
     excircleLineWidth: 1,
     excircleOpacity: 0.5,
     excircleDashLine: false,
