@@ -12,7 +12,7 @@ export default class Form extends Panel {
         })
         let form = this._panelWrap()
         el.appendChild(form)
-        let configBtn = this._div({
+        this._div({
             id: 'configBtn',
             class: "btn hide",
             text: 'config',
@@ -23,8 +23,7 @@ export default class Form extends Panel {
                 this._toggle(panel, "fadeout")
                 this._toggle(el, "hide")
             }
-        })
-        el.appendChild(configBtn)
+        }, el)
         this._appendTo(null, el)
         this.el = el
     }
@@ -78,10 +77,10 @@ export default class Form extends Panel {
         })
 
         fields.forEach(t => {
-            form.appendChild(this._formItem({
+            this._formItem({
                 ...t,
                 input
-            }))
+            }, form)
         })
         return form
     }
@@ -191,7 +190,7 @@ export default class Form extends Panel {
             case "trueorfalse":
             case "boolean":
                 this._trueorfalse({
-                    class: 'form-item-select',
+                    class: 'form-item-checkbox',
                     name: key,
                     ...field
                 }, formItem)

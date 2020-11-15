@@ -1,13 +1,13 @@
 import Panel from "./Panel";
 
 
-export default class List extends Panel{
-    constructor(options){
+export default class List extends Panel {
+    constructor(options) {
         super(options)
-        
+
     }
-    render(){
-        this.List=this._list()
+    render() {
+        this.List = this._list()
     }
     _list(options) {
         let {
@@ -15,27 +15,22 @@ export default class List extends Panel{
             fields
         } = options || this
         let table = this._createEle("table")
-        let tr = this._createEle("tr")
-
-        table.appendChild(tr)
+        let tr = this._createEle("tr", {}, table)
         //header
         fields.forEach(t => {
-            let th = this._createEle("th", {
+            this._createEle("th", {
                 innerText: t.label
-            })
-            tr.appendChild(th)
+            }, tr)
         })
 
         //mock 
         for (let i = 0; i < 10; i++) {
-            let tr = this._createEle("tr")
+            let tr = this._createEle("tr", {}, table)
             fields.forEach(t => {
-                let td = this._createEle("td", {
+                this._createEle("td", {
                     innerText: this._random()
-                })
-                tr.appendChild(td)
+                }, tr)
             })
-            table.appendChild(tr)
         }
 
         let list = this._panel({

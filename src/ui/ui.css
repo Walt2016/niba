@@ -173,6 +173,7 @@ body {
     display: flex;
     margin-bottom: 4px;
     height: 30px;
+    /* justify-content: space-between; */
 }
 
 .panel .form-item:first-child {
@@ -182,7 +183,7 @@ body {
 
 
 .panel .form-item .form-item-label {
-    width: 100px;
+    width: 120px;
     text-align: center;
     display: flex;
     align-items: center;
@@ -191,13 +192,19 @@ body {
 
 .panel .form-item .form-item-input,
 .panel .form-item .form-item-inputnumber,
-.panel .form-item .form-item-select {
+.panel .form-item .form-item-select,
+.panel .form-item .form-item-checkbox {
     border: 1px solid #ccc;
     padding: 0 2px;
     height: 28px;
     line-height: 28px;
-    width: 100px;
+    width: 80px;
 }
+
+.panel .form-item .form-item-checkbox {
+    width: 20px
+}
+
 
 .panel .form-item .form-item-textarea {
     width: 300px;
