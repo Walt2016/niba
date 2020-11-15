@@ -512,10 +512,7 @@ export default class DrawSVG {
         }
         // 旁切圆
         if (options.excircleShow) {
-            this._regularShape('excircle', [options.o], {
-                ...options,
-                'excircleRadius': options.r
-            }, g)
+            this._excircle(options, g)
         }
 
         // 分形
@@ -549,6 +546,13 @@ export default class DrawSVG {
             d
         }, groupRadius)
     }
+    // 旁切圆
+    _excircle(options, g) {
+        this._regularShape('excircle', [options.o], {
+            ...options,
+            'excircleRadius': options.r
+        }, g)
+    }
 
     // 分形
     _fractal(options) {
@@ -580,6 +584,7 @@ export default class DrawSVG {
                         _points: midseg.points,
                         fractalLevel,
                         fractalUse: fractalLevel > 1,
+                        r: _.dis(midseg.points[0], options.o)
                     }))
                 }
                 fn()
@@ -617,7 +622,7 @@ export default class DrawSVG {
                             fractalUse: fractalLevel > 1
                         }))
                     }
-                    fractalTimerUse ? setTimeout(fn, fractalTimerDelay * (index + 1)) : fn()
+                    fractalTimerUse ? setTimeout(fn, fractalLevel * fractalTimerDelay * (index + 1)) : fn()
                 })
                 break;
         }
