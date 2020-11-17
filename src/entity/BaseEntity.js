@@ -90,7 +90,7 @@ export default class BaseEntity {
         if (arguments.length === 1) {
             let options = arguments[0]
             for (let key in options) {
-                return Object.defineProperty(this, "_" + key, {
+                Object.defineProperty(this, "_" + key, {
                     value: options[key],
                     writable: true,
                     enumerable: false
@@ -98,12 +98,13 @@ export default class BaseEntity {
             }
         } else if (arguments.length === 2) {
             let [key, value] = arguments
-            return Object.defineProperty(this, "_" + key, {
+            Object.defineProperty(this, "_" + key, {
                 value,
                 writable: true,
                 enumerable: false
             })
         }
+        // return this
     }
     //清空定时器
     reset() {

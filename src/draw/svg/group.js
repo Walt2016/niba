@@ -25,12 +25,12 @@ const optionsConfig = {
     shape: ['circle', 'rect', 'line', 'polygon'],
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
-    fractalType: ['midSeg', 'zoom', 'reproduce'],
+    fractalType: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce','tree'],
     animationName: ['rotate', 'twinkle'],
     transformName: ['scale', 'translate', 'rotate', 'skew'],
     sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle'],
     patternUnits: ['objextBoundingBox', 'userSpaceOnUse'],
-    segType:['equiangular','randomTop']
+    segType: ['equiangular', 'randomTop']
 }
 
 const _options = (options) => {

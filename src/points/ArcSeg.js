@@ -75,6 +75,15 @@ export default class ArcSeg extends PolarSeg {
 
         return points
     }
+    
+    scale(zoomRatio = 0.5) {
+        let points = []
+        for (let i = 0; i < n; i++) {
+            let a = a1 + i * (a2 - a1) / n
+            points[i] = _.polar(o, r * zoomRatio, a)
+        }
+        return points
+    }
 
     //     //生成控制点
     // createControlPoint(start, end, len) {

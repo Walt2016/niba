@@ -599,11 +599,52 @@ export default class DrawSVG {
                     transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
                 }))
                 break
-            case "reproduce":
-                if (fractalLevel > 3) {
-                    alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
-                    return
+            case "scale":
+                let scaleFn = () => {
+                    let r = options.r * Math.pow(fractalOffset, fractalLevel)
+                    let seg = new ArcSeg({
+                        ...options,
+                        r,
+                    })
+                    this._path(Object.assign({}, options, {
+                        _points: seg.points,
+                        // _points: options._seg({
+                        //     ...options,
+                        //     r
+                        // }),
+                        fractalLevel,
+                        fractalUse: fractalLevel > 1,
+                    }))
                 }
+                fractalTimerUse ? setTimeout(scaleFn, fractalLevel * fractalTimerDelay) : scaleFn()
+                break;
+            case "rotate":
+                let rotateFn = () => {
+                    // let r = options.r * Math.pow(fractalOffset, fractalLevel)
+                    let seg = new ArcSeg({
+                        ...options,
+                        angle: options.angle + fractalOffset
+                        // r,
+                    })
+                    this._path(Object.assign({}, options, {
+                        _points: seg.points,
+                        // _points: options._seg({
+                        //     ...options,
+                        //     r
+                        // }),
+                        angle: options.angle + fractalOffset,
+                        fractalLevel,
+                        fractalUse: fractalLevel > 1,
+                    }))
+                }
+                fractalTimerUse ? setTimeout(rotateFn, fractalLevel * fractalTimerDelay) : rotateFn()
+                break;
+
+            case "reproduce":
+                // if (fractalLevel > 3) {
+                //     alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
+                //     return
+                // }
                 points.forEach((t, index) => {
                     let fn = () => {
                         let o = t
@@ -618,6 +659,32 @@ export default class DrawSVG {
                             o,
                             r,
                             _points: seg.points,
+                            fractalLevel,
+                            fractalUse: fractalLevel > 1
+                        }))
+                    }
+                    fractalTimerUse ? setTimeout(fn, fractalLevel * fractalTimerDelay * (index + 1)) : fn()
+                })
+                break;
+            case "tree":
+                // if (fractalLevel > 3) {
+                //     alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
+                //     return
+                // }
+                points.forEach((t, index) => {
+                    let fn = () => {
+                        let o = t
+                        let r = options.r * Math.pow(fractalOffset, fractalLevel)
+                        let seg = new ArcSeg({
+                            ...options,
+                            o,
+                            r,
+                            // n: options.n
+                        })
+                        this._path(Object.assign({}, options, {
+                            o,
+                            r,
+                            _points: seg.points.slice(0, 3),
                             fractalLevel,
                             fractalUse: fractalLevel > 1
                         }))
