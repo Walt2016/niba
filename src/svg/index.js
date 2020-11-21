@@ -6,6 +6,7 @@ import {
     ArcSeg
 } from '../points'
 import BaseSvg from './baseSvg'
+import Fractal from './Fractal'
 
 export default class DrawSVG extends BaseSvg {
     constructor(options) {
@@ -506,7 +507,10 @@ export default class DrawSVG extends BaseSvg {
         // 分形
         if (options.fractalUse) {
             let colors = _.colorCircle(points.length, options.fractalColorfulOpacity || 1)
-            this._fractal(Object.assign(options, {
+            // this._fractal(Object.assign(options, {
+            //     _colors: colors
+            // }))
+            new Fractal(this._shape.bind(this), Object.assign(options, {
                 _colors: colors
             }))
         }
@@ -542,144 +546,144 @@ export default class DrawSVG extends BaseSvg {
         }, g)
     }
 
-    // 分形
-    _fractal(options) {
-        let {
-            fractalLevel,
-            fractalOffset = 0,
-            fractalTimerUse,
-            fractalTimerDelay = 500,
-            fractalColorful
-        } = options
-        fractalLevel = fractalLevel - 1
-        let points = options._points || []
-        if (fractalColorful && options._colors) {
-            let color = options._colors[fractalLevel % options._colors.length]
-            Object.assign(options, {
-                color,
-                fill: color,
-                'stroke-color': color
-            })
-        }
-        switch (options.fractalType) {
-            case "midSeg":
-                let fn = () => {
-                    let midseg = new MidSeg({
-                        points,
-                        offset: fractalOffset
-                    })
-                    this._shape(Object.assign({}, options, {
-                        _points: midseg.points,
-                        fractalLevel,
-                        fractalUse: fractalLevel > 1,
-                        r: _.dis(midseg.points[0], options.o)
-                    }))
-                }
-                fn()
-                // fractalTimerUse ? setTimeout(fn, fractalTimerDelay * (fractalLevel + 1)) : fn()
+    // // 分形
+    // _fractal(options) {
+    //     let {
+    //         fractalLevel,
+    //         fractalOffset = 0,
+    //         fractalTimerUse,
+    //         fractalTimerDelay = 500,
+    //         fractalColorful
+    //     } = options
+    //     fractalLevel = fractalLevel - 1
+    //     let points = options._points || []
+    //     if (fractalColorful && options._colors) {
+    //         let color = options._colors[fractalLevel % options._colors.length]
+    //         Object.assign(options, {
+    //             color,
+    //             fill: color,
+    //             'stroke-color': color
+    //         })
+    //     }
+    //     switch (options.fractalType) {
+    //         case "midSeg":
+    //             let fn = () => {
+    //                 let midseg = new MidSeg({
+    //                     points,
+    //                     offset: fractalOffset
+    //                 })
+    //                 this._shape(Object.assign({}, options, {
+    //                     _points: midseg.points,
+    //                     fractalLevel,
+    //                     fractalUse: fractalLevel > 1,
+    //                     r: _.dis(midseg.points[0], options.o)
+    //                 }))
+    //             }
+    //             fn()
+    //             // fractalTimerUse ? setTimeout(fn, fractalTimerDelay * (fractalLevel + 1)) : fn()
 
-                break;
-            case "zoom":
-                this._shape(Object.assign({}, options, {
-                    _points: points,
-                    fractalLevel,
-                    fractalUse: fractalLevel > 1,
-                    transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
-                }))
-                break
-            case "scale":
-                let scaleFn = () => {
-                    let r = options.r * Math.pow(fractalOffset, fractalLevel)
-                    let seg = new ArcSeg({
-                        ...options,
-                        r,
-                    })
-                    this._shape(Object.assign({}, options, {
-                        _points: seg.points,
-                        // _points: options._seg({
-                        //     ...options,
-                        //     r
-                        // }),
-                        fractalLevel,
-                        fractalUse: fractalLevel > 1,
-                    }))
-                }
-                fractalTimerUse ? setTimeout(scaleFn, fractalLevel * fractalTimerDelay) : scaleFn()
-                break;
-            case "rotate":
-                let rotateFn = () => {
-                    // let r = options.r * Math.pow(fractalOffset, fractalLevel)
-                    let seg = new ArcSeg({
-                        ...options,
-                        angle: options.angle + fractalOffset
-                        // r,
-                    })
-                    this._shape(Object.assign({}, options, {
-                        _points: seg.points,
-                        // _points: options._seg({
-                        //     ...options,
-                        //     r
-                        // }),
-                        angle: options.angle + fractalOffset,
-                        fractalLevel,
-                        fractalUse: fractalLevel > 1,
-                    }))
-                }
-                fractalTimerUse ? setTimeout(rotateFn, fractalLevel * fractalTimerDelay) : rotateFn()
-                break;
+    //             break;
+    //         case "zoom":
+    //             this._shape(Object.assign({}, options, {
+    //                 _points: points,
+    //                 fractalLevel,
+    //                 fractalUse: fractalLevel > 1,
+    //                 transform: `scale(${fractalOffset* (fractalLevel+1) },${fractalOffset*(fractalLevel+1)})`
+    //             }))
+    //             break
+    //         case "scale":
+    //             let scaleFn = () => {
+    //                 let r = options.r * Math.pow(fractalOffset, fractalLevel)
+    //                 let seg = new ArcSeg({
+    //                     ...options,
+    //                     r,
+    //                 })
+    //                 this._shape(Object.assign({}, options, {
+    //                     _points: seg.points,
+    //                     // _points: options._seg({
+    //                     //     ...options,
+    //                     //     r
+    //                     // }),
+    //                     fractalLevel,
+    //                     fractalUse: fractalLevel > 1,
+    //                 }))
+    //             }
+    //             fractalTimerUse ? setTimeout(scaleFn, fractalLevel * fractalTimerDelay) : scaleFn()
+    //             break;
+    //         case "rotate":
+    //             let rotateFn = () => {
+    //                 // let r = options.r * Math.pow(fractalOffset, fractalLevel)
+    //                 let seg = new ArcSeg({
+    //                     ...options,
+    //                     angle: options.angle + fractalOffset
+    //                     // r,
+    //                 })
+    //                 this._shape(Object.assign({}, options, {
+    //                     _points: seg.points,
+    //                     // _points: options._seg({
+    //                     //     ...options,
+    //                     //     r
+    //                     // }),
+    //                     angle: options.angle + fractalOffset,
+    //                     fractalLevel,
+    //                     fractalUse: fractalLevel > 1,
+    //                 }))
+    //             }
+    //             fractalTimerUse ? setTimeout(rotateFn, fractalLevel * fractalTimerDelay) : rotateFn()
+    //             break;
 
-            case "reproduce":
-                // if (fractalLevel > 3) {
-                //     alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
-                //     return
-                // }
-                points.forEach((t, index) => {
-                    let fn = () => {
-                        let o = t
-                        let r = options.r * Math.pow(fractalOffset, fractalLevel)
-                        let seg = new ArcSeg({
-                            ...options,
-                            o,
-                            r,
-                            // n: options.n
-                        })
-                        this._shape(Object.assign({}, options, {
-                            o,
-                            r,
-                            _points: seg.points,
-                            fractalLevel,
-                            fractalUse: fractalLevel > 1
-                        }))
-                    }
-                    fractalTimerUse ? setTimeout(fn, fractalLevel * fractalTimerDelay * (index + 1)) : fn()
-                })
-                break;
-            case "tree":
-                // if (fractalLevel > 3) {
-                //     alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
-                //     return
-                // }
-                points.forEach((t, index) => {
-                    let fn = () => {
-                        let o = t
-                        let r = options.r * Math.pow(fractalOffset, fractalLevel)
-                        let seg = new ArcSeg({
-                            ...options,
-                            o,
-                            r,
-                            // n: options.n
-                        })
-                        this._shape(Object.assign({}, options, {
-                            o,
-                            r,
-                            _points: seg.points.slice(0, 3),
-                            fractalLevel,
-                            fractalUse: fractalLevel > 1
-                        }))
-                    }
-                    fractalTimerUse ? setTimeout(fn, fractalLevel * fractalTimerDelay * (index + 1)) : fn()
-                })
-                break;
-        }
-    }
+    //         case "reproduce":
+    //             // if (fractalLevel > 3) {
+    //             //     alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
+    //             //     return
+    //             // }
+    //             points.forEach((t, index) => {
+    //                 let fn = () => {
+    //                     let o = t
+    //                     let r = options.r * Math.pow(fractalOffset, fractalLevel)
+    //                     let seg = new ArcSeg({
+    //                         ...options,
+    //                         o,
+    //                         r,
+    //                         // n: options.n
+    //                     })
+    //                     this._shape(Object.assign({}, options, {
+    //                         o,
+    //                         r,
+    //                         _points: seg.points,
+    //                         fractalLevel,
+    //                         fractalUse: fractalLevel > 1
+    //                     }))
+    //                 }
+    //                 fractalTimerUse ? setTimeout(fn, fractalLevel * fractalTimerDelay * (index + 1)) : fn()
+    //             })
+    //             break;
+    //         case "tree":
+    //             // if (fractalLevel > 3) {
+    //             //     alert(`fractalLevel=${fractalLevel}太大了，目前电脑处理不了`)
+    //             //     return
+    //             // }
+    //             points.forEach((t, index) => {
+    //                 let fn = () => {
+    //                     let o = t
+    //                     let r = options.r * Math.pow(fractalOffset, fractalLevel)
+    //                     let seg = new ArcSeg({
+    //                         ...options,
+    //                         o,
+    //                         r,
+    //                         // n: options.n
+    //                     })
+    //                     this._shape(Object.assign({}, options, {
+    //                         o,
+    //                         r,
+    //                         _points: seg.points.slice(0, 3),
+    //                         fractalLevel,
+    //                         fractalUse: fractalLevel > 1
+    //                     }))
+    //                 }
+    //                 fractalTimerUse ? setTimeout(fn, fractalLevel * fractalTimerDelay * (index + 1)) : fn()
+    //             })
+    //             break;
+    //     }
+    // }
 }
