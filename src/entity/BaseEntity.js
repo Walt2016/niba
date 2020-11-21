@@ -5,12 +5,12 @@ import {
     _cos,
     _pos
 } from '../utils'
-import Controler from '../draw/canvas/Controler'
+import Controler from '../canvas/Controler'
 import PolarSeg from '../points/PolarSeg'
 import Freeform from '../points/Freeform'
 import BaseDom from '../ui/BaseDom'
-import DrawCanvas from '../draw/canvas/index'
-import DrawSVG from '../draw/svg/index'
+import DrawCanvas from '../canvas/index'
+import DrawSVG from '../svg/index'
 import Colors from '../colors'
 export default class BaseEntity {
     constructor(options, draw) {
@@ -200,7 +200,7 @@ export default class BaseEntity {
     }
     drawSVG() {
         // this._draw._path(this)
-        this._draw._shape(this)
+        this._draw._draw(this)
     }
     redrawSVG(options) {
         this.reset().update(options)

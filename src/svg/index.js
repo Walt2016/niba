@@ -1,76 +1,42 @@
-import config from '../../config'
-import MidSeg from '../../points/MidSeg'
-import _ from '../../utils/index'
-import Transform from '../../points/Transform'
+import MidSeg from '../points/MidSeg'
+import _ from '../utils/index'
+import Transform from '../points/Transform'
 import './index.css'
 import {
     ArcSeg
-} from '../../points'
-let {
-    env,
-    center
-} = config
-let {
-    width,
-    height
-} = env
+} from '../points'
+import BaseSvg from './baseSvg'
 
-export default class DrawSVG {
+export default class DrawSVG extends BaseSvg {
     constructor(options) {
-        this.init(options)
+        super(options)
     }
-    init(options) {
-        let _svg = this.svgWrappper()
-        document.body.appendChild(_svg);
-        Object.assign(this, {
-            _svg,
-            width,
-            height,
-            props: 'sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
-        })
-    }
-    _createEle(tag, options, parent) {
-        let ele = document.createElementNS('http://www.w3.org/2000/svg', tag)
-        for (let key in options) {
-            if (options[key] !== undefined) {
-                switch (key.toLocaleLowerCase()) {
-                    case "class":
-                        ele.className = options[key]
-                        break;
-                    case "name":
-                    case "innertext":
-                    case "id":
-                    case "innerhtml":
-                    case "value":
-                    case "textcontent":
-                        ele[key] = options[key]
-                        break;
-                    case "click":
-                        ele.addEventListener("click", options[key], false)
-                        break;
-                    default:
-                        ele.setAttribute(key, options[key])
-                        break;
-                }
-            }
+    // 图形合成:入口函数
+    _draw(options) {
+        // 背景图案
+        if (options.patternShow) {
+            this._pattern(options)
         }
-        parent && parent.appendChild(ele)
-        return ele
-    }
-    // svg包围
-    svgWrappper(svgDom) {
-        let svg = this._createEle("svg", {
-            width,
-            height
-        })
-        if (Array.isArray(svgDom)) {
-            svgDom.forEach(t => {
-                svg.appendChild(t)
-            })
-        } else if (svgDom) {
-            svg.appendChild(svgDom)
+        // 网格坐标
+        if (options.gridShow) {
+            this._grid(options)
         }
-        return svg
+        // 极坐标
+        if (options.polarShow) {
+            this._polar(options)
+        }
+        // x轴
+        if (options.axisXShow || options.axisYShow) {
+            this._marker()
+        }
+        if (options.axisXShow) {
+            this._axisX(options)
+        }
+        if (options.axisYShow) {
+            this._axisY(options)
+        }
+        // 图形
+        this._shape(options)
     }
     // 规则参数
     _regualrOptions(options, prefix) {
@@ -112,7 +78,7 @@ export default class DrawSVG {
         }
     }
     // 动画属性
-    _animationProps(opt, t = opt.o || [width / 2, height / 2]) {
+    _animationProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
         return opt.use ? {
             'style': `animation:${opt.name} ${opt.duration||1}s ${opt.iterationCount||'infinite'} linear`,
             'transform-origin': `${t[0]}px ${t[1]}px`
@@ -120,7 +86,7 @@ export default class DrawSVG {
         } : {}
     }
     // 变形属性
-    _transformProps(opt, t = opt.o || [width / 2, height / 2]) {
+    _transformProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
         if (opt.use) {
             let transform = ""
             switch (opt.name) {
@@ -148,7 +114,7 @@ export default class DrawSVG {
         // } : {}
     }
     // 规则图形
-    _regularShape(name, points, options, root = this._svg) {
+    _regularShape(name, points, options, root = this.svg) {
         let opt = this._regualrOptions(options, name)
         let defaultProps = Object.assign(this._lineProps(opt), this._shapeProps(opt))
         let g = this._g({
@@ -220,7 +186,7 @@ export default class DrawSVG {
 
             // 标注文字
             if (opt.text) {
-                this._createEle("text", {
+                this._text({
                     x: t[0],
                     y: t[1],
                     fill: opt.textColor || opt.color || 'black',
@@ -231,7 +197,7 @@ export default class DrawSVG {
         })
     }
     // 线段
-    _line(points, options, g = this._svg) {
+    _line(points, options, g = this.svg) {
         let props = this._lineProps(options)
         this._createEle("line", {
             x1: points[0][0],
@@ -244,6 +210,11 @@ export default class DrawSVG {
     }
     // 网格坐标
     _grid(options) {
+        let {
+            width,
+            height,
+            svg
+        } = this
         let opt = this._regualrOptions(options, "grid")
         let props = this._lineProps(opt)
         let g = this._g({
@@ -252,7 +223,7 @@ export default class DrawSVG {
             fill: 'transparent',
             transform: opt.rotate ? `rotate(${opt.rotate})` : undefined,
             'transform-origin': `${width/2} ${height/2}`
-        }, this._svg)
+        }, svg)
 
         let interval = opt.interval || 100
         let offsetX = (width / 2) % interval
@@ -291,13 +262,18 @@ export default class DrawSVG {
     }
     // 极坐标
     _polar(options) {
+        let {
+            width,
+            height,
+            svg
+        } = this
         let opt = this._regualrOptions(options, "polar")
         let props = this._lineProps(opt)
         let g = this._g({
             ...props,
             id: 'polar',
             fill: 'transparent'
-        }, this._svg)
+        }, svg)
         let interval = opt.interval || 100
         let o = [width / 2, height / 2]
 
@@ -324,7 +300,7 @@ export default class DrawSVG {
     }
     // 箭头
     _marker() {
-        let defs = this._defs(this._svg)
+        let defs = this._defs(this.svg)
         let market = this._createEle("marker", {
             id: 'markerArrow',
             markerWidth: 13,
@@ -346,13 +322,17 @@ export default class DrawSVG {
     }
     // x轴
     _axisX(options) {
+        let {
+            width,
+            height
+        } = this
         let opt = this._regualrOptions(options, "axisX")
         // let props = this._lineProps(opt)
         let g = this._g({
             // ...props,
             id: 'axisX',
             fill: 'transparent'
-        }, this._svg)
+        }, this.svg)
 
         // let offset = 150
         let offset = (width - 10 * 50) / 2
@@ -364,13 +344,17 @@ export default class DrawSVG {
     }
     // y轴
     _axisY(options) {
+        let {
+            width,
+            height
+        } = this
         let opt = this._regualrOptions(options, "axisY")
         // let props = this._lineProps(opt)
         let g = this._g({
             // ...props,
             id: 'axisY',
             fill: 'transparent'
-        }, this._svg)
+        }, this.svg)
         // let offset = 150
         let offset = (height - 10 * 50) / 2
         let points = [
@@ -397,7 +381,7 @@ export default class DrawSVG {
     }
     // 图案
     _pattern(options) {
-        let defs = this._defs(this._svg)
+        let defs = this._defs(this.svg)
         let pattern = this._createEle("pattern", {
             id: "pattern",
             x: 100,
@@ -407,21 +391,21 @@ export default class DrawSVG {
             patternUnits: options.patternUnits || "objextBoundingBox"
         }, defs)
 
-        this._createEle("circle", {
+        this._circle({
             x: 10,
             y: 10,
             fill: 'red',
             r: 5
-
         }, pattern)
-        this._createEle("rect", {
+
+        this._rect({
             x: 0,
             y: 0,
             width,
             height,
             fill: "url(#pattern)",
             stroke: "blue"
-        }, this._svg)
+        }, this.svg)
     }
     // 路径
     _d(points, z) {
@@ -441,9 +425,13 @@ export default class DrawSVG {
         // return points.join(" ")
     }
 
-    // 图形组成
-    _path(options, parent = this._svg) {
+    // 图形
+    _shape(options, parent = this.svg) {
         console.log(options)
+        let {
+            width,
+            height
+        } = this
         let defaultOpt = this._regualrOptions(options)
         let shapeProps = this._shapeProps(defaultOpt)
         let lineProps = this._lineProps(defaultOpt)
@@ -524,7 +512,7 @@ export default class DrawSVG {
         }
     }
     clear() {
-        let div = this._svg
+        let div = this.svg
         while (div.hasChildNodes()) //当div下还存在子节点时 循环继续
         {
             div.removeChild(div.firstChild);
@@ -580,7 +568,7 @@ export default class DrawSVG {
                         points,
                         offset: fractalOffset
                     })
-                    this._path(Object.assign({}, options, {
+                    this._shape(Object.assign({}, options, {
                         _points: midseg.points,
                         fractalLevel,
                         fractalUse: fractalLevel > 1,
@@ -592,7 +580,7 @@ export default class DrawSVG {
 
                 break;
             case "zoom":
-                this._path(Object.assign({}, options, {
+                this._shape(Object.assign({}, options, {
                     _points: points,
                     fractalLevel,
                     fractalUse: fractalLevel > 1,
@@ -606,7 +594,7 @@ export default class DrawSVG {
                         ...options,
                         r,
                     })
-                    this._path(Object.assign({}, options, {
+                    this._shape(Object.assign({}, options, {
                         _points: seg.points,
                         // _points: options._seg({
                         //     ...options,
@@ -626,7 +614,7 @@ export default class DrawSVG {
                         angle: options.angle + fractalOffset
                         // r,
                     })
-                    this._path(Object.assign({}, options, {
+                    this._shape(Object.assign({}, options, {
                         _points: seg.points,
                         // _points: options._seg({
                         //     ...options,
@@ -655,7 +643,7 @@ export default class DrawSVG {
                             r,
                             // n: options.n
                         })
-                        this._path(Object.assign({}, options, {
+                        this._shape(Object.assign({}, options, {
                             o,
                             r,
                             _points: seg.points,
@@ -681,7 +669,7 @@ export default class DrawSVG {
                             r,
                             // n: options.n
                         })
-                        this._path(Object.assign({}, options, {
+                        this._shape(Object.assign({}, options, {
                             o,
                             r,
                             _points: seg.points.slice(0, 3),
@@ -693,57 +681,5 @@ export default class DrawSVG {
                 })
                 break;
         }
-
-    }
-
-    // 图形
-    _shape(options) {
-        // 背景图案
-        if (options.patternShow) {
-            this._pattern(options)
-        }
-        // 网格坐标
-        if (options.gridShow) {
-            this._grid(options)
-        }
-        // 极坐标
-        if (options.polarShow) {
-            this._polar(options)
-        }
-        // x轴
-        if (options.axisXShow || options.axisYShow) {
-            this._marker()
-        }
-        if (options.axisXShow) {
-            this._axisX(options)
-        }
-        if (options.axisYShow) {
-            this._axisY(options)
-        }
-        // 图形
-        this._path(options)
-    }
-    _defs(parent) {
-        return this._createEle("defs", {}, parent)
-    }
-    _g(options, parent) {
-        return this._createEle("g", {
-            id: 'shape',
-            ...options
-        }, parent)
-    }
-    _use(parent) {
-        return this._createEle("use", {
-            x: 0,
-            y: 0,
-            width,
-            height,
-            'xlink:href': '#shape'
-        }, parent)
-    }
-    _symbol(parent) {
-        return this._createEle("symbol", {
-            id: "shape"
-        }, parent)
     }
 }

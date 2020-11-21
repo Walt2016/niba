@@ -1,4 +1,4 @@
-import DrawCanvas from '../draw/canvas/index'
+import DrawCanvas from '../canvas/index'
 
 import {
     Ball,

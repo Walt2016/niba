@@ -1,5 +1,5 @@
 import _ from '../utils/index'
-import DrawSVG from '../draw/svg/index'
+import DrawSVG from '../svg/index'
 let draw = new DrawSVG()
 let {
     width,
@@ -8,7 +8,7 @@ let {
 
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
-import Group from '../draw/svg/group'
+import Group from '../svg/group'
 let dataModel = {
     // 全局
     o: [width / 2, height / 2],
