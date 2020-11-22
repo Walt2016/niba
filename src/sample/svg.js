@@ -26,8 +26,8 @@ let dataModel = {
     dashAnimation: false,
     linejoin: 'arcs',
     sort: 'normal',
-    segType:'equiangular',
-    api:'svg',
+    segType: 'equiangular',
+    api: 'svg',
 
     // 半径
     radiusShow: false,
@@ -84,7 +84,7 @@ let dataModel = {
     vertexTextColor: 'red',
     vertexTextFontSize: 12,
     vertexColorful: false,
-    vertexColorfulOpacity:0.5,
+    vertexColorfulOpacity: 0.5,
 
     // 旁切圆
     excircleShow: false,
@@ -95,7 +95,7 @@ let dataModel = {
     excircleDashArray: [5, 5],
     excircleDashAnimation: false,
     excircleColor: 'red',
-    
+
 
     // 网格坐标
     gridShow: false,
@@ -118,7 +118,7 @@ let dataModel = {
     polarInterval: 100,
     polarColor: 'black',
 
-    
+
 
     // 分形
     fractalUse: false,
@@ -128,7 +128,7 @@ let dataModel = {
     fractalTimerUse: false,
     fractalTimerDelay: 500,
     fractalColorful: false,
-    fractalColorfulOpacity:0.5,
+    fractalColorfulOpacity: 0.5,
 
     // 动画
     animationUse: false,
@@ -162,10 +162,16 @@ let dataModel = {
     axisYSticks: true,
 
     // 背景
-    patternShow:false,
-    patternUnits:'objectBoundingBox'
+    patternShow: false,
+    patternUnits: 'objectBoundingBox',
 
-
+    // 连接线
+    linkShow: false,
+    linkLineWidth: 1,
+    linkColor: 'black',
+    linkOpacity: 0.5,
+    linkDashLine: true,
+    linkDashArray: [5, 5],
 
     // colorful: false,
     // followMouse:false,

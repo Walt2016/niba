@@ -36,6 +36,7 @@ export default class DrawSVG extends BaseSvg {
         if (options.axisYShow) {
             this._axisY(options)
         }
+
         // 图形
         this._shape(options)
     }
@@ -209,6 +210,7 @@ export default class DrawSVG extends BaseSvg {
             // ...options
         }, g)
     }
+
     // 网格坐标
     _grid(options) {
         let {
@@ -482,9 +484,9 @@ export default class DrawSVG extends BaseSvg {
                 })
             }
         } else { // 无边
-            this._path({
-                d
-            }, g)
+            // this._path({
+            //     d
+            // }, g)
         }
         // 半径
         if (options.radiusShow) {
@@ -495,6 +497,10 @@ export default class DrawSVG extends BaseSvg {
         if (options.vertexShow) {
             this._regularShape('vertex', points, options, g)
         }
+        // 顶点链接线
+        if (options.linkShow) {
+            this._link(points, options, g)
+        }
         // 圆心
         if (options.centerShow) {
             this._regularShape('center', [options.o], options, g)
@@ -503,6 +509,7 @@ export default class DrawSVG extends BaseSvg {
         if (options.excircleShow) {
             this._excircle(options, g)
         }
+
 
         // 分形
         if (options.fractalUse) {
@@ -529,14 +536,41 @@ export default class DrawSVG extends BaseSvg {
             return `M${options.o.join(" ")} L${t.join(" ")}`
         }).join(" ")
         let opt = this._regualrOptions(options, "radius")
-        let radiusProps = this._lineProps(opt)
+        let props = this._lineProps(opt)
         let groupRadius = this._g({
             id: 'radius',
-            ...radiusProps
+            ...props
         }, g)
         this._path({
             d
         }, groupRadius)
+    }
+    // 连接线
+    _link(points, options, g = this.svg) {
+        let n = points.length
+        let d = points.map((t, index) => {
+            // return `M${options.o.join(" ")} L${t.join(" ")}`
+            // let next = points[index + i >= n ? 0 : index + i]
+
+            let links = []
+            for (let i = index + 1; i < n; i++) {
+                let next = points[i >= n ? index : i]
+                links[links.length] = `M${t.join(" ")} L${next.join(" ")}`
+            }
+            return links.join(" ")
+
+            // return `M${t.join(" ")} L${next.join(" ")}`
+        }).join(" ")
+        let opt = this._regualrOptions(options, "link")
+        let props = this._lineProps(opt)
+        let groupRadius = this._g({
+            id: 'link',
+            ...props
+        }, g)
+        this._path({
+            d
+        }, groupRadius)
+
     }
     // 旁切圆
     _excircle(options, g) {
