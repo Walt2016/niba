@@ -1,10 +1,4 @@
-import {
-    _atan,
-    _dis,
-    _sin,
-    _cos,
-    _pos
-} from '../utils'
+import _ from '../utils/index'
 import Controler from '../canvas/Controler'
 import PolarSeg from '../points/PolarSeg'
 import Freeform from '../points/Freeform'
@@ -33,7 +27,25 @@ export default class BaseEntity {
             }
         }
         if (draw) {
-            this.setEnumerable("draw", draw)
+            // 
+            if (_.type(draw) === "string") {
+                this.api = draw
+                if (draw === 'svg') {
+                    // let DrawSVG = () => import('../svg/index')
+
+                    // import DrawSVG from '../svg/index'
+                    // let draw = new DrawSVG()
+                    // let DrawSVG = require('../svg/index')
+
+                    this.setEnumerable("draw", new DrawSVG())
+
+                } else {
+
+                }
+
+            } else {
+                this.setEnumerable("draw", draw)
+            }
         }
     }
     // 根据切割机 设置点
@@ -55,6 +67,28 @@ export default class BaseEntity {
             })
             return this.setEnumerable({
                 points
+            })
+        }
+    }
+    // 曲线控制点
+    setControllers(options) {
+        if (options instanceof PolarSeg) {
+            let {
+                points,
+                seg
+            } = options
+            return this.setEnumerable({
+                controllers: points,
+                seg: seg.bind(options)
+            })
+        } else if (Array.isArray(options)) {
+            let {
+                points
+            } = new Freeform({
+                points: options.points
+            })
+            return this.setEnumerable({
+                controllers: points
             })
         }
     }
@@ -187,16 +221,36 @@ export default class BaseEntity {
     // }
 
     // 接口
-    draw(ctx = this._ctx) {
+    draw() {
+        // this._draw.line.call(this, ctx)
+        // this.showController && this.drawController(ctx)
+        // return this
+        if (this.api === 'svg') {
+            this.drawSVG()
+        } else {
+            this.drawCanvas(this._ctx)
+        }
+    }
+    // 从新画
+    redraw(options) {
+        if (this.api === 'svg') {
+            this.redrawSVG(options)
+        } else {
+            this.redrawCanvase(options)
+        }
+        // this.reset().update(options)
+        // this._draw.clear.call(this, this._ctx)
+        // this.draw()
+    }
+    drawCanvas(ctx = this._ctx) {
         this._draw.line.call(this, ctx)
         this.showController && this.drawController(ctx)
         return this
     }
-    // 从新画
-    redraw(options) {
+    redrawCanvase(options) {
         this.reset().update(options)
         this._draw.clear.call(this, this._ctx)
-        this.draw()
+        this.drawCanvas()
     }
     drawSVG() {
         // this._draw._path(this)
@@ -211,7 +265,7 @@ export default class BaseEntity {
     moveTo([tx, ty]) {
         this.timmer && clearInterval(this.timmer)
         this.timmer = setInterval(() => {
-            let d = _dis(this.o, [tx, ty])
+            let d = _.dis(this.o, [tx, ty])
             console.log(d)
             if (d < 1) {
                 this.render([tx, ty])
@@ -240,7 +294,7 @@ export default class BaseEntity {
     }
     // 跟随鼠标
     follow(e) {
-        let pos = _pos(e, this._ctx.canvas)
+        let pos = _.pos(e, this._ctx.canvas)
         if (this.showController) {
             this.pos = pos
         }

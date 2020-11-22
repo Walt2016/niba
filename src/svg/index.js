@@ -256,7 +256,7 @@ export default class DrawSVG extends BaseSvg {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
 
-        this._createEle("path", {
+        this._path({
             d
         }, g)
 
@@ -279,7 +279,7 @@ export default class DrawSVG extends BaseSvg {
         let o = [width / 2, height / 2]
 
         for (let i = 0; i < height / interval; i++) {
-            this._createEle("circle", {
+            this._circle({
                 cx: o[0],
                 cy: o[1],
                 r: interval * i
@@ -295,14 +295,14 @@ export default class DrawSVG extends BaseSvg {
         let d = points.map((t, index) => {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
-        this._createEle("path", {
+        this._path({
             d
         }, g)
     }
     // 箭头
     _marker() {
         let defs = this._defs(this.svg)
-        let market = this._createEle("marker", {
+        let market = this._marker({
             id: 'markerArrow',
             markerWidth: 13,
             markerHeight: 13,
@@ -311,7 +311,7 @@ export default class DrawSVG extends BaseSvg {
             orient: 'auto'
         }, defs)
 
-        this._createEle("path", {
+        this._path({
             d: this._d([
                 [2, 2],
                 [2, 11],
@@ -383,7 +383,7 @@ export default class DrawSVG extends BaseSvg {
     // 图案
     _pattern(options) {
         let defs = this._defs(this.svg)
-        let pattern = this._createEle("pattern", {
+        let pattern = this._pattern({
             id: "pattern",
             x: 100,
             y: 100,
@@ -456,7 +456,7 @@ export default class DrawSVG extends BaseSvg {
             let opt = this._regualrOptions(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)
             let edgeLineProps = this._lineProps(opt)
-            this._createEle("path", {
+            this._path({
                 ...edgeShapeProps,
                 ...edgeLineProps,
                 d,
@@ -474,7 +474,7 @@ export default class DrawSVG extends BaseSvg {
                     'font-size': opt.textFontSize || 12
                 }, g)
                 midseg.points.forEach((t, index) => {
-                    this._createEle("text", {
+                    this._text({
                         x: t[0],
                         y: t[1],
                         textContent: index,
@@ -482,7 +482,7 @@ export default class DrawSVG extends BaseSvg {
                 })
             }
         } else { // 无边
-            this._createEle("path", {
+            this._path({
                 d
             }, g)
         }
@@ -534,7 +534,7 @@ export default class DrawSVG extends BaseSvg {
             id: 'radius',
             ...radiusProps
         }, g)
-        this._createEle("path", {
+        this._path({
             d
         }, groupRadius)
     }
