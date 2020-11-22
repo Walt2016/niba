@@ -172,6 +172,7 @@ let dataModel = {
     linkOpacity: 0.5,
     linkDashLine: true,
     linkDashArray: [5, 5],
+    linkDashAnimation: false,
 
     // colorful: false,
     // followMouse:false,
