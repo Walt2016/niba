@@ -174,6 +174,12 @@ let dataModel = {
     linkDashArray: [5, 5],
     linkDashAnimation: false,
 
+    // 曲线
+    curveUse: false,
+    curveRatio: 0.5
+
+
+
     // colorful: false,
     // followMouse:false,
     // animate:false,

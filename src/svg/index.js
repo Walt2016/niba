@@ -395,8 +395,8 @@ export default class DrawSVG extends BaseSvg {
         }, defs)
 
         this._circle({
-            x: 10,
-            y: 10,
+            cx: 10,
+            cy: 10,
             fill: 'red',
             r: 5
         }, pattern)
@@ -411,10 +411,39 @@ export default class DrawSVG extends BaseSvg {
         }, this.svg)
     }
     // 路径
-    _d(points, z) {
+    _d(points, z, curve) {
         // let p = points.map((t, index) => {
         //     return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         // }).join(" ")
+        if (curve) {
+            let n = points.length
+            let {
+                ratio = 0.5,
+
+            } = curve
+            return points.map((t, index) => {
+                let next = points[index + 1 >= n ? 0 : index + 1]
+                let mid = _.mid(t, next)
+                let dis = _.dis(t, next)
+                let cp = _.polar(mid, ratio * dis, _.atan(t, next) - 90)
+
+                // console.log("_d", dis, mid, cp)
+                // this._circle({
+                //     cx: mid[0],
+                //     cy: mid[1],
+                //     fill: 'blue',
+                //     r: 5
+                // }, this.svg)
+                // this._circle({
+                //     cx: cp[0],
+                //     cy: cp[1],
+                //     fill: 'red',
+                //     r: 5
+                // }, this.svg)
+                return `M${t.join(" ")} Q${cp.join(" ")} ${next.join(" ")}`
+                // return (index === 0 ? "M" : "L") + t.join(" ")
+            }).join(" ")
+        }
         if (z) {
             // p.concat(["z"])
             return points.map((t, index) => {
@@ -425,6 +454,7 @@ export default class DrawSVG extends BaseSvg {
                 return (index % 2 === 0 ? "M" : "L") + t.join(" ")
             }).join(" ")
         }
+
         // return points.join(" ")
     }
 
@@ -448,11 +478,17 @@ export default class DrawSVG extends BaseSvg {
             ...transformProps
         }, parent)
         let points = options._points || []
-        // 边
-        // let d = points.map((t, index) => {
-        //     return (index === 0 ? "M" : "L") + t.join(" ")
-        // }).concat(["z"]).join(" ")
-        let d = this._d(points, true)
+
+        let d = ""
+        if (options.curveUse) {
+            // 曲线
+            let curveOpt = this._regualrOptions(options, "curve")
+            d = this._d(points, true, curveOpt)
+        } else {
+            // 直线
+            d = this._d(points, true)
+        }
+
         if (options.edgeShow) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
@@ -514,9 +550,6 @@ export default class DrawSVG extends BaseSvg {
         // 分形
         if (options.fractalUse) {
             let colors = _.colorCircle(points.length, options.fractalColorfulOpacity || 1)
-            // this._fractal(Object.assign(options, {
-            //     _colors: colors
-            // }))
             new Fractal(this._shape.bind(this), Object.assign(options, {
                 _colors: colors
             }))
@@ -549,17 +582,12 @@ export default class DrawSVG extends BaseSvg {
     _link(points, options, g = this.svg) {
         let n = points.length
         let d = points.map((t, index) => {
-            // return `M${options.o.join(" ")} L${t.join(" ")}`
-            // let next = points[index + i >= n ? 0 : index + i]
-
             let links = []
             for (let i = index + 1; i < n; i++) {
                 let next = points[i >= n ? index : i]
                 links[links.length] = `M${t.join(" ")} L${next.join(" ")}`
             }
             return links.join(" ")
-
-            // return `M${t.join(" ")} L${next.join(" ")}`
         }).join(" ")
         let opt = this._regualrOptions(options, "link")
         let props = this._lineProps(opt)
@@ -570,7 +598,6 @@ export default class DrawSVG extends BaseSvg {
         this._path({
             d
         }, groupRadius)
-
     }
     // 旁切圆
     _excircle(options, g) {
