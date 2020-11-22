@@ -21,31 +21,32 @@ export default class BaseEntity {
                 this[key] = options[key]
             }
 
-            if (key === "colorful") {
-                options[key] &&
-                    this.setEnumerable("colors", new Colors())
+            if (options[key]) {
+                switch (key) {
+                    case "api":
+                        this.setDraw(options[key])
+                        break;
+                    case "colorful":
+                        this.setEnumerable("colors", new Colors())
+                        break;
+                }
             }
         }
         if (draw) {
             // 
             if (_.type(draw) === "string") {
-                this.api = draw
-                if (draw === 'svg') {
-                    // let DrawSVG = () => import('../svg/index')
-
-                    // import DrawSVG from '../svg/index'
-                    // let draw = new DrawSVG()
-                    // let DrawSVG = require('../svg/index')
-
-                    this.setEnumerable("draw", new DrawSVG())
-
-                } else {
-
-                }
-
+                // this.api = draw
+                this.setDraw(draw)
             } else {
                 this.setEnumerable("draw", draw)
             }
+        }
+    }
+    setDraw(draw) {
+        if (draw === 'svg') {
+            this.setEnumerable("draw", new DrawSVG())
+        } else {
+            this.setEnumerable("draw", new DrawCanvas())
         }
     }
     // 根据切割机 设置点
@@ -222,9 +223,6 @@ export default class BaseEntity {
 
     // 接口
     draw() {
-        // this._draw.line.call(this, ctx)
-        // this.showController && this.drawController(ctx)
-        // return this
         if (this.api === 'svg') {
             this.drawSVG()
         } else {
@@ -238,12 +236,10 @@ export default class BaseEntity {
         } else {
             this.redrawCanvase(options)
         }
-        // this.reset().update(options)
-        // this._draw.clear.call(this, this._ctx)
-        // this.draw()
     }
     drawCanvas(ctx = this._ctx) {
-        this._draw.line.call(this, ctx)
+        // this._draw.line.call(this, ctx)
+        this._draw._draw(this)
         this.showController && this.drawController(ctx)
         return this
     }
@@ -253,7 +249,6 @@ export default class BaseEntity {
         this.drawCanvas()
     }
     drawSVG() {
-        // this._draw._path(this)
         this._draw._draw(this)
     }
     redrawSVG(options) {

@@ -27,6 +27,7 @@ let dataModel = {
     linejoin: 'arcs',
     sort: 'normal',
     segType:'equiangular',
+    api:'svg',
 
     // 半径
     radiusShow: false,
@@ -177,7 +178,8 @@ let dataModel = {
 
 // debugger
 // let polygon = new Polygon(dataModel, draw)
-let polygon = new Polygon(dataModel, "svg")
+// let polygon = new Polygon(dataModel, "svg")
+let polygon = new Polygon(dataModel)
 let group = Group._group(polygon)
 let options = Group._options(polygon)
 

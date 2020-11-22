@@ -175,14 +175,11 @@ let dataModel = {
     // draw
 }
 
-// debugger
-// let polygon = new Polygon(dataModel, draw)
+
 let polygon = new Polygon(dataModel, "svg")
 let group = Group._group(polygon)
 let options = Group._options(polygon)
 
-// polygon.draw(ctx)
-// polygon.drawSVG()
 polygon.draw()
 let timmer
 let v = Math.random()

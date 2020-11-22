@@ -40,8 +40,13 @@ export default class DrawCanvas {
             height
         })
     }
+    // 入口函数
+    _draw(options){
+        this.clear()
+        this.line(options)
+    }
     //连线
-    line(ctx = this._ctx) {
+    line(options) {
         let {
             fillStyle = "#FF0000",
                 strokeStyle = "#FF0000",
@@ -50,7 +55,8 @@ export default class DrawCanvas {
                 color,
                 fill,
                 lineWidth = 1
-        } = this
+        } = options
+        let ctx = this.ctx
         ctx.fillStyle = color || fillStyle
         ctx.strokeStyle = color || strokeStyle;
         ctx.lineWidth = lineWidth
@@ -120,7 +126,7 @@ export default class DrawCanvas {
         }
         return this
     }
-    clear(ctx = this._ctx) {
+    clear(ctx = this.ctx) {
         if (ctx) {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         }
