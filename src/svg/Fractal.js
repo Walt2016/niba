@@ -36,9 +36,33 @@ export default class Fractal {
         }
         let fn = this['_' + fractalType]
         // this['_' + fractalType] && this['_' + fractalType](options)
-        fractalTimerUse ? setTimeout(() => {
-            fn.call(this, options)
-        }, fractalLevel * fractalTimerDelay) : fn.call(this, options)
+        if (fn) {
+            fractalTimerUse ? setTimeout(() => {
+                fn.call(this, options)
+            }, fractalLevel * fractalTimerDelay) : fn.call(this, options)
+        }
+
+    }
+    _radiusRatio(options) {
+        let {
+            fractalLevel,
+            fractalOffset,
+            fractalTimerUse,
+            fractalTimerDelay,
+            fractalColorful,
+            _points: points,
+            fractalType,
+            curveRadiusRatio
+        } = options
+        fractalLevel = fractalLevel - 1
+        curveRadiusRatio -= fractalOffset * fractalLevel
+        this.draw(Object.assign({}, options, {
+            _points: points,
+            curveRadiusRatio,
+            fractalLevel,
+            fractalUse: fractalLevel > 1
+            // r: _.dis(midseg.points[0], options.o)
+        }))
 
     }
     _midSeg(options) {

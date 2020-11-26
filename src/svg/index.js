@@ -438,7 +438,6 @@ export default class DrawSVG extends BaseSvg {
             }).join(" ")
         }
         if (z) { // 闭合线段
-            // p.concat(["z"])
             return points.map((t, index) => {
                 return (index === 0 ? "M" : "L") + t.join(" ")
             }).concat(["z"]).join(" ")

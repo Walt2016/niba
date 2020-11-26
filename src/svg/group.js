@@ -25,7 +25,7 @@ const optionsConfig = {
     shape: ['circle', 'rect', 'line', 'polygon'],
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
-    fractalType: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce', 'tree'],
+    fractalType: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce', 'tree','radiusRatio'],
     animationName: ['rotate', 'twinkle'],
     transformName: ['scale', 'translate', 'rotate', 'skew'],
     sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle'],
