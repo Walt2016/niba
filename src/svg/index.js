@@ -412,50 +412,41 @@ export default class DrawSVG extends BaseSvg {
     }
     // 路径
     _d(points, z, curve) {
-        // let p = points.map((t, index) => {
-        //     return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-        // }).join(" ")
-        if (curve) {
+        if (curve) { // 曲线
             let n = points.length
             let {
                 ratio = 0.5,
-
+                    controller,
+                    radiusRatio = 0.5,
+                    angleOffset = 0,
+                    orient
             } = curve
             return points.map((t, index) => {
                 let next = points[index + 1 >= n ? 0 : index + 1]
                 let mid = _.mid(t, next)
                 let dis = _.dis(t, next)
-                let cp = _.polar(mid, ratio * dis, _.atan(t, next) - 90)
-
-                // console.log("_d", dis, mid, cp)
-                // this._circle({
-                //     cx: mid[0],
-                //     cy: mid[1],
-                //     fill: 'blue',
-                //     r: 5
-                // }, this.svg)
-                // this._circle({
-                //     cx: cp[0],
-                //     cy: cp[1],
-                //     fill: 'red',
-                //     r: 5
-                // }, this.svg)
+                let cp = _.polar(mid, radiusRatio * dis, orient ? _.atan(t, next) - 90 + angleOffset : angleOffset)
+                if (controller) {
+                    this._circle({
+                        cx: cp[0],
+                        cy: cp[1],
+                        fill: 'red',
+                        r: 5
+                    }, this.svg)
+                }
                 return `M${t.join(" ")} Q${cp.join(" ")} ${next.join(" ")}`
-                // return (index === 0 ? "M" : "L") + t.join(" ")
             }).join(" ")
         }
-        if (z) {
+        if (z) { // 闭合线段
             // p.concat(["z"])
             return points.map((t, index) => {
                 return (index === 0 ? "M" : "L") + t.join(" ")
             }).concat(["z"]).join(" ")
-        } else {
+        } else { // 折线
             return points.map((t, index) => {
                 return (index % 2 === 0 ? "M" : "L") + t.join(" ")
             }).join(" ")
         }
-
-        // return points.join(" ")
     }
 
     // 图形

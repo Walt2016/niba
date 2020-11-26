@@ -176,7 +176,10 @@ let dataModel = {
 
     // 曲线
     curveUse: false,
-    curveRatio: 0.5
+    curveRadiusRatio: 0.5,
+    curveController: false,
+    curveAngleOffset: 0,
+    curveOrient: true
 
 
 
