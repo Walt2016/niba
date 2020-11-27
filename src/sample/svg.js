@@ -179,7 +179,13 @@ let dataModel = {
     curveRadiusRatio: 0.5,
     curveController: false,
     curveAngleOffset: 0,
-    curveOrient: true
+    curveOrient: true,
+
+    waveUse: false,
+    waveRadiusRatio: 0.5,
+    waveController: false,
+    waveAngleOffset: 0,
+    waveOrient: true
 
 
 

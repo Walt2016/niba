@@ -410,31 +410,51 @@ export default class DrawSVG extends BaseSvg {
             stroke: "blue"
         }, this.svg)
     }
+    // 波浪曲线
+    _wave(p1, p2, opitons) {
+        let mid = _.mid(p1, p2)
+        return [this._curve(p1, mid, opitons),
+            this._curve(mid, p2, {
+                ...opitons,
+                angleOffset: opitons.angleOffset || 0 + 180
+            })
+        ].join(" ")
+    }
+    // 两点画曲线
+    _curve(p1, p2, opitons) {
+        let {
+            controller,
+            radiusRatio = 0.5,
+            angleOffset = 0,
+            orient
+        } = opitons
+        let mid = _.mid(p1, p2)
+        let dis = _.dis(p1, p2)
+        let cp = _.polar(mid, radiusRatio * dis, orient ? _.atan(p1, p2) - 90 + angleOffset : angleOffset)
+        if (controller) {
+            this._circle({
+                cx: cp[0],
+                cy: cp[1],
+                fill: 'red',
+                r: 5
+            }, this.svg)
+        }
+        return `M${p1.join(" ")} Q${cp.join(" ")} ${p2.join(" ")}`
+    }
     // 路径
-    _d(points, z, curve) {
-        if (curve) { // 曲线
+    _d(points, z, curve, wave) {
+        if (wave) { // 曲线
             let n = points.length
-            let {
-                ratio = 0.5,
-                    controller,
-                    radiusRatio = 0.5,
-                    angleOffset = 0,
-                    orient
-            } = curve
             return points.map((t, index) => {
                 let next = points[index + 1 >= n ? 0 : index + 1]
-                let mid = _.mid(t, next)
-                let dis = _.dis(t, next)
-                let cp = _.polar(mid, radiusRatio * dis, orient ? _.atan(t, next) - 90 + angleOffset : angleOffset)
-                if (controller) {
-                    this._circle({
-                        cx: cp[0],
-                        cy: cp[1],
-                        fill: 'red',
-                        r: 5
-                    }, this.svg)
-                }
-                return `M${t.join(" ")} Q${cp.join(" ")} ${next.join(" ")}`
+                return this._wave(t, next, wave)
+            }).join(" ")
+        }
+        if (curve) { // 曲线
+            let n = points.length
+            return points.map((t, index) => {
+                let next = points[index + 1 >= n ? 0 : index + 1]
+                return this._curve(t, next, curve)
             }).join(" ")
         }
         if (z) { // 闭合线段
@@ -469,17 +489,25 @@ export default class DrawSVG extends BaseSvg {
         }, parent)
         let points = options._points || []
 
-        let d = ""
+        // let d = ""
+        let ds = []
+        if (options.waveUse) {
+            //  波浪线
+            let waveOpt = this._regualrOptions(options, "wave")
+            ds[ds.length] = this._d(points, true, false, waveOpt)
+        }
         if (options.curveUse) {
             // 曲线
             let curveOpt = this._regualrOptions(options, "curve")
-            d = this._d(points, true, curveOpt)
-        } else {
-            // 直线
-            d = this._d(points, true)
+            ds[ds.length] = this._d(points, true, curveOpt)
         }
 
-        if (options.edgeShow) { // 有边
+        if (options.edgeShow) {
+            // 直线
+            ds[ds.length] = this._d(points, true)
+        }
+
+        if (options.waveUse || options.curveUse || options.edgeShow) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)
@@ -487,7 +515,7 @@ export default class DrawSVG extends BaseSvg {
             this._path({
                 ...edgeShapeProps,
                 ...edgeLineProps,
-                d,
+                d: ds.join(" "),
                 transform: options.transform,
                 'transform-origin': `${width/2} ${height/2}`
             }, g)
@@ -509,11 +537,8 @@ export default class DrawSVG extends BaseSvg {
                     }, groupEdgeText)
                 })
             }
-        } else { // 无边
-            // this._path({
-            //     d
-            // }, g)
         }
+
         // 半径
         if (options.radiusShow) {
             this._radius(points, options, g)
