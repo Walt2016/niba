@@ -1,7 +1,7 @@
-import config from './config'
+import config from '../config'
 import {
     _type,
-} from './utils'
+} from '../utils'
 
 import filter from './filter'
 import {
@@ -25,7 +25,7 @@ import {
     Ray,
     Text,
     Arc
-} from './entity'
+} from '../entity'
 let {
     env,
     center

@@ -14,16 +14,14 @@
          }
      }
 
-     //  function _pos(e, canvas) {
+     //  function _.pos(e, canvas) {
      //      let x = e.clientX,
      //          y = e.clientY
      //      var canvasBox = canvas.getBoundingClientRect(); //获取canvas元素的边界框
      //      return [(x - canvasBox.left) * (canvas.width / canvasBox.width), (y - canvasBox.top) * (canvas.height / canvasBox.height)]
      //  }
 
-     import {
-         _pos
-     } from '../utils'
+     import _ from '../utils'
 
      export default class Events {
          constructor(options) {
@@ -69,7 +67,7 @@
 
          }
          _start(e) {
-             var p = _pos(e);
+             var p = _.pos(e);
              drawing = true
              current = [p];
              points = [p];
@@ -83,7 +81,7 @@
              // }
          }
          _move(e) {
-             var p = _pos(e);
+             var p = _.pos(e);
              this._background.call(this, p)
              this._renderGroup.call(this, p)
              if (drawing) { //画 
@@ -96,7 +94,7 @@
              }
          }
          _end(e) {
-             var p = _pos(e);
+             var p = _.pos(e);
              drawing = false;
              if (config.shape !== "cursor") { //增加图形
                  this.group[this.group.length] = activeShape
@@ -164,7 +162,7 @@
                  entity,
                  ui
              } = this
-             //  let pos = _pos(e, canvas)
+             //  let pos = _.pos(e, canvas)
 
              //  if (entity.showController) {
              //      entity.pos = pos
@@ -250,7 +248,7 @@
                  activePointIndex,
                  ui
              } = this
-             let pos = _pos(e, canvas)
+             let pos = _.pos(e, canvas)
              if (entity.showController) {
                  entity.pos = pos
              }
@@ -309,7 +307,7 @@
                  ui
              } = this
              canvas.style.cursor = 'pointer';
-             let pos = _pos(e, canvas)
+             let pos = _.pos(e, canvas)
              if (dragging && entity.drag) {
                  ui && ui._set("o", pos)
                  entity.render(pos)

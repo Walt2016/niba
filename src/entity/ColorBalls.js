@@ -5,11 +5,7 @@ import {
 
 } from ".";
 
-import {
-    _sin,
-    _cos,
-    _polar
-} from "../utils"
+import _ from "../utils"
 
 import {
     CurveSeg
@@ -76,13 +72,13 @@ export default class ColorBalls extends BaseEntity {
     //     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     //     for (var a = 0; a < 360; a += 10) {
 
-    //         // var r2 = A * r + B * r * _sin(n * (a + phi)); // n = 0,1,2,3,4,5,.....360...
+    //         // var r2 = A * r + B * r * _.sin(n * (a + phi)); // n = 0,1,2,3,4,5,.....360...
 
-    //         var r2 = r +  0.5*r * _sin(n * (a + phi));
-    //         // var x = o[0] + r2 * _cos(a);
-    //         // var y = o[1] + r2 * _sin(a);
+    //         var r2 = r +  0.5*r * _.sin(n * (a + phi));
+    //         // var x = o[0] + r2 * _.cos(a);
+    //         // var y = o[1] + r2 * _.sin(a);
 
-    //         let [x, y] = _polar(o, r2, a)
+    //         let [x, y] = _.polar(o, r2, a)
 
     //         ctx.beginPath();
     //         ctx.fillStyle = "hsl(" + a + ",100%, 50%)";

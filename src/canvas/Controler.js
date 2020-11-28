@@ -1,10 +1,5 @@
 // 控制点
-import {
-    _atan,
-    _dis,
-    _sin,
-    _cos
-} from '../utils'
+import _ from '../utils'
 import Freeform from '../points/Freeform'
 export default class Controler extends  Freeform{
     constructor(options) {
@@ -96,11 +91,11 @@ export default class Controler extends  Freeform{
 
     //生成控制点
     createControlPoint(start, end, len) {
-        let angle = _atan(start, end),
-            c = _dis(start, end),
+        let angle = _.atan(start, end),
+            c = _.dis(start, end),
             l = c + (!len ? 0 : c / len),
-            x2 = l * _cos(angle) + start[0],
-            y2 = l * _sin(angle) + start[1];
+            x2 = l * _.cos(angle) + start[0],
+            y2 = l * _.sin(angle) + start[1];
         return [x2, y2]
     }
     // 控制点

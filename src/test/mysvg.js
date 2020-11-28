@@ -1,8 +1,8 @@
-import config from './config'
+import config from '../config'
 import {
     _type,
     kebab
-} from './utils'
+} from '../utils'
 import {
     arcseg
 } from './points1'

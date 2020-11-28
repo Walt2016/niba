@@ -24,8 +24,8 @@ export default class Fractal {
             _colors: colors,
             fractalType
         } = options
-        // fractalLevel = fractalLevel - 1
-        // let points = options._points || []
+
+        
         if (fractalColorful && colors) {
             let color = colors[fractalLevel % colors.length]
             Object.assign(options, {
@@ -35,23 +35,35 @@ export default class Fractal {
             })
         }
         let fn = this['_' + fractalType]
-        // this['_' + fractalType] && this['_' + fractalType](options)
         if (fn) {
             fractalTimerUse ? setTimeout(() => {
                 fn.call(this, options)
             }, fractalLevel * fractalTimerDelay) : fn.call(this, options)
         }
+    }
+    // 顶点镜像
+    _vertexMirror(options){
+        let {
+            fractalLevel,
+            _points: points
+        } = options
+
+        points.forEach(t=>{
+           let mirrorPoints =_.mirror2(points,t)
+            this.draw(Object.assign({}, options, {
+                _points: mirrorPoints,
+                fractalLevel,
+                fractalUse: fractalLevel > 1
+            }))
+        })
+
 
     }
     _radiusRatio(options) {
         let {
             fractalLevel,
             fractalOffset,
-            fractalTimerUse,
-            fractalTimerDelay,
-            fractalColorful,
             _points: points,
-            fractalType,
             curveRadiusRatio
         } = options
         fractalLevel = fractalLevel - 1
@@ -61,7 +73,6 @@ export default class Fractal {
             curveRadiusRatio,
             fractalLevel,
             fractalUse: fractalLevel > 1
-            // r: _.dis(midseg.points[0], options.o)
         }))
 
     }
@@ -70,11 +81,7 @@ export default class Fractal {
         let {
             fractalLevel,
             fractalOffset,
-            fractalTimerUse,
-            fractalTimerDelay,
-            fractalColorful,
-            _points: points,
-            fractalType
+            _points: points
         } = options
         // fractalLevel = fractalLevel - 1
         let midseg = new MidSeg({
@@ -92,11 +99,7 @@ export default class Fractal {
         let {
             fractalLevel,
             fractalOffset,
-            fractalTimerUse,
-            fractalTimerDelay,
-            fractalColorful,
-            _points: points,
-            fractalType
+            _points: points
         } = options
         this.draw(Object.assign({}, options, {
             _points: points,
@@ -108,12 +111,7 @@ export default class Fractal {
     _scale(options) {
         let {
             fractalLevel,
-            fractalOffset,
-            fractalTimerUse,
-            fractalTimerDelay,
-            fractalColorful,
-            _points: points,
-            fractalType
+            fractalOffset
         } = options
         let r = options.r * Math.pow(fractalOffset, fractalLevel)
         let seg = new ArcSeg({
@@ -122,10 +120,6 @@ export default class Fractal {
         })
         this.draw(Object.assign({}, options, {
             _points: seg.points,
-            // _points: options._seg({
-            //     ...options,
-            //     r
-            // }),
             fractalLevel,
             fractalUse: fractalLevel > 1,
         }))
@@ -134,25 +128,14 @@ export default class Fractal {
     _rotate(options) {
         let {
             fractalLevel,
-            fractalOffset,
-            fractalTimerUse,
-            fractalTimerDelay,
-            fractalColorful,
-            _points: points,
-            fractalType
+            fractalOffset
         } = options
-        // let r = options.r * Math.pow(fractalOffset, fractalLevel)
         let seg = new ArcSeg({
             ...options,
             angle: options.angle + fractalOffset
-            // r,
         })
         this.draw(Object.assign({}, options, {
             _points: seg.points,
-            // _points: options._seg({
-            //     ...options,
-            //     r
-            // }),
             angle: options.angle + fractalOffset,
             fractalLevel,
             fractalUse: fractalLevel > 1,
@@ -164,9 +147,7 @@ export default class Fractal {
             fractalOffset,
             fractalTimerUse,
             fractalTimerDelay,
-            fractalColorful,
-            _points: points,
-            fractalType
+            _points: points
         } = options
 
         points.forEach((t, index) => {
@@ -176,8 +157,7 @@ export default class Fractal {
                 let seg = new ArcSeg({
                     ...options,
                     o,
-                    r,
-                    // n: options.n
+                    r
                 })
                 this.draw(Object.assign({}, options, {
                     o,
@@ -197,9 +177,7 @@ export default class Fractal {
             fractalOffset,
             fractalTimerUse,
             fractalTimerDelay,
-            fractalColorful,
-            _points: points,
-            fractalType
+            _points: points
         } = options
         points.forEach((t, index) => {
             let fn = () => {
@@ -208,8 +186,7 @@ export default class Fractal {
                 let seg = new ArcSeg({
                     ...options,
                     o,
-                    r,
-                    // n: options.n
+                    r
                 })
                 this.draw(Object.assign({}, options, {
                     o,

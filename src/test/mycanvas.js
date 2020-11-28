@@ -1,7 +1,7 @@
-import config from './config'
+import config from '../config'
 import {
     _type,
-} from './utils'
+} from '../utils'
 import {
     arcseg,
     dis
@@ -12,7 +12,7 @@ import {
     dots
 } from './lattice'
 import color from './color'
-import fractal from './fractal'
+import fractal from '../fractal'
 import {
     pixel,
     _pre,
@@ -28,7 +28,7 @@ import {
     Ray,
     Text,
     Arc
-} from './entity'
+} from '../entity'
 let {
     wrapperOptions,
     center

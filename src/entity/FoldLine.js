@@ -1,10 +1,5 @@
 // 折线
-import {
-    _mid,
-    _dis,
-    _sin,
-    _cos
-} from "../utils"
+import _ from "../utils"
 import BaseEntity from "./BaseEntity";
 
 export default class FoldLine extends BaseEntity {
@@ -16,12 +11,12 @@ export default class FoldLine extends BaseEntity {
         } = options
         this.p1 = p1
         this.p2 = p2
-        // let r1 = _dis(p1, p2)/2
-        // this.o1 = _mid(p1, p2)
+        // let r1 = _.dis(p1, p2)/2
+        // this.o1 = _.mid(p1, p2)
 
         // let a = 90
-        // let p3 = [p1[0] - r1 * _cos(a), p1[1] + r1 * _sin(a)]
-        // let p4 = [p2[0] + r1 * _cos(a), p2[1] - r1 * _sin(a)]
+        // let p3 = [p1[0] - r1 * _.cos(a), p1[1] + r1 * _.sin(a)]
+        // let p4 = [p2[0] + r1 * _.cos(a), p2[1] - r1 * _.sin(a)]
 
         // this.points = [p1, p4, p3, p2]
 
@@ -35,14 +30,14 @@ export default class FoldLine extends BaseEntity {
     fold(p1,p2){
        
 
-        let r1 = _dis(p1, p2)/2
-       let o1 = _mid(p1, p2)
+        let r1 = _.dis(p1, p2)/2
+       let o1 = _.mid(p1, p2)
 
         let a = 90
-        let p3 = [o1[0] + r1 * _cos(a), o1[1] + r1 * _sin(a)]
+        let p3 = [o1[0] + r1 * _.cos(a), o1[1] + r1 * _.sin(a)]
 
-        // let p3 = [p1[0] - r1 * _cos(a), p1[1] + r1 * _sin(a)]
-        // let p4 = [p2[0] + r1 * _cos(a), p2[1] - r1 * _sin(a)]
+        // let p3 = [p1[0] - r1 * _.cos(a), p1[1] + r1 * _.sin(a)]
+        // let p4 = [p2[0] + r1 * _.cos(a), p2[1] - r1 * _.sin(a)]
 
         if(this.level++>=10){
             // return [p1, p4, p3, p2]

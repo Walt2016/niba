@@ -1,8 +1,5 @@
 // 矩形
-import {
-    _sin,
-    _cos
-} from '../utils'
+import _ from '../utils'
 import BaseEntity from './BaseEntity'
 import {
     ArcSeg
@@ -14,8 +11,8 @@ export default class Rect extends BaseEntity {
         this.setPoints(new ArcSeg(options))
 
         
-        this.rectWidth = this.r * _sin(this.a) *2
-        this.rectHeight = this.r * _cos(this.a)*2
+        this.rectWidth = this.r * _.sin(this.a) *2
+        this.rectHeight = this.r * _.cos(this.a)*2
         // this.index=0
     }
 

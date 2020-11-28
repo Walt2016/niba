@@ -1,4 +1,4 @@
-import config from './config'
+import config from '../config'
 //类型判断
 const _type = function (o) {
     if (o === null) return 'null';

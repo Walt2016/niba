@@ -1,9 +1,4 @@
-import {
-    _sin,
-    _cos,
-    _polar,
-    _mid
-} from '../utils'
+import _ from '../utils'
 
 // 线段
 import BaseEntity from './BaseEntity'
@@ -37,8 +32,8 @@ export default class Stick extends BaseEntity {
         } = this
 
         // 两端
-        this.p1 = _polar(o, r, a) //[o[0] + r * _cos(a), o[1] + r * _sin(a)]
-        this.p2 = _polar(o, r, a + 180) //[o[0] - r * _cos(a), o[1] - r * _sin(a)]
+        this.p1 = _.polar(o, r, a) //[o[0] + r * _.cos(a), o[1] + r * _.sin(a)]
+        this.p2 = _.polar(o, r, a + 180) //[o[0] - r * _.cos(a), o[1] - r * _.sin(a)]
 
         // this.points=[this.p1,this.p2]
 
@@ -52,14 +47,14 @@ export default class Stick extends BaseEntity {
         } = this
         a2 %= 360
         if (a2 < 180) {
-            this.p1 = _polar(p2, 2 * r, a2)
+            this.p1 = _.polar(p2, 2 * r, a2)
             // this.p1 = [p2[0] + 2 * r * Math.cos(a2 * Math.PI / 180), p2[1] + 2 * r * Math.sin(a2 * Math.PI / 180)]
         } else {
-            this.p2 = _polar(p1, 2 * r, a2 + 180)
+            this.p2 = _.polar(p1, 2 * r, a2 + 180)
             // this.p2 = [p1[0] - 2 * r * Math.cos(a2 * Math.PI / 180), p1[1] - 2 * r * Math.sin(a2 * Math.PI / 180)]
         }
         // this.o = [(this.p1[0] + this.p2[0]) / 2, (this.p1[1] + this.p2[1]) / 2]
-        this.o = _mid(this.p1, this.p2)
+        this.o = _.mid(this.p1, this.p2)
 
     }
 

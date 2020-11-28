@@ -75,7 +75,7 @@ export default class ArcSeg extends PolarSeg {
 
         return points
     }
-    
+
     scale(zoomRatio = 0.5) {
         let points = []
         for (let i = 0; i < n; i++) {
@@ -83,6 +83,10 @@ export default class ArcSeg extends PolarSeg {
             points[i] = _.polar(o, r * zoomRatio, a)
         }
         return points
+    }
+    // 订单镜像
+    vetexMirror() {
+
     }
 
     //     //生成控制点
