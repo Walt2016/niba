@@ -25,7 +25,7 @@ export default class Fractal {
             fractalType
         } = options
 
-        
+
         if (fractalColorful && colors) {
             let color = colors[fractalLevel % colors.length]
             Object.assign(options, {
@@ -41,15 +41,31 @@ export default class Fractal {
             }, fractalLevel * fractalTimerDelay) : fn.call(this, options)
         }
     }
+    // 边镜像
+    _edgeMirror(options) {
+        let {
+            fractalLevel,
+            _points: points
+        } = options
+        let midPoints = _.mid2(points)
+        midPoints.forEach(t => {
+            let mirrorPoints = _.mirror2(points, t)
+            this.draw(Object.assign({}, options, {
+                _points: mirrorPoints,
+                fractalLevel,
+                fractalUse: fractalLevel > 1
+            }))
+        })
+    }
     // 顶点镜像
-    _vertexMirror(options){
+    _vertexMirror(options) {
         let {
             fractalLevel,
             _points: points
         } = options
 
-        points.forEach(t=>{
-           let mirrorPoints =_.mirror2(points,t)
+        points.forEach(t => {
+            let mirrorPoints = _.mirror2(points, t)
             this.draw(Object.assign({}, options, {
                 _points: mirrorPoints,
                 fractalLevel,

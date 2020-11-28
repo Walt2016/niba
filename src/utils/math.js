@@ -17,6 +17,7 @@ const polar = (o = [0, 0], r = 0, a = 0) => {
 const mid = (p1 = [0, 0], p2 = [0, 0]) => {
     return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]
 }
+
 // 距离
 const dis = (p1 = [0, 0], p2 = [0, 0]) => {
     return Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]))
@@ -36,6 +37,14 @@ const mirror2 = (points, o) => {
         return mirror(t, o)
     })
 }
+// 多个点的中点
+const mid2 = (points) => {
+    let n = points.length
+    return points.map((t, index) => {
+        let next = points[index + 1 >= n ? 0 : index + 1]
+        return mid(t, next)
+    })
+}
 
 export default {
     sin,
@@ -45,5 +54,6 @@ export default {
     dis,
     atan,
     mirror,
-    mirror2
+    mirror2,
+    mid2
 }
