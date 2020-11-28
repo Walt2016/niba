@@ -410,6 +410,38 @@ export default class DrawSVG extends BaseSvg {
             stroke: "blue"
         }, this.svg)
     }
+    // 锯齿
+    _sawtooth(p1, p2, opitons) {
+        let {
+            controller,
+            radiusRatio = 0.5,
+            angleOffset = 0,
+            orient
+        } = opitons
+        let mid = _.mid(p1, p2)
+        let dis = _.dis(p1, p2)
+        let cp = _.polar(mid, radiusRatio * dis, orient ? _.atan(p1, p2) - 90 + angleOffset : angleOffset)
+
+        let cp2 = _.mirror(cp, mid)
+        if (controller) {
+            this._circle({
+                cx: cp[0],
+                cy: cp[1],
+                fill: 'red',
+                r: 5
+            }, this.svg)
+            this._circle({
+                cx: cp2[0],
+                cy: cp2[1],
+                fill: 'red',
+                r: 5
+            }, this.svg)
+        }
+
+        return [p1, cp, cp2, p2].map((t, index) => {
+            return (index === 0 ? "M" : "L") + t.join(" ")
+        }).join(" ")
+    }
     // 波浪曲线
     _wave(p1, p2, opitons) {
         let mid = _.mid(p1, p2)
@@ -442,7 +474,14 @@ export default class DrawSVG extends BaseSvg {
         return `M${p1.join(" ")} Q${cp.join(" ")} ${p2.join(" ")}`
     }
     // 路径
-    _d(points, z, curve, wave) {
+    _d(points, z, curve, wave, sawtooth) {
+        if (sawtooth) { // 曲线
+            let n = points.length
+            return points.map((t, index) => {
+                let next = points[index + 1 >= n ? 0 : index + 1]
+                return this._sawtooth(t, next, sawtooth)
+            }).join(" ")
+        }
         if (wave) { // 曲线
             let n = points.length
             return points.map((t, index) => {
@@ -491,6 +530,11 @@ export default class DrawSVG extends BaseSvg {
 
         // let d = ""
         let ds = []
+        if (options.sawtoothUse) {
+            //  锯齿形
+            let sawtoothOpt = this._regualrOptions(options, "sawtooth")
+            ds[ds.length] = this._d(points, true, false, false, sawtoothOpt)
+        }
         if (options.waveUse) {
             //  波浪线
             let waveOpt = this._regualrOptions(options, "wave")
@@ -507,7 +551,7 @@ export default class DrawSVG extends BaseSvg {
             ds[ds.length] = this._d(points, true)
         }
 
-        if (options.waveUse || options.curveUse || options.edgeShow) { // 有边
+        if (options.sawtoothUse || options.waveUse || options.curveUse || options.edgeShow) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)

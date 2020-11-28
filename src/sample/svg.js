@@ -180,12 +180,18 @@ let dataModel = {
     curveController: false,
     curveAngleOffset: 0,
     curveOrient: true,
-
+    // 波浪形
     waveUse: false,
     waveRadiusRatio: 0.5,
     waveController: false,
     waveAngleOffset: 0,
-    waveOrient: true
+    waveOrient: true,
+    // 锯齿形
+    sawtoothUse: false,
+    sawtoothRadiusRatio: 0.5,
+    sawtoothController: false,
+    sawtoothAngleOffset: 0,
+    sawtoothOrient: true,
 
 
 

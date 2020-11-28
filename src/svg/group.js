@@ -1,7 +1,7 @@
 // 分组 和选项
 
 const groupConfig = {
-    group: ['edge', 'wave', 'curve', 'radius', 'vertex', 'link', 'center', 'excircle', 'axisX', 'axisY', 'grid', 'polar', 'fractal', 'animation', 'transform', 'pattern'],
+    group: ['edge', 'sawtooth', 'wave', 'curve', 'radius', 'vertex', 'link', 'center', 'excircle', 'axisX', 'axisY', 'grid', 'polar', 'fractal', 'animation', 'transform', 'pattern'],
     other: 'shape'
 }
 const _group = (options) => {
@@ -25,7 +25,7 @@ const optionsConfig = {
     shape: ['circle', 'rect', 'line', 'polygon'],
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
-    fractalType: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce', 'tree', 'radiusRatio','vertexMirror','edgeMirror'],
+    fractalType: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce', 'tree', 'radiusRatio', 'vertexMirror', 'edgeMirror'],
     animationName: ['rotate', 'twinkle'],
     transformName: ['scale', 'translate', 'rotate', 'skew'],
     sort: ['normal', 'neighborSwap', 'intervalSort', 'misplaced', 'paritySort', 'shuffle'],
