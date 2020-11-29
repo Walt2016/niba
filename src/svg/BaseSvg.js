@@ -18,26 +18,26 @@ export default class BaseSvg {
             svg,
             width,
             height,
-            props: 'orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
-        ['rect', 'g', 'text', 'path', 'pattern', 'marker'].forEach(t => {
+        ['rect', 'g', 'text', 'pattern', 'marker'].forEach(t => {
             Object.assign(this, {
-                [`_${t}`]: (options, parent) => {
+                [`_${t}`]: (props, g) => {
                     return this._createEle(t, {
                         id: t,
-                        ...options
-                    }, parent)
+                        ...props
+                    }, g)
                 }
             })
         })
     }
-    _createEle(tag, options, parent) {
+    _createEle(tag, props, g) {
         let ele = document.createElementNS('http://www.w3.org/2000/svg', tag)
-        for (let key in options) {
-            if (options[key] !== undefined) {
+        for (let key in props) {
+            if (props[key] !== undefined) {
                 switch (key.toLocaleLowerCase()) {
                     case "class":
-                        ele.className = options[key]
+                        ele.className = props[key]
                         break;
                     case "name":
                     case "innertext":
@@ -45,18 +45,18 @@ export default class BaseSvg {
                     case "innerhtml":
                     case "value":
                     case "textcontent":
-                        ele[key] = options[key]
+                        ele[key] = props[key]
                         break;
                     case "click":
-                        ele.addEventListener("click", options[key], false)
+                        ele.addEventListener("click", props[key], false)
                         break;
                     default:
-                        ele.setAttribute(key, options[key])
+                        ele.setAttribute(key, props[key])
                         break;
                 }
             }
         }
-        parent && parent.appendChild(ele)
+        g && g.appendChild(ele)
         return ele
     }
     // svg包围
@@ -74,31 +74,47 @@ export default class BaseSvg {
         }
         return svg
     }
-    _defs(parent) {
-        return this._createEle("defs", {}, parent)
+    _defs(g) {
+        return this._createEle("defs", {}, g)
     }
 
-    _use(parent) {
+    _use(g) {
         return this._createEle("use", {
             x: 0,
             y: 0,
             width,
             height,
             'xlink:href': '#shape'
-        }, parent)
+        }, g)
     }
-    _symbol(parent) {
+    _symbol(g) {
         return this._createEle("symbol", {
             id: "shape"
-        }, parent)
+        }, g)
     }
-    _circle(o, r, options, g) {
+    _circle(o, r, props, g) {
         return this._createEle('circle', {
             cx: o[0],
             cy: o[1],
             r,
             id: 'circle',
-            ...options
+            ...props
+        }, g)
+    }
+    _path(d, props, g) {
+        return this._createEle('path', {
+            d,
+            id: 'path',
+            ...props
+        }, g)
+    }
+    _line(p1, p2, props, g) {
+        this._createEle("line", {
+            x1: p1[0],
+            y1: p1[1],
+            x2: p2[0],
+            y2: p2[1],
+            ...props
         }, g)
     }
 }

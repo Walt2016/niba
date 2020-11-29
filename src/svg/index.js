@@ -64,6 +64,7 @@ export default class DrawSVG extends BaseSvg {
             'stroke-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
             'stroke-width': opt.lineWidth || opt.strokeWidth || 1,
             'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
+            'stroke-dashoffset': opt.dashOffset ? opt.dashOffset : undefined,
             'stroke-linecap': opt.linecap ? opt.linecap : undefined,
             'stroke-linejoin': opt.linejoin,
             'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined,
@@ -207,7 +208,6 @@ export default class DrawSVG extends BaseSvg {
             x2: points[1][0],
             y2: points[1][1],
             ...props
-            // ...options
         }, g)
     }
 
@@ -258,9 +258,7 @@ export default class DrawSVG extends BaseSvg {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
 
-        this._path({
-            d
-        }, g)
+        this._path(d, {}, g)
 
     }
     // 极坐标
@@ -293,9 +291,7 @@ export default class DrawSVG extends BaseSvg {
         let d = points.map((t, index) => {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
-        this._path({
-            d
-        }, g)
+        this._path(d, {}, g)
     }
     // 箭头
     _marker() {
@@ -309,13 +305,12 @@ export default class DrawSVG extends BaseSvg {
             orient: 'auto'
         }, defs)
 
-        this._path({
-            d: this._d([
-                [2, 2],
-                [2, 11],
-                [10, 6],
-                [2, 2]
-            ]),
+        this._path(this._d([
+            [2, 2],
+            [2, 11],
+            [10, 6],
+            [2, 2]
+        ]), {
             fill: 'red'
         }, market)
     }
@@ -326,9 +321,7 @@ export default class DrawSVG extends BaseSvg {
             height
         } = this
         let opt = this._regualrOptions(options, "axisX")
-        // let props = this._lineProps(opt)
         let g = this._g({
-            // ...props,
             id: 'axisX',
             fill: 'transparent'
         }, this.svg)
@@ -348,9 +341,7 @@ export default class DrawSVG extends BaseSvg {
             height
         } = this
         let opt = this._regualrOptions(options, "axisY")
-        // let props = this._lineProps(opt)
         let g = this._g({
-            // ...props,
             id: 'axisY',
             fill: 'transparent'
         }, this.svg)
@@ -374,7 +365,9 @@ export default class DrawSVG extends BaseSvg {
                 ...opt,
                 lineWidth: 10,
                 dashLine: true,
-                dashArray: [1, 50]
+                dashArray: [1, 50],
+                dashOffset: 5,
+
             }, g)
         }
     }
@@ -402,64 +395,40 @@ export default class DrawSVG extends BaseSvg {
             stroke: "blue"
         }, this.svg)
     }
-    // 锯齿
-    _sawtooth(p1, p2, opitons) {
-        let  wf= new Waveform(p1, p2, opitons)
-        if (opitons.controller) {
-            this._circle(wf.cp, 5, {
-                fill: 'red'
-            }, this.svg)
-            this._circle(wf.cp2, 5, {
-                fill: 'red'
-            }, this.svg)
-        }
-        return wf._sawtooth()
-    }
-    // 波浪曲线
-    _wave(p1, p2, opitons) {
-        let  wf= new Waveform(p1, p2, opitons)
-        if (opitons.controller) {
-            this._circle(wf.cp, 5, {
-                fill: 'red'
-            }, this.svg)
-            this._circle(wf.cp2, 5, {
-                fill: 'red'
-            }, this.svg)
-        }
-        return wf._wave()
-    }
-    // 两点画曲线
-    _curve(p1, p2, opitons) {
-        let  wf= new Waveform(p1, p2, opitons)
-        if (opitons.controller) {
-            this._circle(wf.cp, 5, {
-                fill: 'red'
-            }, this.svg)
-        }
-        return wf._curve()
-    }
     // 路径
     _d(points, z, curve, wave, sawtooth) {
         if (sawtooth) { // 曲线
-            let n = points.length
-            return points.map((t, index) => {
-                let next = points[index + 1 >= n ? 0 : index + 1]
-                return this._sawtooth(t, next, sawtooth)
-            }).join(" ")
+            let wf = new Waveform(points, sawtooth, (e) => {
+                e.cp.forEach(t => {
+                    sawtooth.controller &&
+                        this._circle(t, 5, {
+                            fill: 'red'
+                        }, this.svg)
+                })
+            })
+           return wf._sawtooth()
         }
         if (wave) { // 曲线
-            let n = points.length
-            return points.map((t, index) => {
-                let next = points[index + 1 >= n ? 0 : index + 1]
-                return this._wave(t, next, wave)
-            }).join(" ")
+            let wf = new Waveform(points, wave, (e) => {
+                e.cp.forEach(t => {
+                    wave.controller &&
+                        this._circle(t, 5, {
+                            fill: 'red'
+                        }, this.svg)
+                })
+            })
+           return wf._wave()
         }
         if (curve) { // 曲线
-            let n = points.length
-            return points.map((t, index) => {
-                let next = points[index + 1 >= n ? 0 : index + 1]
-                return this._curve(t, next, curve)
-            }).join(" ")
+            let wf = new Waveform(points, curve, (e) => {
+                e.cp.forEach(t => {
+                    curve.controller &&
+                        this._circle(t, 5, {
+                            fill: 'red'
+                        }, this.svg)
+                })
+            })
+           return wf._curve()
         }
         if (z) { // 闭合线段
             return points.map((t, index) => {
@@ -521,10 +490,9 @@ export default class DrawSVG extends BaseSvg {
             let opt = this._regualrOptions(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)
             let edgeLineProps = this._lineProps(opt)
-            this._path({
+            this._path(ds.join(" "), {
                 ...edgeShapeProps,
                 ...edgeLineProps,
-                d: ds.join(" "),
                 transform: options.transform,
                 'transform-origin': `${width/2} ${height/2}`
             }, g)
@@ -598,9 +566,7 @@ export default class DrawSVG extends BaseSvg {
             id: 'radius',
             ...props
         }, g)
-        this._path({
-            d
-        }, groupRadius)
+        this._path(d, {}, groupRadius)
     }
     // 连接线
     _link(points, options, g = this.svg) {
@@ -619,9 +585,7 @@ export default class DrawSVG extends BaseSvg {
             id: 'link',
             ...props
         }, g)
-        this._path({
-            d
-        }, groupRadius)
+        this._path(d, {}, groupRadius)
     }
     // 旁切圆
     _excircle(options, g) {
