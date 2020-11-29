@@ -175,23 +175,30 @@ let dataModel = {
     linkDashAnimation: false,
 
     // 曲线
-    curveUse: false,
+    curveShow: false,
     curveRadiusRatio: 1,
     curveController: false,
     curveAngleOffset: 0,
     curveOrient: true,
     // 波浪形
-    waveUse: false,
+    waveShow: false,
     waveRadiusRatio: 1,
     waveController: false,
     waveAngleOffset: 0,
     waveOrient: true,
     // 锯齿形
-    sawtoothUse: false,
+    sawtoothShow: false,
     sawtoothRadiusRatio: 1,
     sawtoothController: false,
     sawtoothAngleOffset: 0,
     sawtoothOrient: true,
+
+    // 半圆
+    semicircleShow: false
+    // semicircleRadiusRatio: 1,
+    // semicircleController: false,
+    // semicircleAngleOffset: 0,
+    // semicircleOrient: true,
 
 
 

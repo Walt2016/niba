@@ -396,40 +396,19 @@ export default class DrawSVG extends BaseSvg {
         }, this.svg)
     }
     // 路径
-    _d(points, z, curve, wave, sawtooth) {
-        if (sawtooth) { // 曲线
-            let wf = new Waveform(points, sawtooth, (e) => {
+    _d(points, z, type, props) { //curve, wave, sawtooth
+        if (type && props) {
+            let wf = new Waveform(points, props, (e) => {
                 e.cp.forEach(t => {
-                    sawtooth.controller &&
+                    props.controller &&
                         this._circle(t, 5, {
                             fill: 'red'
                         }, this.svg)
                 })
             })
-           return wf._sawtooth()
+            return wf['_' + type]()
         }
-        if (wave) { // 曲线
-            let wf = new Waveform(points, wave, (e) => {
-                e.cp.forEach(t => {
-                    wave.controller &&
-                        this._circle(t, 5, {
-                            fill: 'red'
-                        }, this.svg)
-                })
-            })
-           return wf._wave()
-        }
-        if (curve) { // 曲线
-            let wf = new Waveform(points, curve, (e) => {
-                e.cp.forEach(t => {
-                    curve.controller &&
-                        this._circle(t, 5, {
-                            fill: 'red'
-                        }, this.svg)
-                })
-            })
-           return wf._curve()
-        }
+       
         if (z) { // 闭合线段
             return points.map((t, index) => {
                 return (index === 0 ? "M" : "L") + t.join(" ")
@@ -464,20 +443,25 @@ export default class DrawSVG extends BaseSvg {
 
         // let d = ""
         let ds = []
-        if (options.sawtoothUse) {
+        if (options.semicircleShow) {
+            //  锯齿形
+            let semicircleOpt = this._regualrOptions(options, "semicircle")
+            ds[ds.length] = this._d(points, true, "semicircle", semicircleOpt)
+        }
+        if (options.sawtoothShow) {
             //  锯齿形
             let sawtoothOpt = this._regualrOptions(options, "sawtooth")
-            ds[ds.length] = this._d(points, true, false, false, sawtoothOpt)
+            ds[ds.length] = this._d(points, true, "sawtooth", sawtoothOpt)
         }
-        if (options.waveUse) {
+        if (options.waveShow) {
             //  波浪线
             let waveOpt = this._regualrOptions(options, "wave")
-            ds[ds.length] = this._d(points, true, false, waveOpt)
+            ds[ds.length] = this._d(points, true, "wave", waveOpt)
         }
-        if (options.curveUse) {
+        if (options.curveShow) {
             // 曲线
             let curveOpt = this._regualrOptions(options, "curve")
-            ds[ds.length] = this._d(points, true, curveOpt)
+            ds[ds.length] = this._d(points, true, "curve", curveOpt)
         }
 
         if (options.edgeShow) {
@@ -485,7 +469,7 @@ export default class DrawSVG extends BaseSvg {
             ds[ds.length] = this._d(points, true)
         }
 
-        if (options.sawtoothUse || options.waveUse || options.curveUse || options.edgeShow) { // 有边
+        if (options.semicircleShow || options.sawtoothShow || options.waveShow || options.curveShow || options.edgeShow) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)

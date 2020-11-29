@@ -21,7 +21,34 @@
     0% {
         transform: rotate(0);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
+
+@keyframes loading {
+    0% {
+
+        /* transition: all 2s;
+        stroke-dasharray: 314, 314;
+        stroke-dashoffset: 314; */
+        stroke-dasharray: 500, 500;
+        stroke-dashoffset: 500
+    }
+
+    100% {
+        stroke-dasharray: 500, 500;
+        stroke-dashoffset: 0
+    }
+}
+
+/* #vertex circle{
+    transition: all 2s;
+    stroke-dasharray:314,314;
+    stroke-dashoffset:314;
+}
+
+#vertex:hover circle{
+    stroke-dashoffset:0;
+} */
