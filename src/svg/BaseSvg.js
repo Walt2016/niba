@@ -20,7 +20,7 @@ export default class BaseSvg {
             height,
             props: 'orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
-        ['rect', 'circle', 'g', 'text', 'path','pattern','marker'].forEach(t => {
+        ['rect', 'g', 'text', 'path', 'pattern', 'marker'].forEach(t => {
             Object.assign(this, {
                 [`_${t}`]: (options, parent) => {
                     return this._createEle(t, {
@@ -91,5 +91,14 @@ export default class BaseSvg {
         return this._createEle("symbol", {
             id: "shape"
         }, parent)
+    }
+    _circle(o, r, options, g) {
+        return this._createEle('circle', {
+            cx: o[0],
+            cy: o[1],
+            r,
+            id: 'circle',
+            ...options
+        }, g)
     }
 }

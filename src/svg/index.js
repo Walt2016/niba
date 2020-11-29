@@ -7,6 +7,7 @@ import {
 } from '../points'
 import BaseSvg from './baseSvg'
 import Fractal from './Fractal'
+import Waveform from './WaveForm'
 
 export default class DrawSVG extends BaseSvg {
     constructor(options) {
@@ -36,7 +37,6 @@ export default class DrawSVG extends BaseSvg {
         if (options.axisYShow) {
             this._axisY(options)
         }
-
         // 图形
         this._shape(options)
     }
@@ -281,11 +281,7 @@ export default class DrawSVG extends BaseSvg {
         let o = [width / 2, height / 2]
 
         for (let i = 0; i < height / interval; i++) {
-            this._circle({
-                cx: o[0],
-                cy: o[1],
-                r: interval * i
-            }, g)
+            this._circle(o, interval * i, {}, g)
         }
 
         let points = [
@@ -393,12 +389,8 @@ export default class DrawSVG extends BaseSvg {
             height: 0.2,
             patternUnits: options.patternUnits || "objextBoundingBox"
         }, defs)
-
-        this._circle({
-            cx: 10,
-            cy: 10,
-            fill: 'red',
-            r: 5
+        this._circle([10, 10], 5, {
+            fill: 'red'
         }, pattern)
 
         this._rect({
@@ -412,66 +404,39 @@ export default class DrawSVG extends BaseSvg {
     }
     // 锯齿
     _sawtooth(p1, p2, opitons) {
-        let {
-            controller,
-            radiusRatio = 0.5,
-            angleOffset = 0,
-            orient
-        } = opitons
-        let mid = _.mid(p1, p2)
-        let dis = _.dis(p1, p2)
-        let cp = _.polar(mid, radiusRatio * dis, orient ? _.atan(p1, p2) - 90 + angleOffset : angleOffset)
-
-        let cp2 = _.mirror(cp, mid)
-        if (controller) {
-            this._circle({
-                cx: cp[0],
-                cy: cp[1],
-                fill: 'red',
-                r: 5
+        let  wf= new Waveform(p1, p2, opitons)
+        if (opitons.controller) {
+            this._circle(wf.cp, 5, {
+                fill: 'red'
             }, this.svg)
-            this._circle({
-                cx: cp2[0],
-                cy: cp2[1],
-                fill: 'red',
-                r: 5
+            this._circle(wf.cp2, 5, {
+                fill: 'red'
             }, this.svg)
         }
-
-        return [p1, cp, cp2, p2].map((t, index) => {
-            return (index === 0 ? "M" : "L") + t.join(" ")
-        }).join(" ")
+        return wf._sawtooth()
     }
     // 波浪曲线
     _wave(p1, p2, opitons) {
-        let mid = _.mid(p1, p2)
-        return [this._curve(p1, mid, opitons),
-            this._curve(mid, p2, {
-                ...opitons,
-                angleOffset: opitons.angleOffset || 0 + 180
-            })
-        ].join(" ")
+        let  wf= new Waveform(p1, p2, opitons)
+        if (opitons.controller) {
+            this._circle(wf.cp, 5, {
+                fill: 'red'
+            }, this.svg)
+            this._circle(wf.cp2, 5, {
+                fill: 'red'
+            }, this.svg)
+        }
+        return wf._wave()
     }
     // 两点画曲线
     _curve(p1, p2, opitons) {
-        let {
-            controller,
-            radiusRatio = 0.5,
-            angleOffset = 0,
-            orient
-        } = opitons
-        let mid = _.mid(p1, p2)
-        let dis = _.dis(p1, p2)
-        let cp = _.polar(mid, radiusRatio * dis, orient ? _.atan(p1, p2) - 90 + angleOffset : angleOffset)
-        if (controller) {
-            this._circle({
-                cx: cp[0],
-                cy: cp[1],
-                fill: 'red',
-                r: 5
+        let  wf= new Waveform(p1, p2, opitons)
+        if (opitons.controller) {
+            this._circle(wf.cp, 5, {
+                fill: 'red'
             }, this.svg)
         }
-        return `M${p1.join(" ")} Q${cp.join(" ")} ${p2.join(" ")}`
+        return wf._curve()
     }
     // 路径
     _d(points, z, curve, wave, sawtooth) {
