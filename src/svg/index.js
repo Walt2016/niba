@@ -1,6 +1,6 @@
 import MidSeg from '../points/MidSeg'
 import _ from '../utils/index'
-import Transform from '../points/Transform'
+
 import './index.css'
 import {
     ArcSeg
@@ -8,10 +8,21 @@ import {
 import BaseSvg from './baseSvg'
 import Fractal from './Fractal'
 import Waveform from './WaveForm'
+import Axis from './Axis'
 
 export default class DrawSVG extends BaseSvg {
     constructor(options) {
         super(options)
+        this.setup(options)
+    }
+    setup(options) {
+        let svg = this._svg()
+        document.body.appendChild(svg);
+        let axis = new Axis(options, svg)
+        Object.assign(this, {
+            svg,
+            axis
+        })
     }
     // 图形合成:入口函数
     _draw(options) {
@@ -21,101 +32,27 @@ export default class DrawSVG extends BaseSvg {
         }
         // 网格坐标
         if (options.gridShow) {
-            this._grid(options)
+            this.axis._grid(options)
         }
         // 极坐标
         if (options.polarShow) {
-            this._polar(options)
+            this.axis._polar(options)
         }
         // x轴
         if (options.axisXShow || options.axisYShow) {
-            this._marker()
+            this.axis._marker()
         }
+
         if (options.axisXShow) {
-            this._axisX(options)
+            this.axis._axisX(options)
         }
         if (options.axisYShow) {
-            this._axisY(options)
+            this.axis._axisY(options)
         }
         // 图形
         this._shape(options)
     }
-    // 规则参数
-    _regualrOptions(options, prefix) {
-        let opt = {};
-        this.props.forEach(t => {
-            if (prefix) {
-                let name = _.camelCase([prefix, t])
-                if (options[name]) {
-                    opt[t] = options[name]
-                }
-            } else {
-                if (options[t]) {
-                    opt[t] = options[t]
-                }
-            }
-        })
-        return opt
-    }
-    // 线条属性
-    _lineProps(opt = {}) {
-        return {
-            stroke: opt.color || opt.stroke || 'black',
-            'stroke-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
-            'stroke-width': opt.lineWidth || opt.strokeWidth || 1,
-            'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
-            'stroke-dashoffset': opt.dashOffset ? opt.dashOffset : undefined,
-            'stroke-linecap': opt.linecap ? opt.linecap : undefined,
-            'stroke-linejoin': opt.linejoin,
-            'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined,
-            'marker-end': opt['marker-end'] ? opt['marker-end'] : undefined
-        }
-    }
-    // 图形属性
-    _shapeProps(opt) {
-        return opt.fill ? {
-            fill: opt.color || 'red',
-            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity
-        } : {
-            fill: 'transparent',
-        }
-    }
-    // 动画属性
-    _animationProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
-        return opt.use ? {
-            'style': `animation:${opt.name} ${opt.duration||1}s ${opt.iterationCount||'infinite'} linear`,
-            'transform-origin': `${t[0]}px ${t[1]}px`
-            // 'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined
-        } : {}
-    }
-    // 变形属性
-    _transformProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
-        if (opt.use) {
-            let transform = ""
-            switch (opt.name) {
-                case "skew":
-                    transform = `${opt.name}X(${opt.propA})${opt.name}Y(${opt.propB})` //,${opt.propB}
-                    break;
-                case "rotate":
-                    transform = `${opt.name}(${opt.propA})`
-                    break;
-                default:
-                    transform = `${opt.name}(${opt.propA},${opt.propB})`
 
-            }
-
-            return {
-                transform,
-                'transform-origin': `${t[0]}px ${t[1]}px`
-            }
-        }
-
-        // return opt.use ? {
-        //     // transform: 'scale(2,2)',
-        //     transform: `${opt.name}(${opt.propA},${opt.propB})`,
-        //     'transform-origin': `${t[0]}px ${t[1]}px`
-        // } : {}
-    }
     // 规则图形
     _regularShape(name, points, options, root = this.svg) {
         let opt = this._regualrOptions(options, name)
@@ -199,178 +136,9 @@ export default class DrawSVG extends BaseSvg {
             }
         })
     }
-    // 线段
-    _line(points, options, g = this.svg) {
-        let props = this._lineProps(options)
-        this._createEle("line", {
-            x1: points[0][0],
-            y1: points[0][1],
-            x2: points[1][0],
-            y2: points[1][1],
-            ...props
-        }, g)
-    }
 
-    // 网格坐标
-    _grid(options) {
-        let {
-            width,
-            height,
-            svg
-        } = this
-        let opt = this._regualrOptions(options, "grid")
-        let props = this._lineProps(opt)
-        let g = this._g({
-            ...props,
-            id: 'grid',
-            fill: 'transparent',
-            transform: opt.rotate ? `rotate(${opt.rotate})` : undefined,
-            'transform-origin': `${width/2} ${height/2}`
-        }, svg)
 
-        let interval = opt.interval || 100
-        let offsetX = (width / 2) % interval
-        let offsetY = (height / 2) % interval
-        // 竖线
-        let points = [
-            [0 + offsetX, 0],
-            [0 + offsetX, height]
-        ]
-        let tf = new Transform({
-            points
-        })
-        for (let i = 0; i < width / interval; i++) {
-            points = points.concat(tf.translate(interval * i))
-        }
-        // 横线
-        let points2 = [
-            [0, 0 + offsetY],
-            [width, 0 + offsetY]
-        ]
-        tf = new Transform({
-            points: points2
-        })
-        for (let i = 0; i < height / interval; i++) {
-            points = points.concat(tf.translateY(interval * i))
-        }
 
-        let d = points.map((t, index) => {
-            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-        }).join(" ")
-
-        this._path(d, {}, g)
-
-    }
-    // 极坐标
-    _polar(options) {
-        let {
-            width,
-            height,
-            svg
-        } = this
-        let opt = this._regualrOptions(options, "polar")
-        let props = this._lineProps(opt)
-        let g = this._g({
-            ...props,
-            id: 'polar',
-            fill: 'transparent'
-        }, svg)
-        let interval = opt.interval || 100
-        let o = [width / 2, height / 2]
-
-        for (let i = 0; i < height / interval; i++) {
-            this._circle(o, interval * i, {}, g)
-        }
-
-        let points = [
-            [width / 2, 0],
-            [width / 2, height],
-            [0, height / 2],
-            [width, height / 2]
-        ]
-        let d = points.map((t, index) => {
-            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-        }).join(" ")
-        this._path(d, {}, g)
-    }
-    // 箭头
-    _marker() {
-        let defs = this._defs(this.svg)
-        let market = this._marker({
-            id: 'markerArrow',
-            markerWidth: 13,
-            markerHeight: 13,
-            refx: 2,
-            refy: 6,
-            orient: 'auto'
-        }, defs)
-
-        this._path(this._d([
-            [2, 2],
-            [2, 11],
-            [10, 6],
-            [2, 2]
-        ]), {
-            fill: 'red'
-        }, market)
-    }
-    // x轴
-    _axisX(options) {
-        let {
-            width,
-            height
-        } = this
-        let opt = this._regualrOptions(options, "axisX")
-        let g = this._g({
-            id: 'axisX',
-            fill: 'transparent'
-        }, this.svg)
-
-        // let offset = 150
-        let offset = (width - 10 * 50) / 2
-        let points = [
-            [0 + offset, height / 2],
-            [width - offset, height / 2]
-        ]
-        this._axis(points, opt, g)
-    }
-    // y轴
-    _axisY(options) {
-        let {
-            width,
-            height
-        } = this
-        let opt = this._regualrOptions(options, "axisY")
-        let g = this._g({
-            id: 'axisY',
-            fill: 'transparent'
-        }, this.svg)
-        // let offset = 150
-        let offset = (height - 10 * 50) / 2
-        let points = [
-            [width / 2, 0 + offset],
-            [width / 2, height - offset]
-        ]
-        this._axis(points, opt, g)
-    }
-    // 坐标轴
-    _axis(points, opt, g) {
-        this._line(points, {
-            ...opt,
-            'marker-end': 'url(#markerArrow)'
-        }, g)
-        // 刻度
-        if (opt.sticks) {
-            this._line(points, {
-                ...opt,
-                lineWidth: 10,
-                dashLine: true,
-                dashArray: [1, 50],
-                dashOffset: 5,
-
-            }, g)
-        }
-    }
     // 图案
     _pattern(options) {
         let defs = this._defs(this.svg)
@@ -408,7 +176,7 @@ export default class DrawSVG extends BaseSvg {
             })
             return wf['_' + type]()
         }
-       
+
         if (z) { // 闭合线段
             return points.map((t, index) => {
                 return (index === 0 ? "M" : "L") + t.join(" ")
@@ -444,7 +212,7 @@ export default class DrawSVG extends BaseSvg {
         // let d = ""
         let ds = []
         if (options.semicircleShow) {
-            //  锯齿形
+            //  半圆形
             let semicircleOpt = this._regualrOptions(options, "semicircle")
             ds[ds.length] = this._d(points, true, "semicircle", semicircleOpt)
         }

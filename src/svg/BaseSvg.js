@@ -1,4 +1,5 @@
 import config from '../config'
+import _ from '../utils/index'
 let {
     env,
     center
@@ -12,10 +13,10 @@ export default class BaseSvg {
         this._init(options)
     }
     _init(options) {
-        let svg = this._svg()
-        document.body.appendChild(svg);
+        // let svg = this._svg()
+        // document.body.appendChild(svg);
         Object.assign(this, {
-            svg,
+            // svg,
             width,
             height,
             props: 'orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
@@ -116,5 +117,93 @@ export default class BaseSvg {
             y2: p2[1],
             ...props
         }, g)
+    }
+    // // 线段
+    // _line(points, options, g = this.svg) {
+    //     let props = this._lineProps(options)
+    //     this._createEle("line", {
+    //         x1: points[0][0],
+    //         y1: points[0][1],
+    //         x2: points[1][0],
+    //         y2: points[1][1],
+    //         ...props
+    //     }, g)
+    // }
+
+    // 规则参数
+    _regualrOptions(options, prefix) {
+        let opt = {};
+        this.props.forEach(t => {
+            if (prefix) {
+                let name = _.camelCase([prefix, t])
+                if (options[name]) {
+                    opt[t] = options[name]
+                }
+            } else {
+                if (options[t]) {
+                    opt[t] = options[t]
+                }
+            }
+        })
+        return opt
+    }
+    // 线条属性
+    _lineProps(opt = {}) {
+        return {
+            stroke: opt.color || opt.stroke || 'black',
+            'stroke-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
+            'stroke-width': opt.lineWidth || opt.strokeWidth || 1,
+            'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
+            'stroke-dashoffset': opt.dashOffset ? opt.dashOffset : undefined,
+            'stroke-linecap': opt.linecap ? opt.linecap : undefined,
+            'stroke-linejoin': opt.linejoin,
+            'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined,
+            'marker-end': opt['marker-end'] ? opt['marker-end'] : undefined
+        }
+    }
+    // 图形属性
+    _shapeProps(opt) {
+        return opt.fill ? {
+            fill: opt.color || 'red',
+            'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity
+        } : {
+            fill: 'transparent',
+        }
+    }
+    // 动画属性
+    _animationProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
+        return opt.use ? {
+            'style': `animation:${opt.name} ${opt.duration||1}s ${opt.iterationCount||'infinite'} linear`,
+            'transform-origin': `${t[0]}px ${t[1]}px`
+            // 'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined
+        } : {}
+    }
+    // 变形属性
+    _transformProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
+        if (opt.use) {
+            let transform = ""
+            switch (opt.name) {
+                case "skew":
+                    transform = `${opt.name}X(${opt.propA})${opt.name}Y(${opt.propB})` //,${opt.propB}
+                    break;
+                case "rotate":
+                    transform = `${opt.name}(${opt.propA})`
+                    break;
+                default:
+                    transform = `${opt.name}(${opt.propA},${opt.propB})`
+
+            }
+
+            return {
+                transform,
+                'transform-origin': `${t[0]}px ${t[1]}px`
+            }
+        }
+
+        // return opt.use ? {
+        //     // transform: 'scale(2,2)',
+        //     transform: `${opt.name}(${opt.propA},${opt.propB})`,
+        //     'transform-origin': `${t[0]}px ${t[1]}px`
+        // } : {}
     }
 }
