@@ -2,35 +2,47 @@ import _ from '../utils'
 // 波形
 export default class Waveform {
     constructor(points, options, callback) {
+        // 控制点
         let cp = []
+        // 中点
         let mid = []
-        let n = points.length
+        // 半径
         let r
-        points.map((t, index) => {
-            let next = points[index + 1 >= n ? 0 : index + 1]
-            let p = this.calc(t, next, options)
+        // let n=Math.ceil(points.length/2)
+        // let n=2
+        this.options = options
+        let n = points.length
+        this._forEach(points, n, (t, index, next) => {
+            let p = this.calc(t, next)
             cp[cp.length] = p.cp1
             cp[cp.length] = p.cp2
             mid[mid.length] = p.mid
             r = p.r
-        }).join(" ")
+        })
         Object.assign(this, {
             points,
             cp,
-            n,
             mid,
-            r
+            r,
+            n
         })
         callback && callback(this)
     }
+    // foreach增加一个next参数
+    _forEach(points, n, callback) {
+        // let n = points.length
+        points.forEach((t, index) => {
+            let next = points[index + 1 >= n ? 0 : index + 1]
+            callback && callback(t, index, next)
+        })
+    }
     // 计算控制点
-    calc(p1, p2, options) {
+    calc(p1, p2) {
         let {
-            controller,
             radiusRatio = 1,
-            angleOffset = 0,
-            orient
-        } = options
+                angleOffset = 0,
+                orient
+        } = this.options
         let mid = _.mid(p1, p2)
         let r = _.dis(p1, mid)
         let cp1 = _.polar(mid, radiusRatio * r, orient ? _.atan(p1, p2) - 90 + angleOffset : angleOffset)
@@ -53,16 +65,33 @@ export default class Waveform {
     // 半圆弧
     _semicircle() {
         // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
-        let ps = []
         let {
-            points,
-            n,
-            r
-        } = this
-        points.forEach((t, index) => {
-            let next = points[index + 1 >= n ? 0 : index + 1]
+            sweepFlag,
+            radiusRatio = 1,
+            xAxisRotation = 0,
+            largeArcFlag
+        } = this.options
+        let ps = []
+        this._forEach(this.points, this.n, (t, index, next) => {
             ps[ps.length] = t
-            ps[ps.length] = [r, r, 0, 0, 1, ...next]
+            ps[ps.length] = [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
+        })
+        return this._d(ps)
+    }
+
+       // 椭圆弧 elliptical arc 椭圆弧
+       _elliptical() {
+        // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
+        let {
+            sweepFlag,
+            radiusRatio = 1,
+            xAxisRotation = 0,
+            largeArcFlag
+        } = this.options
+        let ps = []
+        this._forEach(this.points, this.n, (t, index, next) => {
+            ps[ps.length] = t
+            ps[ps.length] = [this.r, radiusRatio * this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
         })
         return this._d(ps)
     }
@@ -70,51 +99,31 @@ export default class Waveform {
     // 曲线
     _curve() {
         let ps = []
-        let {
-            points,
-            n
-        } = this
-        points.forEach((t, index) => {
-            let next = points[index + 1 >= n ? 0 : index + 1]
+        this._forEach(this.points, this.n, (t, index, next) => {
             ps[ps.length] = t
             ps[ps.length] = [...this.cp[2 * index], ...next]
         })
         return this._d(ps)
-        // return this._d([this.p1, [...this.cp1, ...this.p2]])
     }
     // 波形
     _wave() {
         let ps = []
-        let {
-            points,
-            n
-        } = this
-        points.forEach((t, index) => {
-            let next = points[index + 1 >= n ? 0 : index + 1]
+        this._forEach(this.points, this.n, (t, index, next) => {
             ps[ps.length] = t
             ps[ps.length] = [...this.cp[2 * index], ...this.mid[index]]
             ps[ps.length] = [...this.cp[2 * index + 1], ...next]
         })
         return this._d(ps)
-        // return this._d([this.p1, [...this.cp1, ...this.mid],
-        //     [...this.cp2, ...this.p2]
-        // ])
     }
     // 锯齿形
     _sawtooth() {
         let ps = []
-        let {
-            points,
-            n
-        } = this
-        points.forEach((t, index) => {
-            let next = points[index + 1 >= n ? 0 : index + 1]
+        this._forEach(this.points, this.n, (t, index, next) => {
             ps[ps.length] = t
             ps[ps.length] = this.cp[2 * index]
             ps[ps.length] = this.cp[2 * index + 1]
             ps[ps.length] = next
         })
         return this._d(ps)
-        // return this._d([this.p1, this.cp1, this.cp2, this.p2])
     }
 }

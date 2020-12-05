@@ -209,35 +209,23 @@ export default class DrawSVG extends BaseSvg {
         }, parent)
         let points = options._points || []
 
-        // let d = ""
-        let ds = []
-        if (options.semicircleShow) {
-            //  半圆形
-            let semicircleOpt = this._regualrOptions(options, "semicircle")
-            ds[ds.length] = this._d(points, true, "semicircle", semicircleOpt)
-        }
-        if (options.sawtoothShow) {
-            //  锯齿形
-            let sawtoothOpt = this._regualrOptions(options, "sawtooth")
-            ds[ds.length] = this._d(points, true, "sawtooth", sawtoothOpt)
-        }
-        if (options.waveShow) {
-            //  波浪线
-            let waveOpt = this._regualrOptions(options, "wave")
-            ds[ds.length] = this._d(points, true, "wave", waveOpt)
-        }
-        if (options.curveShow) {
-            // 曲线
-            let curveOpt = this._regualrOptions(options, "curve")
-            ds[ds.length] = this._d(points, true, "curve", curveOpt)
-        }
-
+        let ds = [];
+        let curveEdges = ['semicircle', 'sawtooth', 'wave', 'curve', 'elliptical']
+        curveEdges.forEach(t => {
+            if (options[t + 'Show']) {
+                let props = this._regualrOptions(options, t)
+                ds[ds.length] = this._d(points, true, t, props)
+            }
+        })
         if (options.edgeShow) {
             // 直线
             ds[ds.length] = this._d(points, true)
         }
+        let showEdge = [...curveEdges, 'edge'].some(t => {
+            return options[t + 'Show']
+        })
 
-        if (options.semicircleShow || options.sawtoothShow || options.waveShow || options.curveShow || options.edgeShow) { // 有边
+        if (showEdge) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)

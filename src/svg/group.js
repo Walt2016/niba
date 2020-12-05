@@ -1,7 +1,7 @@
 // 分组 和选项
 
 const groupConfig = {
-    group: ['edge', 'sawtooth', 'wave', 'curve','semicircle', 'radius', 'vertex', 'link', 'center', 'excircle', 'axisX', 'axisY', 'grid', 'polar', 'fractal', 'animation', 'transform', 'pattern'],
+    group: ['edge', 'sawtooth', 'wave', 'curve','semicircle','elliptical', 'radius', 'vertex', 'link', 'center', 'excircle', 'axisX', 'axisY', 'grid', 'polar', 'fractal', 'animation', 'transform', 'pattern'],
     other: 'shape'
 }
 const _group = (options) => {

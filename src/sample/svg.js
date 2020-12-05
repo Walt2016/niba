@@ -194,7 +194,20 @@ let dataModel = {
     sawtoothOrient: true,
 
     // 半圆
-    semicircleShow: false
+    semicircleShow: false,
+    semicircleSweepFlag: true,
+    // semicircleRadiusRatio: 1,
+    // semicircleXAxisRotation: 0,
+    // semicircleLargeArcFlag: false,
+
+
+    
+    ellipticalShow: false,
+    ellipticalSweepFlag: true,
+    ellipticalRadiusRatio: 1,
+    ellipticalXAxisRotation: 0,
+    ellipticalLargeArcFlag: false
+
     // semicircleRadiusRatio: 1,
     // semicircleController: false,
     // semicircleAngleOffset: 0,

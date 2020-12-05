@@ -177,6 +177,8 @@ export default class Form extends Panel {
             class: "form-item-label",
             text: label
         }, formItem)
+        let d = value.toString().split(".")[1]
+        let step = Math.pow(10, d ? -1 * d.toString().length : 0)
 
         switch (type) {
             case "textarea":
@@ -204,10 +206,17 @@ export default class Form extends Panel {
                 }, formItem)
                 break
             case "number":
-                let d = value.toString().split(".")[1]
-                let step = Math.pow(10, d ? -1 * d.toString().length : 0)
                 this._inputNumber({
                     class: 'form-item-inputnumber',
+                    value,
+                    name: key,
+                    step,
+                    ...field
+                }, formItem)
+                break;
+            case "range":
+                this._inputRange({
+                    class: 'form-item-inputrange',
                     value,
                     name: key,
                     step,
@@ -308,6 +317,12 @@ export default class Form extends Panel {
     // 下拉选项
     _select(field, parent) {
         return this._createEle("select", field, parent);
+    }
+    _inputRange(field, parent) {
+        return this._input({
+            ...field,
+            type: 'range'
+        }, parent)
     }
     // 数字
     _inputNumber(field, parent) {

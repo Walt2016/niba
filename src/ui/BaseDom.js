@@ -41,6 +41,13 @@ export default class BaseDom {
                     type: "select",
                     options: options[key]
                 }
+            // } else if (label === 'opacity') {
+            //     fields[fields.length] = {
+            //         key,
+            //         label,
+            //         value: data[key],
+            //         type: 'range'
+            //     }
             } else {
                 fields[fields.length] = {
                     key,
