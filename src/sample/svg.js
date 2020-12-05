@@ -196,32 +196,19 @@ let dataModel = {
     // 半圆
     semicircleShow: false,
     semicircleSweepFlag: true,
-    // semicircleRadiusRatio: 1,
-    // semicircleXAxisRotation: 0,
-    // semicircleLargeArcFlag: false,
 
-
-    
+    // 椭圆弧
     ellipticalShow: false,
     ellipticalSweepFlag: true,
     ellipticalRadiusRatio: 1,
     ellipticalXAxisRotation: 0,
     ellipticalLargeArcFlag: false
 
-    // semicircleRadiusRatio: 1,
-    // semicircleController: false,
-    // semicircleAngleOffset: 0,
-    // semicircleOrient: true,
-
-
 
     // colorful: false,
     // followMouse:false,
     // animate:false,
     // drag:false,
-    // ctx
-    // ui
-    // draw
 }
 
 // debugger
