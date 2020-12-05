@@ -126,11 +126,8 @@ export default class DrawSVG extends BaseSvg {
 
             // 标注文字
             if (opt.text) {
-                this._text({
-                    x: t[0],
-                    y: t[1],
+                this._text(t, index, {
                     fill: opt.textColor || opt.color || 'black',
-                    textContent: index,
                     'font-size': opt.textFontSize || 12
                 }, g)
             }
@@ -247,11 +244,7 @@ export default class DrawSVG extends BaseSvg {
                     'font-size': opt.textFontSize || 12
                 }, g)
                 midseg.points.forEach((t, index) => {
-                    this._text({
-                        x: t[0],
-                        y: t[1],
-                        textContent: index,
-                    }, groupEdgeText)
+                    this._text(t, index, {}, groupEdgeText)
                 })
             }
         }

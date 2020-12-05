@@ -5,7 +5,6 @@ import Transform from '../points/Transform'
 export default class Axis extends BaseSvg {
     constructor(options, svg) {
         super(options)
-        // Object.assign(this, options)
         Object.assign(this, {
             ...options,
             svg
@@ -25,9 +24,41 @@ export default class Axis extends BaseSvg {
         }, svg)
 
         // let offset = 150
-        let offset = (width - 10 * 50) / 2
-        this._axis([0 + offset, height / 2],
-            [width - offset, height / 2], opt, g)
+        // let offset = (width - 10 * 50) / 2
+        let offset = width * 0.1
+        let p1 = [0 + offset, height / 2]
+        let p2 = [width - offset, height / 2]
+        // this._axis([0 + offset, height / 2],
+        //     [width - offset, height / 2], opt, g)
+        let props = this._lineProps(opt)
+
+        this._line(p1, p2, {
+            ...props
+        }, g)
+
+        // 刻度
+        if (opt.sticks) {
+            let o = [width / 2, height / 2]
+            let ps = []
+            for (let i = 0; i < 5; i++) {
+                ps[ps.length] = {
+                    pos: [o[0] + i * 50, o[1]],
+                    label: i
+                }
+                if (i > 0) {
+                    ps[ps.length] = {
+                        pos: [o[0] - i * 50, o[1]],
+                        label: -i
+                    }
+                }
+            }
+            ps.forEach(t => {
+                this._circle(t.pos, 3, {
+                    fill: 'red'
+                }, g)
+                this._text([t.pos[0] - 3, t.pos[1] + 15], t.label, {}, g)
+            })
+        }
     }
     // y轴
     _axisY(options) {
@@ -42,8 +73,42 @@ export default class Axis extends BaseSvg {
             fill: 'transparent'
         }, svg)
         // let offset = 150
-        let offset = (height - 10 * 50) / 2
-        this._axis([width / 2, 0 + offset], [width / 2, height - offset], opt, g)
+        // let offset = (height - 10 * 50) / 2
+        // this._axis([width / 2, 0 + offset], [width / 2, height - offset], opt, g)
+
+        let offset = width * 0.1
+        let p1 = [width / 2, 0 + offset]
+        let p2 = [width / 2, height - offset]
+        let props = this._lineProps(opt)
+
+        this._line(p1, p2, {
+            ...props
+        }, g)
+
+        // 刻度
+        if (opt.sticks) {
+            let o = [width / 2, height / 2]
+            let ps = []
+            for (let i = 0; i < 5; i++) {
+                ps[ps.length] = {
+                    pos: [o[0], o[1] + i * 50],
+                    label: i
+                }
+                if (i > 0) {
+                    ps[ps.length] = {
+                        pos: [o[0], o[1] - i * 50],
+                        label: -i
+                    }
+                }
+            }
+            ps.forEach(t => {
+                this._circle(t.pos, 3, {
+                    fill: 'red'
+                }, g)
+                this._text([t.pos[0] - 15, t.pos[1] + 15], t.label, {}, g)
+            })
+        }
+
     }
     // 坐标轴
     _axis(p1, p2, opt, g) {
@@ -60,7 +125,7 @@ export default class Axis extends BaseSvg {
                     lineWidth: 10,
                     dashLine: true,
                     dashArray: [1, 50],
-                    dashOffset:5
+                    dashOffset: 5
                 })
             }, g)
         }

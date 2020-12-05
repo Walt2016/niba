@@ -21,7 +21,7 @@ export default class BaseSvg {
             height,
             props: 'largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
-        ['rect', 'g', 'text', 'pattern', 'marker'].forEach(t => {
+        ['rect', 'g', 'pattern', 'marker'].forEach(t => {
             Object.assign(this, {
                 [`_${t}`]: (props, g) => {
                     return this._createEle(t, {
@@ -99,6 +99,16 @@ export default class BaseSvg {
             cy: o[1],
             r,
             id: 'circle',
+            ...props
+        }, g)
+    }
+    _text(p, text, props, g) {
+        return this._createEle('text', {
+            x: p[0],
+            y: p[1],
+            textContent: text,
+            fill: 'black',
+            'font-size': 12,
             ...props
         }, g)
     }
