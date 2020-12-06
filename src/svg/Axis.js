@@ -6,16 +6,20 @@ export default class Axis extends BaseSvg {
     constructor(options, svg) {
         super(options)
         Object.assign(this, {
+            step: 50,
             ...options,
             svg
         })
+
+
     }
     // x轴
     _axisX(options) {
         let {
             width,
             height,
-            svg
+            svg,
+            step
         } = this
         let opt = this._regualrOptions(options, "axisX")
         let g = this._g({
@@ -32,32 +36,43 @@ export default class Axis extends BaseSvg {
         //     [width - offset, height / 2], opt, g)
         let props = this._lineProps(opt)
 
+        if (opt.arrow) {
+            this._axisArrow()
+        }
+
         this._line(p1, p2, {
-            ...props
+            ...props,
+            'marker-end': 'url(#markerArrow)'
         }, g)
 
         // 刻度
         if (opt.sticks) {
             let o = [width / 2, height / 2]
+            let n = Math.ceil(width / 2 / step) - 1
             let ps = []
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < n; i++) {
                 ps[ps.length] = {
-                    pos: [o[0] + i * 50, o[1]],
+                    pos: [o[0] + i * step, o[1]],
                     label: i
                 }
                 if (i > 0) {
                     ps[ps.length] = {
-                        pos: [o[0] - i * 50, o[1]],
+                        pos: [o[0] - i * step, o[1]],
                         label: -i
                     }
                 }
             }
+            let sticks = []
             ps.forEach(t => {
-                this._circle(t.pos, 3, {
-                    fill: 'red'
-                }, g)
+                sticks[sticks.length] = [t.pos, [t.pos[0], t.pos[1] - 10]]
+                // this._circle(t.pos, 3, {
+                //     fill: 'red'
+                // }, g)
                 this._text([t.pos[0] - 3, t.pos[1] + 15], t.label, {}, g)
             })
+            this._path(this._sticks(sticks), {
+                stroke: 'gray'
+            }, g)
         }
     }
     // y轴
@@ -65,7 +80,8 @@ export default class Axis extends BaseSvg {
         let {
             width,
             height,
-            svg
+            svg,
+            step
         } = this
         let opt = this._regualrOptions(options, "axisY")
         let g = this._g({
@@ -77,38 +93,64 @@ export default class Axis extends BaseSvg {
         // this._axis([width / 2, 0 + offset], [width / 2, height - offset], opt, g)
 
         let offset = width * 0.1
-        let p1 = [width / 2, 0 + offset]
-        let p2 = [width / 2, height - offset]
+        let p1 = [width / 2, height - offset]
+        let p2 = [width / 2, 0 + offset]
+
         let props = this._lineProps(opt)
 
+        if (opt.arrow) {
+            this._axisArrow()
+        }
+
+
         this._line(p1, p2, {
-            ...props
+            ...props,
+            'marker-end': 'url(#markerArrow)'
         }, g)
 
         // 刻度
         if (opt.sticks) {
             let o = [width / 2, height / 2]
+            let n = Math.ceil(height / 2 / step) - 1
             let ps = []
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < n; i++) {
                 ps[ps.length] = {
-                    pos: [o[0], o[1] + i * 50],
-                    label: i
+                    pos: [o[0], o[1] + i * step],
+                    label: -i
                 }
                 if (i > 0) {
                     ps[ps.length] = {
-                        pos: [o[0], o[1] - i * 50],
-                        label: -i
+                        pos: [o[0], o[1] - i * step],
+                        label: i
                     }
                 }
             }
+            let sticks = []
             ps.forEach(t => {
-                this._circle(t.pos, 3, {
-                    fill: 'red'
-                }, g)
+                sticks[sticks.length] = [t.pos, [t.pos[0] + 10, t.pos[1]]]
+                // this._circle(t.pos, 3, {
+                //     fill: 'red'
+                // }, g)
                 this._text([t.pos[0] - 15, t.pos[1] + 15], t.label, {}, g)
             })
+
+            this._path(this._sticks(sticks), {
+                stroke: 'gray'
+            }, g)
         }
 
+    }
+    // 二维点
+    _sticks(sticks) {
+        return sticks.map(t => {
+            return `M${t[0].join(" ")} L${t[1].join(" ")}`
+        }).join(" ")
+    }
+    // 链接点
+    _d(points) {
+        return points.map((t, index) => {
+            return `${index===0 ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
+        }).join(" ")
     }
     // 坐标轴
     _axis(p1, p2, opt, g) {
@@ -212,25 +254,37 @@ export default class Axis extends BaseSvg {
         }).join(" ")
         this._path(d, {}, g)
     }
+
+    //     <marker id="arrow" refX="0" refY="3" markerWidth="20" markerHeight="20" orient="auto">
+    //     <path d="M0 0 L0 6 L10 3" style="fill: #ffff;"></path>
+    // </marker>
     // 箭头
-    _marker() {
+    _axisArrow() {
+        if (this._has('markerArrow')) return
         let defs = this._defs(this.svg)
         let market = this._marker({
             id: 'markerArrow',
-            markerWidth: 13,
-            markerHeight: 13,
-            refx: 2,
-            refy: 6,
+            // markerWidth: 13,
+            // markerHeight: 13,
+            // refx: 2,
+            // refy: 6,
+            markerWidth: 20,
+            markerHeight: 20,
+            refX: 0,
+            refY: 3,
             orient: 'auto'
         }, defs)
 
         this._path(this._d([
-            [2, 2],
-            [2, 11],
-            [10, 6],
-            [2, 2]
+            [0, 0],
+            [0, 6],
+            [10, 3]
+            // [2, 2],
+            // [2, 11],
+            // [10, 6],
+            // [2, 2]
         ]), {
-            fill: 'red'
+            fill: 'gray'
         }, market)
     }
 }
