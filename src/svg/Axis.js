@@ -22,9 +22,12 @@ export default class Axis extends BaseSvg {
             step
         } = this
         let opt = this._regualrOptions(options, "axisX")
+        if (opt.arrow) {
+            this._axisArrow()
+        }
         let g = this._g({
             id: 'axisX',
-            fill: 'transparent'
+            fill: 'none'
         }, svg)
 
         let offset = width * 0.1
@@ -32,9 +35,7 @@ export default class Axis extends BaseSvg {
         let p2 = [width - offset, height / 2]
         let props = this._lineProps(opt)
 
-        if (opt.arrow) {
-            this._axisArrow()
-        }
+
 
         this._line(p1, p2, {
             ...props,
@@ -67,7 +68,7 @@ export default class Axis extends BaseSvg {
                 'font-size': 12
             }, g)
             ps.forEach(t => {
-                sticks[sticks.length] = [t.pos, [t.pos[0], t.pos[1] - 10]]
+                sticks[sticks.length] = [t.pos, [t.pos[0], t.pos[1] - 6]]
                 // this._circle(t.pos, 3, {
                 //     fill: 'red'
                 // }, g)
@@ -87,6 +88,9 @@ export default class Axis extends BaseSvg {
             step
         } = this
         let opt = this._regualrOptions(options, "axisY")
+        if (opt.arrow) {
+            this._axisArrow()
+        }
         let g = this._g({
             id: 'axisY',
             fill: 'none'
@@ -97,9 +101,7 @@ export default class Axis extends BaseSvg {
         let p2 = [width / 2, 0 + offset]
         let props = this._lineProps(opt)
 
-        if (opt.arrow) {
-            this._axisArrow()
-        }
+
 
 
         this._line(p1, p2, {
@@ -136,7 +138,7 @@ export default class Axis extends BaseSvg {
                 'font-size': 12
             }, g)
             ps.forEach(t => {
-                sticks[sticks.length] = [t.pos, [t.pos[0] + 10, t.pos[1]]]
+                sticks[sticks.length] = [t.pos, [t.pos[0] + 6, t.pos[1]]]
                 // this._circle(t.pos, 3, {
                 //     fill: 'red'
                 // }, g)
@@ -149,13 +151,13 @@ export default class Axis extends BaseSvg {
         }
 
     }
-    // 二维点
+    // 二维点[[p1,p2],[p3,p4]] => [[[x,y],[x,y]],[[x,y],[x,y]]]
     _sticks(sticks) {
         return sticks.map(t => {
             return `M${t[0].join(" ")} L${t[1].join(" ")}`
         }).join(" ")
     }
-    // 链接点
+    // 链接点 [p1,p2]  =>[[x,y],[x,y]]
     _d(points) {
         return points.map((t, index) => {
             return `${index===0 ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
@@ -273,10 +275,6 @@ export default class Axis extends BaseSvg {
         let defs = this._defs(this.svg)
         let market = this._marker({
             id: 'markerArrow',
-            // markerWidth: 13,
-            // markerHeight: 13,
-            // refx: 2,
-            // refy: 6,
             markerWidth: 20,
             markerHeight: 20,
             refX: 0,
@@ -288,10 +286,6 @@ export default class Axis extends BaseSvg {
             [0, 0],
             [0, 6],
             [10, 3]
-            // [2, 2],
-            // [2, 11],
-            // [10, 6],
-            // [2, 2]
         ]), {
             fill: 'gray'
         }, market)
