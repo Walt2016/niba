@@ -111,8 +111,8 @@ export default class BaseSvg {
             x: p[0],
             y: p[1],
             textContent: text,
-            fill: 'black',
-            'font-size': 12,
+            // fill: 'black',
+            // 'font-size': 12,
             ...props
         }, g)
     }

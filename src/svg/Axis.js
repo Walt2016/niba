@@ -27,13 +27,9 @@ export default class Axis extends BaseSvg {
             fill: 'transparent'
         }, svg)
 
-        // let offset = 150
-        // let offset = (width - 10 * 50) / 2
         let offset = width * 0.1
         let p1 = [0 + offset, height / 2]
         let p2 = [width - offset, height / 2]
-        // this._axis([0 + offset, height / 2],
-        //     [width - offset, height / 2], opt, g)
         let props = this._lineProps(opt)
 
         if (opt.arrow) {
@@ -48,12 +44,14 @@ export default class Axis extends BaseSvg {
         // 刻度
         if (opt.sticks) {
             let o = [width / 2, height / 2]
-            let n = Math.ceil(width / 2 / step) - 1
+            let n = Math.ceil((width / 2 - offset) / step)
             let ps = []
             for (let i = 0; i < n; i++) {
-                ps[ps.length] = {
-                    pos: [o[0] + i * step, o[1]],
-                    label: i
+                if (!(options.axisXShow && options.axisYShow && i == 0)) {
+                    ps[ps.length] = {
+                        pos: [o[0] + i * step, o[1]],
+                        label: i
+                    }
                 }
                 if (i > 0) {
                     ps[ps.length] = {
@@ -63,12 +61,17 @@ export default class Axis extends BaseSvg {
                 }
             }
             let sticks = []
+            let textG = this._g({
+                id: 'axis-x-text-group',
+                fill: 'black',
+                'font-size': 12
+            }, g)
             ps.forEach(t => {
                 sticks[sticks.length] = [t.pos, [t.pos[0], t.pos[1] - 10]]
                 // this._circle(t.pos, 3, {
                 //     fill: 'red'
                 // }, g)
-                this._text([t.pos[0] - 3, t.pos[1] + 15], t.label, {}, g)
+                this._text([t.pos[0] - 3, t.pos[1] + 15], t.label, {}, textG)
             })
             this._path(this._sticks(sticks), {
                 stroke: 'gray'
@@ -86,16 +89,12 @@ export default class Axis extends BaseSvg {
         let opt = this._regualrOptions(options, "axisY")
         let g = this._g({
             id: 'axisY',
-            fill: 'transparent'
+            fill: 'none'
         }, svg)
-        // let offset = 150
-        // let offset = (height - 10 * 50) / 2
-        // this._axis([width / 2, 0 + offset], [width / 2, height - offset], opt, g)
 
-        let offset = width * 0.1
+        let offset = height * 0.1
         let p1 = [width / 2, height - offset]
         let p2 = [width / 2, 0 + offset]
-
         let props = this._lineProps(opt)
 
         if (opt.arrow) {
@@ -111,13 +110,18 @@ export default class Axis extends BaseSvg {
         // 刻度
         if (opt.sticks) {
             let o = [width / 2, height / 2]
-            let n = Math.ceil(height / 2 / step) - 1
+            let n = Math.ceil((height / 2 - offset) / step)
             let ps = []
             for (let i = 0; i < n; i++) {
+
+                // 排除O点
+                // if (!(options.axisXShow && options.axisYShow && i == 0)) {
                 ps[ps.length] = {
                     pos: [o[0], o[1] + i * step],
                     label: -i
                 }
+                // }
+
                 if (i > 0) {
                     ps[ps.length] = {
                         pos: [o[0], o[1] - i * step],
@@ -126,12 +130,17 @@ export default class Axis extends BaseSvg {
                 }
             }
             let sticks = []
+            let textG = this._g({
+                id: 'axis-y-text-group',
+                fill: 'black',
+                'font-size': 12
+            }, g)
             ps.forEach(t => {
                 sticks[sticks.length] = [t.pos, [t.pos[0] + 10, t.pos[1]]]
                 // this._circle(t.pos, 3, {
                 //     fill: 'red'
                 // }, g)
-                this._text([t.pos[0] - 15, t.pos[1] + 15], t.label, {}, g)
+                this._text([t.pos[0] - 15, t.pos[1] + 15], t.label, {}, textG)
             })
 
             this._path(this._sticks(sticks), {
