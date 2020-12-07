@@ -151,7 +151,7 @@ let dataModel = {
     axisXDashArray: [5, 5],
     axisXDashAnimation: false,
     axisXSticks: true,
-    axisXArrow: false,
+    axisXArrow: true,
 
     axisYShow: false,
     axisYLineWidth: 1,
@@ -161,7 +161,7 @@ let dataModel = {
     axisYDashArray: [5, 5],
     axisYDashAnimation: false,
     axisYSticks: true,
-    axisYArrow: false,
+    axisYArrow: true,
 
     // 背景
     patternShow: false,

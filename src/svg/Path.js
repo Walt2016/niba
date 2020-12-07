@@ -3,6 +3,31 @@ export default class Path {
     constructor() {
 
     }
+    // 链接点 [p1,p2]  =>[[x,y],[x,y]]  通用链接方式
+    polyline(points, z, broken) {
+        return points.map((t, index) => {
+            return `${ (broken ? index %2 ===0 : index===0) ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
+        }).join(" ") + (z ? ' z' : '')
+    }
+    // 闭合线段[p1,p2,p3] p1->p2->p3->p1
+    closedLinePath(points) {
+        return points.map((t, index) => {
+            return (index === 0 ? "M" : "L") + t.join(" ")
+        }).concat(["z"]).join(" ")
+    }
+    // 折线[p1,p2,p3,p4]  p1->p2  p3->p4
+    brokenLinePath(points) {
+        return points.map((t, index) => {
+            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
+        }).join(" ")
+    }
+    // 二维点[[p1,p2],[p3,p4]] => [[[x,y],[x,y]],[[x,y],[x,y]]]
+    twoDimensionalPointPath(sticks) {
+        return sticks.map(t => {
+            return `M${t[0].join(" ")} L${t[1].join(" ")}`
+        }).join(" ")
+    }
+
 
     rect2path(x, y, width, height, rx, ry) {
         /* * rx 和 ry 的规则是： * 1. 如果其中一个设置为 0 则圆角不生效 * 2. 如果有一个没有设置则取值为另一个 */
