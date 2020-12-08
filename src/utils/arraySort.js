@@ -1,4 +1,3 @@
-
 //两个元素交换位置
 const swapArr = (arr, x, y) => {
     // arr[x] = arr.splice(y, 1, arr[x])[0];
@@ -72,6 +71,19 @@ function paritySort(arr) {
     })
 }
 
+// 对角点diagonal point
+const diagonal = points => {
+    let n = points.length;
+    let mid = Math.floor(n / 2)
+
+    let ps = []
+    for (let i = 0; i < mid; i++) {
+        ps[ps.length] = points[i]
+        ps[ps.length] = points[mid + i]
+    }
+    return ps
+}
+
 
 //数组乱序 random
 const shuffle = (arr, index) => {
@@ -106,5 +118,6 @@ export default {
     intervalSort,
     misplaced,
     paritySort,
-    shuffle
+    shuffle,
+    diagonal
 }

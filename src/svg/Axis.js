@@ -1,6 +1,9 @@
 import BaseSvg from "./baseSvg"
 import Transform from '../points/Transform'
 import Path from './Path'
+import {
+    ArcSeg
+} from '../points'
 
 // 坐标轴
 export default class Axis extends BaseSvg {
@@ -20,11 +23,11 @@ export default class Axis extends BaseSvg {
     }
     // x轴
     _axisX(options) {
-        this._axis(options,'axisX')
+        this._axis(options, 'axisX')
     }
     // y轴
     _axisY(options) {
-        this._axis(options,'axisY')
+        this._axis(options, 'axisY')
     }
 
     // 坐标轴 id = axisX axisY
@@ -182,7 +185,7 @@ export default class Axis extends BaseSvg {
         let g = this._g({
             ...props,
             id: 'polar',
-            fill: 'transparent'
+            fill: 'none'
         }, svg)
         let interval = opt.interval || 100
         let o = [width / 2, height / 2]
@@ -191,16 +194,27 @@ export default class Axis extends BaseSvg {
             this._circle(o, interval * i, {}, g)
         }
 
-        let points = [
-            [width / 2, 0],
-            [width / 2, height],
-            [0, height / 2],
-            [width, height / 2]
-        ]
-        let d = points.map((t, index) => {
-            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-        }).join(" ")
-        this._path(d, {}, g)
+        let seg = new ArcSeg({
+            o,
+            r: 300,
+            n: 12,
+            sort: 'diagonal' //对角点
+        })
+
+        this._path(this._d(seg.points, false, true), {
+            // 'stroke-dasharray':0
+        }, g)
+
+        // let points = [
+        //     [width / 2, 0],
+        //     [width / 2, height],
+        //     [0, height / 2],
+        //     [width, height / 2]
+        // ]
+        // let d = points.map((t, index) => {
+        //     return (index % 2 === 0 ? "M" : "L") + t.join(" ")
+        // }).join(" ")
+        // this._path(d, {}, g)
     }
 
     //     <marker id="arrow" refX="0" refY="3" markerWidth="20" markerHeight="20" orient="auto">
