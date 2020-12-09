@@ -189,14 +189,16 @@ export default class Axis extends BaseSvg {
         }, svg)
         let interval = opt.interval || 100
         let o = [width / 2, height / 2]
+        let n = (width > height ? width : height) / interval / 2
 
-        for (let i = 0; i < height / interval; i++) {
+
+        for (let i = 0; i < n; i++) {
             this._circle(o, interval * i, {}, g)
         }
 
         let seg = new ArcSeg({
             o,
-            r: 300,
+            r: 100 * n,
             n: 12,
             sort: 'diagonal' //对角点
         })
@@ -204,17 +206,6 @@ export default class Axis extends BaseSvg {
         this._path(this._d(seg.points, false, true), {
             // 'stroke-dasharray':0
         }, g)
-
-        // let points = [
-        //     [width / 2, 0],
-        //     [width / 2, height],
-        //     [0, height / 2],
-        //     [width, height / 2]
-        // ]
-        // let d = points.map((t, index) => {
-        //     return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-        // }).join(" ")
-        // this._path(d, {}, g)
     }
 
     //     <marker id="arrow" refX="0" refY="3" markerWidth="20" markerHeight="20" orient="auto">
