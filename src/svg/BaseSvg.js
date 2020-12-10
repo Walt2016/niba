@@ -1,5 +1,6 @@
 import config from '../config'
 import _ from '../utils/index'
+import Path from './Path'
 let {
     env,
     center
@@ -61,8 +62,8 @@ export default class BaseSvg {
         return ele
     }
     // 判断node是否存在
-    _has(id){
-        return document.querySelector("#"+id)
+    _has(id) {
+        return document.querySelector("#" + id)
     }
     // svg包围
     _svg(svgDom) {
@@ -122,6 +123,14 @@ export default class BaseSvg {
             id: 'path',
             ...props
         }, g)
+    }
+    // 链接点 [p1,p2]  =>[[x,y],[x,y]]
+    _d(points, closed, broken) {
+        return new Path().d(points, closed, broken)
+    }
+    // 线段
+    _d2(segments) {
+        return new Path().d2(segments)
     }
     _line(p1, p2, props, g) {
         this._createEle("line", {

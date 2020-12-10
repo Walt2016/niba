@@ -1,6 +1,6 @@
 import BaseSvg from "./baseSvg"
 import Transform from '../points/Transform'
-import Path from './Path'
+
 import {
     ArcSeg
 } from '../points'
@@ -17,10 +17,7 @@ export default class Axis extends BaseSvg {
 
 
     }
-    // 链接点 [p1,p2]  =>[[x,y],[x,y]]
-    _d(points, z, type) {
-        return (new Path()).polyline(points, z, type)
-    }
+
     // x轴
     _axisX(options) {
         this._axis(options, 'axisX')
@@ -84,8 +81,7 @@ export default class Axis extends BaseSvg {
                     }
                 }
                 ps.forEach(t => {
-                    sticks[sticks.length] = t.pos
-                    sticks[sticks.length] = [t.pos[0], t.pos[1] - 6]
+                    sticks[sticks.length] = [t.pos, [t.pos[0], t.pos[1] - 6]]
                     // this._circle(t.pos, 3, {
                     //     fill: 'red'
                     // }, g)
@@ -110,15 +106,14 @@ export default class Axis extends BaseSvg {
                     }
                 }
                 ps.forEach(t => {
-                    sticks[sticks.length] = t.pos
-                    sticks[sticks.length] = [t.pos[0] + 6, t.pos[1]]
+                    sticks[sticks.length] = [t.pos, [t.pos[0] + 6, t.pos[1]]]
                     // this._circle(t.pos, 3, {
                     //     fill: 'red'
                     // }, g)
                     this._text([t.pos[0] - 15, t.pos[1] + 15], t.label, {}, textG)
                 })
             }
-            this._path(this._d(sticks, false, true), {
+            this._path(this._d2(sticks), {
                 stroke: 'gray'
             }, g)
         }
@@ -135,7 +130,7 @@ export default class Axis extends BaseSvg {
         let g = this._g({
             ...props,
             id: 'grid',
-            fill: 'transparent',
+            fill: 'none',
             transform: opt.rotate ? `rotate(${opt.rotate})` : undefined,
             'transform-origin': `${width/2} ${height/2}`
         }, svg)
@@ -144,34 +139,29 @@ export default class Axis extends BaseSvg {
         let offsetX = (width / 2) % interval
         let offsetY = (height / 2) % interval
         // 竖线
-        let points = [
+        let segments = [
             [0 + offsetX, 0],
             [0 + offsetX, height]
         ]
         let tf = new Transform({
-            points
+            segments
         })
-        for (let i = 0; i < width / interval; i++) {
-            points = points.concat(tf.translate(interval * i))
-        }
+        segments = Array.from({
+            length: width / interval
+        }, (_, i) => tf.translate(interval * i))
         // 横线
-        let points2 = [
+        let segments2 = [
             [0, 0 + offsetY],
             [width, 0 + offsetY]
         ]
         tf = new Transform({
-            points: points2
+            segments: segments2
         })
-        for (let i = 0; i < height / interval; i++) {
-            points = points.concat(tf.translateY(interval * i))
-        }
+        segments = [...segments, ...Array.from({
+            length: height / interval
+        }, (_, i) => tf.translateY(interval * i))]
 
-        let d = points.map((t, index) => {
-            return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-        }).join(" ")
-
-        this._path(d, {}, g)
-
+        this._path(this._d2(segments), {}, g)
     }
     // 极坐标
     _polar(options) {

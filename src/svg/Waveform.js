@@ -1,7 +1,9 @@
 import _ from '../utils'
+import Path from './Path'
 // 波形
-export default class Waveform {
+export default class Waveform extends Path {
     constructor(points, options, callback) {
+        super(points)
         // 控制点
         let cp = []
         // 中点
@@ -57,11 +59,12 @@ export default class Waveform {
         }
     }
 
-    _d(points) {
-        return points.map((t, index) => {
-            return `${index===0 ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
-        }).join(" ")
-    }
+    // d(points) {
+    //     return this.d(points)
+    //     // return points.map((t, index) => {
+    //     //     return `${index===0 ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
+    //     // }).join(" ")
+    // }
     // 半圆弧
     _semicircle() {
         // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
@@ -76,11 +79,11 @@ export default class Waveform {
             ps[ps.length] = t
             ps[ps.length] = [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
         })
-        return this._d(ps)
+        return this.d(ps)
     }
 
-       // 椭圆弧 elliptical arc 椭圆弧
-       _elliptical() {
+    // 椭圆弧 elliptical arc 椭圆弧
+    _elliptical() {
         // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
         let {
             sweepFlag,
@@ -93,7 +96,7 @@ export default class Waveform {
             ps[ps.length] = t
             ps[ps.length] = [this.r, radiusRatio * this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
         })
-        return this._d(ps)
+        return this.d(ps)
     }
 
     // 曲线
@@ -103,7 +106,7 @@ export default class Waveform {
             ps[ps.length] = t
             ps[ps.length] = [...this.cp[2 * index], ...next]
         })
-        return this._d(ps)
+        return this.d(ps)
     }
     // 波形
     _wave() {
@@ -113,7 +116,7 @@ export default class Waveform {
             ps[ps.length] = [...this.cp[2 * index], ...this.mid[index]]
             ps[ps.length] = [...this.cp[2 * index + 1], ...next]
         })
-        return this._d(ps)
+        return this.d(ps)
     }
     // 锯齿形
     _sawtooth() {
@@ -124,6 +127,6 @@ export default class Waveform {
             ps[ps.length] = this.cp[2 * index + 1]
             ps[ps.length] = next
         })
-        return this._d(ps)
+        return this.d(ps)
     }
 }

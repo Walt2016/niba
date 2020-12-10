@@ -160,30 +160,46 @@ export default class DrawSVG extends BaseSvg {
             stroke: "blue"
         }, this.svg)
     }
-    // 路径
-    _d(points, z, type, props) { //curve, wave, sawtooth
-        if (type && props) {
-            let wf = new Waveform(points, props, (e) => {
-                e.cp.forEach(t => {
-                    props.controller &&
-                        this._circle(t, 5, {
-                            fill: 'red'
-                        }, this.svg)
-                })
-            })
-            return wf['_' + type]()
-        }
 
-        if (z) { // 闭合线段
-            return points.map((t, index) => {
-                return (index === 0 ? "M" : "L") + t.join(" ")
-            }).concat(["z"]).join(" ")
-        } else { // 折线
-            return points.map((t, index) => {
-                return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-            }).join(" ")
-        }
-    }
+    // _wave(points, closed, type, props) {
+    //     if (type && props) {
+    //         let wf = new Waveform(points, props, (e) => {
+    //             e.cp.forEach(t => {
+    //                 props.controller &&
+    //                     this._circle(t, 5, {
+    //                         fill: 'red'
+    //                     }, this.svg)
+    //             })
+    //         })
+    //         return wf['_' + type]()
+    //     }
+    //     return this._d(points, closed)
+
+    // }
+    // 路径
+    // _d(points, z, type, props) { //curve, wave, sawtooth
+    //     if (type && props) {
+    //         let wf = new Waveform(points, props, (e) => {
+    //             e.cp.forEach(t => {
+    //                 props.controller &&
+    //                     this._circle(t, 5, {
+    //                         fill: 'red'
+    //                     }, this.svg)
+    //             })
+    //         })
+    //         return wf['_' + type]()
+    //     }
+
+    //     if (z) { // 闭合线段
+    //         return points.map((t, index) => {
+    //             return (index === 0 ? "M" : "L") + t.join(" ")
+    //         }).concat(["z"]).join(" ")
+    //     } else { // 折线
+    //         return points.map((t, index) => {
+    //             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
+    //         }).join(" ")
+    //     }
+    // }
 
     // 图形
     _shape(options, parent = this.svg) {
@@ -211,7 +227,19 @@ export default class DrawSVG extends BaseSvg {
         curveEdges.forEach(t => {
             if (options[t + 'Show']) {
                 let props = this._regualrOptions(options, t)
-                ds[ds.length] = this._d(points, true, t, props)
+                if (t && props) {
+                    let wf = new Waveform(points, props, (e) => {
+                        e.cp.forEach(t => {
+                            props.controller &&
+                                this._circle(t, 5, {
+                                    fill: 'red'
+                                }, this.svg)
+                        })
+                    })
+                    // return wf['_' + type]()
+                    ds[ds.length] = wf['_' + t]()
+                }
+                // ds[ds.length] = this._d(points, true, t, props)
             }
         })
         if (options.edgeShow) {

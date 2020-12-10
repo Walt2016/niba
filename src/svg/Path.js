@@ -3,11 +3,11 @@ export default class Path {
     constructor() {
 
     }
-    // 链接点 [p1,p2]  =>[[x,y],[x,y]]  通用链接方式
-    polyline(points, z, broken) {
+    // 链接点 [p1,p2]  =>[[x,y],[x,y]]  通用链接方式 polyline
+    d(points, closed, broken) {
         return points.map((t, index) => {
             return `${ (broken ? index %2 ===0 : index===0) ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
-        }).join(" ") + (z ? ' z' : '')
+        }).join(" ") + (closed ? ' z' : '')
     }
     // 闭合线段[p1,p2,p3] p1->p2->p3->p1
     closedLinePath(points) {
@@ -21,9 +21,9 @@ export default class Path {
             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
         }).join(" ")
     }
-    // 二维点[[p1,p2],[p3,p4]] => [[[x,y],[x,y]],[[x,y],[x,y]]]
-    twoDimensionalPointPath(sticks) {
-        return sticks.map(t => {
+    // 线段，二维点[[p1,p2],[p3,p4]] => [[[x,y],[x,y]],[[x,y],[x,y]]]
+    d2(segments) {
+        return segments.map(t => {
             return `M${t[0].join(" ")} L${t[1].join(" ")}`
         }).join(" ")
     }
