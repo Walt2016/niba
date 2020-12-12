@@ -31,6 +31,19 @@ const atan = (p1 = [0, 0], p2 = [0, 0]) => {
 const mirror = (p, o) => {
     return [2 * o[0] - p[0], 2 * o[1] - p[1]]
 }
+
+// 线段分割： 分割数量
+const split = (p1, p2, splitNum) => {
+    let r = dis(p1, p2)
+    let a = atan(p1, p2)
+    return Array.from({
+        length: splitNum + 2
+    }, (_, index) => {
+        return polar(p1, index * r / (splitNum + 1), a)
+    })
+}
+
+
 // 多个点的镜像
 const mirror2 = (points, o) => {
     return points.map(t => {
@@ -55,5 +68,6 @@ export default {
     atan,
     mirror,
     mirror2,
-    mid2
+    mid2,
+    split
 }

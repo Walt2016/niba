@@ -4,28 +4,37 @@ import Path from './Path'
 export default class Waveform extends Path {
     constructor(points, options, callback) {
         super(points)
-        // 控制点
-        let cp = []
-        // 中点
-        let mid = []
-        // 半径
-        let r
-        // let n=Math.ceil(points.length/2)
-        // let n=2
+        // 波形分割数
+        let splitNum = options.splitNum
+        if (splitNum) {
+            let ps = []
+            this._forEach(points, points.length, (t, index, next) => {
+                ps = ps.concat(_.split(t, next, splitNum))
+            })
+            points = ps
+        }
         this.options = options
+        // 控制点
+        let cps = []
+        // 中点
+        let mids = []
+
+        // 半径
+        let rs = []
+        // 循环点
         let n = options.recycleIndex % points.length || points.length
         this._forEach(points, n, (t, index, next) => {
             let p = this.calc(t, next)
-            cp[cp.length] = p.cp1
-            cp[cp.length] = p.cp2
-            mid[mid.length] = p.mid
-            r = p.r
+            cps[cps.length] = p.cp1
+            cps[cps.length] = p.cp2
+            mids[mids.length] = p.mid
+            rs[rs.length] = p.r
         })
         Object.assign(this, {
             points,
-            cp,
-            mid,
-            r,
+            cps,
+            mids,
+            rs,
             n
         })
         callback && callback(this)
@@ -69,9 +78,10 @@ export default class Waveform extends Path {
         } = this.options
         let ps = []
         this._forEach(this.points, this.n, (t, index, next) => {
+            let r = this.rs[index]
             // ps[ps.length] = t
             // ps[ps.length] = [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
-            ps[ps.length] = [t, [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]]
+            ps[ps.length] = [t, [r, r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]]
         })
         return this.d(ps)
     }
@@ -87,8 +97,9 @@ export default class Waveform extends Path {
         } = this.options
         let ps = []
         this._forEach(this.points, this.n, (t, index, next) => {
+            let r = this.rs[index]
             ps[ps.length] = t
-            ps[ps.length] = [this.r, radiusRatio * this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
+            ps[ps.length] = [r, radiusRatio * r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
         })
         return this.d(ps)
     }
@@ -98,7 +109,7 @@ export default class Waveform extends Path {
         let ps = []
         this._forEach(this.points, this.n, (t, index, next) => {
             ps[ps.length] = t
-            ps[ps.length] = [...this.cp[2 * index], ...next]
+            ps[ps.length] = [...this.cps[2 * index], ...next]
         })
         return this.d(ps)
     }
@@ -107,8 +118,8 @@ export default class Waveform extends Path {
         let ps = []
         this._forEach(this.points, this.n, (t, index, next) => {
             ps[ps.length] = t
-            ps[ps.length] = [...this.cp[2 * index], ...this.mid[index]]
-            ps[ps.length] = [...this.cp[2 * index + 1], ...next]
+            ps[ps.length] = [...this.cps[2 * index], ...this.mids[index]]
+            ps[ps.length] = [...this.cps[2 * index + 1], ...next]
         })
         return this.d(ps)
     }
@@ -117,8 +128,8 @@ export default class Waveform extends Path {
         let ps = []
         this._forEach(this.points, this.n, (t, index, next) => {
             ps[ps.length] = t
-            ps[ps.length] = this.cp[2 * index]
-            ps[ps.length] = this.cp[2 * index + 1]
+            ps[ps.length] = this.cps[2 * index]
+            ps[ps.length] = this.cps[2 * index + 1]
             ps[ps.length] = next
         })
         return this.d(ps)

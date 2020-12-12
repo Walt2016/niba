@@ -193,6 +193,7 @@ let dataModel = {
     curveAngleOffset: 0,
     curveOrient: true,
     curveRecycleIndex: 0,
+    curveSplitNum: 0,
     // 波浪形
     waveShow: false,
     waveRadiusRatio: 1,
@@ -200,6 +201,7 @@ let dataModel = {
     waveAngleOffset: 0,
     waveOrient: true,
     waveRecycleIndex: 0,
+    waveSplitNum: 0,
     // 锯齿形
     sawtoothShow: false,
     sawtoothRadiusRatio: 1,
@@ -207,11 +209,13 @@ let dataModel = {
     sawtoothAngleOffset: 0,
     sawtoothOrient: true,
     sawtoothRecycleIndex: 0,
+    sawtoothSplitNum: 0,
 
     // 半圆
     semicircleShow: false,
     semicircleSweepFlag: true,
     semicircleRecycleIndex: 0,
+    semicircleSplitNum: 0,
 
     // 椭圆弧
     ellipticalShow: false,
@@ -220,6 +224,7 @@ let dataModel = {
     ellipticalXAxisRotation: 0,
     ellipticalLargeArcFlag: false,
     ellipticalRecycleIndex: 0,
+    ellipticalSplitNum: 0,
 
 
     // colorful: false,

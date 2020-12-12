@@ -184,7 +184,7 @@ export default class DrawSVG extends BaseSvg {
                 let props = this._regualrOptions(options, t)
                 if (t && props) {
                     let wf = new Waveform(points, props, (e) => {
-                        e.cp.forEach(t => {
+                        e.cps.forEach(t => {
                             props.controller &&
                                 this._circle(t, 5, {
                                     fill: 'red'

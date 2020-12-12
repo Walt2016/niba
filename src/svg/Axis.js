@@ -176,7 +176,7 @@ export default class Axis extends BaseSvg {
         let o = [width / 2, height / 2]
         let n = Math.ceil((width > height ? width : height) / interval / 2)
 
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i <= n; i++) {
             this._circle(o, interval * i, {}, g)
         }
 
