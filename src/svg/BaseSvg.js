@@ -124,7 +124,7 @@ export default class BaseSvg {
             ...props
         }, g)
     }
-    // 链接点 [p1,p2]  =>[[x,y],[x,y]]
+    // 链接点 [p1,p2]  =>[[x,y],[x,y]] 
     _d(points, closed, broken) {
         return new Path().d(points, closed, broken)
     }

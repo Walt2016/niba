@@ -22,9 +22,10 @@ export default class Path {
         }).join(" ")
     }
     // 线段，二维点[[p1,p2],[p3,p4]] => [[[x,y],[x,y]],[[x,y],[x,y]]]
-    d2(segments) {
+    d2(segments, closed, broken) {
         return segments.map(t => {
-            return `M${t[0].join(" ")} L${t[1].join(" ")}`
+            // return `M${t[0].join(" ")} L${t[1].join(" ")}`
+            return this.d(t, closed, broken)
         }).join(" ")
     }
 

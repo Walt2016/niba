@@ -14,10 +14,7 @@ export default class Axis extends BaseSvg {
             ...options,
             svg
         })
-
-
     }
-
     // x轴
     _axisX(options) {
         this._axis(options, 'axisX')
@@ -179,8 +176,7 @@ export default class Axis extends BaseSvg {
         }, svg)
         let interval = opt.interval || 100
         let o = [width / 2, height / 2]
-        let n = (width > height ? width : height) / interval / 2
-
+        let n =Math.ceil((width > height ? width : height) / interval / 2) 
 
         for (let i = 0; i < n; i++) {
             this._circle(o, interval * i, {}, g)

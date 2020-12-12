@@ -42,7 +42,6 @@ export default class DrawSVG extends BaseSvg {
         if (options.axisXShow || options.axisYShow) {
             this.axis._marker()
         }
-
         if (options.axisXShow) {
             this.axis._axisX(options)
         }
@@ -117,7 +116,6 @@ export default class DrawSVG extends BaseSvg {
                         cx: t[0],
                         cy: t[1],
                         r: opt.radius || 5
-
                         // filter: 'url(#f3)'
                     })
                     break;
@@ -133,8 +131,6 @@ export default class DrawSVG extends BaseSvg {
             }
         })
     }
-
-
 
     // 图案
     _pattern(options) {
@@ -160,47 +156,6 @@ export default class DrawSVG extends BaseSvg {
             stroke: "blue"
         }, this.svg)
     }
-
-    // _wave(points, closed, type, props) {
-    //     if (type && props) {
-    //         let wf = new Waveform(points, props, (e) => {
-    //             e.cp.forEach(t => {
-    //                 props.controller &&
-    //                     this._circle(t, 5, {
-    //                         fill: 'red'
-    //                     }, this.svg)
-    //             })
-    //         })
-    //         return wf['_' + type]()
-    //     }
-    //     return this._d(points, closed)
-
-    // }
-    // 路径
-    // _d(points, z, type, props) { //curve, wave, sawtooth
-    //     if (type && props) {
-    //         let wf = new Waveform(points, props, (e) => {
-    //             e.cp.forEach(t => {
-    //                 props.controller &&
-    //                     this._circle(t, 5, {
-    //                         fill: 'red'
-    //                     }, this.svg)
-    //             })
-    //         })
-    //         return wf['_' + type]()
-    //     }
-
-    //     if (z) { // 闭合线段
-    //         return points.map((t, index) => {
-    //             return (index === 0 ? "M" : "L") + t.join(" ")
-    //         }).concat(["z"]).join(" ")
-    //     } else { // 折线
-    //         return points.map((t, index) => {
-    //             return (index % 2 === 0 ? "M" : "L") + t.join(" ")
-    //         }).join(" ")
-    //     }
-    // }
-
     // 图形
     _shape(options, parent = this.svg) {
         console.log(options)
@@ -236,8 +191,9 @@ export default class DrawSVG extends BaseSvg {
                                 }, this.svg)
                         })
                     })
-                    // return wf['_' + type]()
-                    ds[ds.length] = wf['_' + t]()
+                    if (wf['_' + t]) {
+                        ds[ds.length] = wf['_' + t]()
+                    }
                 }
                 // ds[ds.length] = this._d(points, true, t, props)
             }
@@ -298,8 +254,6 @@ export default class DrawSVG extends BaseSvg {
         if (options.excircleShow) {
             this._excircle(options, g)
         }
-
-
         // 分形
         if (options.fractalUse) {
             let colors = _.colorCircle(points.length, options.fractalColorfulOpacity || 1)
@@ -318,9 +272,7 @@ export default class DrawSVG extends BaseSvg {
     }
     // 半径
     _radius(points, options, g) {
-        let d = points.map((t, index) => {
-            return `M${options.o.join(" ")} L${t.join(" ")}`
-        }).join(" ")
+        let d = this._d2(points.map(t => [options.o, t]))
         let opt = this._regualrOptions(options, "radius")
         let props = this._lineProps(opt)
         let groupRadius = this._g({
@@ -332,14 +284,14 @@ export default class DrawSVG extends BaseSvg {
     // 连接线
     _link(points, options, g = this.svg) {
         let n = points.length
-        let d = points.map((t, index) => {
-            let links = []
+        let links = []
+        points.forEach((t, index) => {
             for (let i = index + 1; i < n; i++) {
                 let next = points[i >= n ? index : i]
-                links[links.length] = `M${t.join(" ")} L${next.join(" ")}`
+                links[links.length] = [t, next]
             }
-            return links.join(" ")
-        }).join(" ")
+        })
+        let d = this._d2(links)
         let opt = this._regualrOptions(options, "link")
         let props = this._lineProps(opt)
         let groupRadius = this._g({
