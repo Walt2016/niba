@@ -136,23 +136,21 @@ export default class Axis extends BaseSvg {
         let offsetX = (width / 2) % interval
         let offsetY = (height / 2) % interval
         // 竖线
-        let segments = [
-            [0 + offsetX, 0],
-            [0 + offsetX, height]
-        ]
         let tf = new Transform({
-            segments
+            points: [
+                [0 + offsetX, 0],
+                [0 + offsetX, height]
+            ]
         })
-        segments = Array.from({
+        let segments = Array.from({
             length: width / interval
         }, (_, i) => tf.translate(interval * i))
         // 横线
-        let segments2 = [
-            [0, 0 + offsetY],
-            [width, 0 + offsetY]
-        ]
         tf = new Transform({
-            segments: segments2
+            points: [
+                [0, 0 + offsetY],
+                [width, 0 + offsetY]
+            ]
         })
         segments = [...segments, ...Array.from({
             length: height / interval
@@ -176,7 +174,7 @@ export default class Axis extends BaseSvg {
         }, svg)
         let interval = opt.interval || 100
         let o = [width / 2, height / 2]
-        let n =Math.ceil((width > height ? width : height) / interval / 2) 
+        let n = Math.ceil((width > height ? width : height) / interval / 2)
 
         for (let i = 0; i < n; i++) {
             this._circle(o, interval * i, {}, g)

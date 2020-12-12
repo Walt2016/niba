@@ -233,31 +233,10 @@ export default class DrawSVG extends BaseSvg {
             }
         }
 
-        // 半径
-        if (options.radiusShow) {
-            this._radius(points, options, g)
-        }
+        ['radius', 'link', 'vertex', 'center', 'excircle', 'incircle'].forEach(t => {
+            options[t + 'Show'] && this['_' + t] && this['_' + t](options, g)
 
-        // 顶点
-        if (options.vertexShow) {
-            this._regularShape('vertex', points, options, g)
-        }
-        // 顶点链接线
-        if (options.linkShow) {
-            this._link(points, options, g)
-        }
-        // 圆心
-        if (options.centerShow) {
-            this._regularShape('center', [options.o], options, g)
-        }
-        // 旁切圆
-        if (options.excircleShow) {
-            this._excircle(options, g)
-        }
-         // 内切圆
-         if (options.incircleShow) {
-            this._incircle(options, g)
-        }
+        })
         // 分形
         if (options.fractalUse) {
             let colors = _.colorCircle(points.length, options.fractalColorfulOpacity || 1)
@@ -275,7 +254,8 @@ export default class DrawSVG extends BaseSvg {
         return this
     }
     // 半径
-    _radius(points, options, g) {
+    _radius(options, g) {
+        let points = options._points
         let d = this._d(points.map(t => [options.o, t]))
         let opt = this._regualrOptions(options, "radius")
         let props = this._lineProps(opt)
@@ -286,7 +266,8 @@ export default class DrawSVG extends BaseSvg {
         this._path(d, {}, groupRadius)
     }
     // 连接线
-    _link(points, options, g = this.svg) {
+    _link(options, g = this.svg) {
+        let points = options._points
         let n = points.length
         let links = []
         points.forEach((t, index) => {
@@ -304,6 +285,14 @@ export default class DrawSVG extends BaseSvg {
         }, g)
         this._path(d, {}, groupRadius)
     }
+    // 顶点
+    _vertex(options, g) {
+        this._regularShape('vertex', options._points, options, g)
+    }
+    // 圆心
+    _center(options, g) {
+        this._regularShape('center', [options.o], options, g)
+    }
     // 旁切圆
     _excircle(options, g) {
         this._regularShape('excircle', [options.o], {
@@ -314,7 +303,7 @@ export default class DrawSVG extends BaseSvg {
     // 内切圆
     _incircle(options, g) {
         let points = options._points || []
-        let r = _.dis(options.o, _.mid.apply(null,points.slice(0, 2)))
+        let r = _.dis(options.o, _.mid.apply(null, points.slice(0, 2)))
 
         this._regularShape('incircle', [options.o], {
             ...options,

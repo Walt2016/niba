@@ -1,9 +1,10 @@
-// 线段 line segment // [[x,y],[x,y]]
+// 线段 line segment // [[x,y],[x,y],[x,y]] [p1,p2,p3]
 // vertical 
+import _ from '../utils'
 
 export default class Transform {
     constructor(options) {
-        this.segments = options.segments  
+        this.points = options.points
     }
 
     //     x1:width/2,
@@ -12,9 +13,9 @@ export default class Transform {
     //     y2:height,
     // (x1x2+y1y2)=0 。
     vertical() {
-        let segments = this.segments
-        let p1 = segments[0]
-        let p2 = segments[1]
+        let points = this.points
+        let p1 = points[0]
+        let p2 = points[1]
 
         return [
             [0, (p1[1] + p2[1]) / 2],
@@ -22,14 +23,14 @@ export default class Transform {
         ]
 
     }
-    // x 轴平移
-    translate(x = 100) {
-        return this.segments.map(t => {
-            return [t[0] + x, t[1]]
+    //  平移r   方向
+    translate(r = 100, direction = 0) {
+        return this.points.map(t => {
+            return [t[0] + r * _.cos(direction), t[1] + r * _.sin(direction)]
         })
     }
     translateY(y = 100) {
-        return this.segments.map(t => {
+        return this.points.map(t => {
             return [t[0], t[1] + y]
         })
     }
