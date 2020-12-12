@@ -14,10 +14,7 @@ export default class BaseSvg {
         this._init(options)
     }
     _init(options) {
-        // let svg = this._svg()
-        // document.body.appendChild(svg);
         Object.assign(this, {
-            // svg,
             width,
             height,
             props: 'arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
@@ -137,17 +134,6 @@ export default class BaseSvg {
             ...props
         }, g)
     }
-    // // 线段
-    // _line(points, options, g = this.svg) {
-    //     let props = this._lineProps(options)
-    //     this._createEle("line", {
-    //         x1: points[0][0],
-    //         y1: points[0][1],
-    //         x2: points[1][0],
-    //         y2: points[1][1],
-    //         ...props
-    //     }, g)
-    // }
 
     // 规则参数
     _regualrOptions(options, prefix) {

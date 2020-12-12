@@ -254,6 +254,10 @@ export default class DrawSVG extends BaseSvg {
         if (options.excircleShow) {
             this._excircle(options, g)
         }
+         // 内切圆
+         if (options.incircleShow) {
+            this._incircle(options, g)
+        }
         // 分形
         if (options.fractalUse) {
             let colors = _.colorCircle(points.length, options.fractalColorfulOpacity || 1)
@@ -306,5 +310,16 @@ export default class DrawSVG extends BaseSvg {
             ...options,
             'excircleRadius': options.r
         }, g)
+    }
+    // 内切圆
+    _incircle(options, g) {
+        let points = options._points || []
+        let r = _.dis(options.o, _.mid.apply(null,points.slice(0, 2)))
+
+        this._regularShape('incircle', [options.o], {
+            ...options,
+            'incircleRadius': r
+        }, g)
+
     }
 }

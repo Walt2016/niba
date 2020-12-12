@@ -96,6 +96,16 @@ let dataModel = {
     excircleDashAnimation: false,
     excircleColor: 'red',
 
+    // 内切圆
+    incircleShow: false,
+    incircleFill: false,
+    incircleLineWidth: 1,
+    incircleOpacity: 0.5,
+    incircleDashLine: false,
+    incircleDashArray: [5, 5],
+    incircleDashAnimation: false,
+    incircleColor: 'red',
+
 
     // 网格坐标
     gridShow: false,
