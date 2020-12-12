@@ -272,7 +272,7 @@ export default class DrawSVG extends BaseSvg {
     }
     // 半径
     _radius(points, options, g) {
-        let d = this._d2(points.map(t => [options.o, t]))
+        let d = this._d(points.map(t => [options.o, t]))
         let opt = this._regualrOptions(options, "radius")
         let props = this._lineProps(opt)
         let groupRadius = this._g({
@@ -291,7 +291,7 @@ export default class DrawSVG extends BaseSvg {
                 links[links.length] = [t, next]
             }
         })
-        let d = this._d2(links)
+        let d = this._d(links)
         let opt = this._regualrOptions(options, "link")
         let props = this._lineProps(opt)
         let groupRadius = this._g({

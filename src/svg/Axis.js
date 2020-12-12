@@ -110,7 +110,7 @@ export default class Axis extends BaseSvg {
                     this._text([t.pos[0] - 15, t.pos[1] + 15], t.label, {}, textG)
                 })
             }
-            this._path(this._d2(sticks), {
+            this._path(this._d(sticks), {
                 stroke: 'gray'
             }, g)
         }
@@ -158,7 +158,7 @@ export default class Axis extends BaseSvg {
             length: height / interval
         }, (_, i) => tf.translateY(interval * i))]
 
-        this._path(this._d2(segments), {}, g)
+        this._path(this._d(segments), {}, g)
     }
     // 极坐标
     _polar(options) {

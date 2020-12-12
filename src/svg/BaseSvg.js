@@ -128,10 +128,6 @@ export default class BaseSvg {
     _d(points, closed, broken) {
         return new Path().d(points, closed, broken)
     }
-    // 线段
-    _d2(segments) {
-        return new Path().d2(segments)
-    }
     _line(p1, p2, props, g) {
         this._createEle("line", {
             x1: p1[0],
