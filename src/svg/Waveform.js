@@ -13,7 +13,7 @@ export default class Waveform extends Path {
         // let n=Math.ceil(points.length/2)
         // let n=2
         this.options = options
-        let n = points.length
+        let n = options.recycleIndex % points.length || points.length
         this._forEach(points, n, (t, index, next) => {
             let p = this.calc(t, next)
             cp[cp.length] = p.cp1
@@ -58,13 +58,6 @@ export default class Waveform extends Path {
             r
         }
     }
-
-    // d(points) {
-    //     return this.d(points)
-    //     // return points.map((t, index) => {
-    //     //     return `${index===0 ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
-    //     // }).join(" ")
-    // }
     // 半圆弧
     _semicircle() {
         // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
@@ -76,8 +69,9 @@ export default class Waveform extends Path {
         } = this.options
         let ps = []
         this._forEach(this.points, this.n, (t, index, next) => {
-            ps[ps.length] = t
-            ps[ps.length] = [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
+            // ps[ps.length] = t
+            // ps[ps.length] = [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
+            ps[ps.length] = [t, [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]]
         })
         return this.d(ps)
     }

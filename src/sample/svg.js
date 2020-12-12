@@ -192,29 +192,34 @@ let dataModel = {
     curveController: false,
     curveAngleOffset: 0,
     curveOrient: true,
+    curveRecycleIndex: 0,
     // 波浪形
     waveShow: false,
     waveRadiusRatio: 1,
     waveController: false,
     waveAngleOffset: 0,
     waveOrient: true,
+    waveRecycleIndex: 0,
     // 锯齿形
     sawtoothShow: false,
     sawtoothRadiusRatio: 1,
     sawtoothController: false,
     sawtoothAngleOffset: 0,
     sawtoothOrient: true,
+    sawtoothRecycleIndex: 0,
 
     // 半圆
     semicircleShow: false,
     semicircleSweepFlag: true,
+    semicircleRecycleIndex: 0,
 
     // 椭圆弧
     ellipticalShow: false,
     ellipticalSweepFlag: true,
     ellipticalRadiusRatio: 1,
     ellipticalXAxisRotation: 0,
-    ellipticalLargeArcFlag: false
+    ellipticalLargeArcFlag: false,
+    ellipticalRecycleIndex: 0,
 
 
     // colorful: false,

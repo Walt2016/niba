@@ -309,6 +309,5 @@ export default class DrawSVG extends BaseSvg {
             ...options,
             'incircleRadius': r
         }, g)
-
     }
 }
