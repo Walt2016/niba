@@ -186,12 +186,18 @@ export default class DrawSVG extends BaseSvg {
                     waveform: t,
                     ...opt
                 }, (e) => {
-                    if (opt.controller) {
+                    if (opt.controlPoint) {
                         e.cps.forEach(t => {
                             this._circle(t, 5, {
                                 fill: 'red'
                             }, g)
                         })
+                    }
+                    if (opt.controlLink) {
+                        this._path(this._d(e.cps, {
+                            closed: false,
+                            broken: true
+                        }), {}, g)
                     }
                 })
             }
@@ -260,12 +266,18 @@ export default class DrawSVG extends BaseSvg {
         })
 
         let d = this._d(ps, opt, (e) => {
-            if (opt.controller) {
+            if (opt.controlPoint) {
                 e.cps.forEach(t => {
                     this._circle(t, 5, {
                         fill: 'red'
                     }, groupRadius)
                 })
+            }
+            if (opt.controlLink) {
+                this._path(this._d(e.cps, {
+                    closed: false,
+                    broken: true
+                }), {}, groupRadius)
             }
         })
         this._path(d, {}, groupRadius)
@@ -294,12 +306,18 @@ export default class DrawSVG extends BaseSvg {
             ...opt,
             closed: false
         }, (e) => {
-            if (opt.controller) {
+            if (opt.controlPoint) {
                 e.cps.forEach(t => {
                     this._circle(t, 5, {
                         fill: 'red'
                     }, groupRadius)
                 })
+            }
+            if (opt.controlLink) {
+                this._path(this._d(e.cps, {
+                    closed: false,
+                    broken: true
+                }), {}, groupRadius)
             }
         })
         this._path(d, {}, groupRadius)

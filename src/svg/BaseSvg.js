@@ -1,6 +1,5 @@
 import config from '../config'
 import _ from '../utils/index'
-import Path from './Path'
 import Waveform from './Waveform'
 let {
     env,
@@ -18,7 +17,7 @@ export default class BaseSvg {
         Object.assign(this, {
             width,
             height,
-            props: 'closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['rect', 'g', 'pattern', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -135,7 +134,11 @@ export default class BaseSvg {
         if (wf['_' + waveform]) {
             return wf['_' + waveform]()
         }
-        return new Path().d(points, closed, broken)
+        return wf.d()
+        // return wf.d(points, {
+        //     closed,
+        //     broken
+        // })
     }
     _line(p1, p2, props, g) {
         this._createEle("line", {

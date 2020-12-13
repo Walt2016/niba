@@ -1,12 +1,22 @@
 // 万能函数path
 export default class Path {
-    constructor() {
+    constructor(points, options) {
+        Object.assign(this, {
+            points,
+            options
+        })
 
     }
     // 链接点 [p1,p2]  =>[[x,y],[x,y]]  通用链接方式 polyline
-    d(points, closed, broken) {
+    d(points = this.points, {
+        closed,
+        broken
+    } = this.options) {
         return points.map((t, index) => {
-            return Array.isArray(t[0]) ? this.d(t, false, broken) : `${ (broken ? index %2 ===0 : index===0) ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
+            return Array.isArray(t[0]) ? this.d(t, {
+                closed: false,
+                broken
+            }) : `${ (broken ? index %2 ===0 : index===0) ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
         }).join(" ") + (closed ? ' z' : '')
     }
     // 闭合线段[p1,p2,p3] p1->p2->p3->p1
@@ -25,7 +35,10 @@ export default class Path {
     d2(segments, closed, broken) {
         return segments.map(t => {
             // return `M${t[0].join(" ")} L${t[1].join(" ")}`
-            return this.d(t, closed, broken)
+            return this.d(t, {
+                closed,
+                broken
+            })
         }).join(" ")
     }
 

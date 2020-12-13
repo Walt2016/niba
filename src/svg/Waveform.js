@@ -3,7 +3,7 @@ import Path from './Path'
 // 波形
 export default class Waveform extends Path {
     constructor(points, options, callback) {
-        super(points)
+        super(points, options)
         // 波形分割数
         let splitNum = options.splitNum
         if (splitNum) {
