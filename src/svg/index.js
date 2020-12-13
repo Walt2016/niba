@@ -178,50 +178,18 @@ export default class DrawSVG extends BaseSvg {
         let points = options._points || []
 
         let ds = [];
-        let curveEdges = ['semicircle', 'sawtooth', 'wave', 'curve', 'elliptical']
+        let showEdge = false;
+        let curveEdges = ['edge', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical']
         curveEdges.forEach(t => {
             if (options[t + 'Show']) {
+                showEdge = true
                 let props = this._regualrOptions(options, t)
-                if (t && props) {
-                    let wf = new Waveform(points, props, (e) => {
-                        e.cps.forEach(t => {
-                            props.controller &&
-                                this._circle(t, 5, {
-                                    fill: 'red'
-                                }, this.svg)
-                        })
-                    })
-                    if (wf['_' + t]) {
-                        ds[ds.length] = wf['_' + t]()
-                    }
-                }
-                // ds[ds.length] = this._d(points, true, t, props)
-            }
-        })
-        if (options.edgeShow) {
-
-            let t = options.edgeWaveform
-            let props = this._regualrOptions(options, "edge")
-            let wf = new Waveform(points, props, (e) => {
-                e.cps.forEach(t => {
-                    props.controller &&
-                        this._circle(t, 5, {
-                            fill: 'red'
-                        }, this.svg)
+                ds[ds.length] = this._d(points, {
+                    waveform: t,
+                    ...props
                 })
-            })
-
-            if (wf['_' + t]) {
-                ds[ds.length] = wf['_' + t]()
-            } else {
-                // 直线
-                ds[ds.length] = this._d(points, options.closed, options.broken)
             }
-        }
-        let showEdge = [...curveEdges, 'edge'].some(t => {
-            return options[t + 'Show']
         })
-
         if (showEdge) { // 有边
             let defaultOpt = this._regualrOptions(options)
             let opt = this._regualrOptions(options, "edge")
@@ -251,7 +219,6 @@ export default class DrawSVG extends BaseSvg {
 
         ['radius', 'link', 'vertex', 'center', 'excircle', 'incircle'].forEach(t => {
             options[t + 'Show'] && this['_' + t] && this['_' + t](options, g)
-
         })
         // 分形
         if (options.fractalUse) {
@@ -279,7 +246,7 @@ export default class DrawSVG extends BaseSvg {
             id: 'radius',
             ...props
         }, g)
-        let t = options.radiusWaveform
+        // let waveform = opt.waveform
         let ps = []
         points.forEach(t => {
             ps[ps.length] = options.o
@@ -288,27 +255,37 @@ export default class DrawSVG extends BaseSvg {
 
         // points = points.map(t => [options.o, t])
 
-        let wf = new Waveform(ps, props, (e) => {
-            e.cps.forEach(t => {
-                props.controller &&
-                    this._circle(t, 5, {
-                        fill: 'red'
-                    }, this.svg)
-            })
-        })
-        // let ds=[]
-        let d = ""
-        if (wf['_' + t]) {
-            // ds[ds.length] = wf['_' + t]()
-            d = wf['_' + t]()
-        } else {
-            // 直线
-            // ds[ds.length] = this._d(points, options.closed, options.broken)
-            // d = this._d(points.map(t => [options.o, t]))
-            d = this._d(ps)
-        }
+        // let wf = new Waveform(ps, props, (e) => {
+        //     e.cps.forEach(t => {
+        //         props.controller &&
+        //             this._circle(t, 5, {
+        //                 fill: 'red'
+        //             }, this.svg)
+        //     })
+        // })
+        // // let ds=[]
+        // let d = ""
+        // if (wf['_' + t]) {
+        //     // ds[ds.length] = wf['_' + t]()
+        //     d = wf['_' + t]()
+        // } else {
+        //     // 直线
+        //     // ds[ds.length] = this._d(points, options.closed, options.broken)
+        //     // d = this._d(points.map(t => [options.o, t]))
+        //     d = this._d(ps)
+        // }
         // let d = this._d(points.map(t => [options.o, t]))
-        this._path(d, {}, groupRadius)
+        let d = this._d(ps, opt)
+        this._path(d, {
+            callback: (e) => {
+                e.cps.forEach(t => {
+                    opt.controller &&
+                        this._circle(t, 5, {
+                            fill: 'red'
+                        }, this.svg)
+                })
+            }
+        }, groupRadius)
     }
     // 连接线
     _link(options, g = this.svg) {
@@ -318,16 +295,19 @@ export default class DrawSVG extends BaseSvg {
         points.forEach((t, index) => {
             for (let i = index + 1; i < n; i++) {
                 let next = points[i >= n ? index : i]
-                links[links.length] = [t, next]
+                // links[links.length] = [t, next]
+                links[links.length] = t
+                links[links.length] = next
             }
         })
-        let d = this._d(links)
+
         let opt = this._regualrOptions(options, "link")
         let props = this._lineProps(opt)
         let groupRadius = this._g({
             id: 'link',
             ...props
         }, g)
+        let d = this._d(links, opt)
         this._path(d, {}, groupRadius)
     }
     // 顶点

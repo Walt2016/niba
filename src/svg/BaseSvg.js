@@ -1,6 +1,7 @@
 import config from '../config'
 import _ from '../utils/index'
 import Path from './Path'
+import Waveform from './Waveform'
 let {
     env,
     center
@@ -17,7 +18,7 @@ export default class BaseSvg {
         Object.assign(this, {
             width,
             height,
-            props: 'markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['rect', 'g', 'pattern', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -122,7 +123,27 @@ export default class BaseSvg {
         }, g)
     }
     // 链接点 [p1,p2]  =>[[x,y],[x,y]] 
-    _d(points, closed, broken) {
+    _d(points, options, callback) {
+        let {
+            closed,
+            broken = false,
+            waveform = "line"
+        } = options
+        closed = closed === undefined ? true : closed
+
+        let wf = new Waveform(points, options, callback)
+        // (e) => {
+        //     // e.cps.forEach(t => {
+        //     //     options.controller &&
+        //     //         this._circle(t, 5, {
+        //     //             fill: 'red'
+        //     //         }, this.svg)
+        //     // })
+        // }
+        if (wf['_' + waveform]) {
+            // ds[ds.length] = wf['_' + t]()
+            return wf['_' + waveform]()
+        }
         return new Path().d(points, closed, broken)
     }
     _line(p1, p2, props, g) {

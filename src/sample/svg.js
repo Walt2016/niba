@@ -28,9 +28,8 @@ let dataModel = {
     sort: 'normal',
     segType: 'equiangular',
     api: 'svg',
-    closed: true,
-    broken: false,
-    
+
+
 
     // 半径
     radiusShow: false,
@@ -50,6 +49,7 @@ let dataModel = {
     radiusRecycleIndex: 0,
     radiusSplitNum: 0,
 
+
     // 边
     edgeShow: true,
     edgeLineWidth: 1,
@@ -63,6 +63,8 @@ let dataModel = {
     edgeText: false,
     edgeTextColor: 'red',
     edgeTextFontSize: 12,
+    edgeClosed: true,
+    edgeBroken: false,
     edgeWaveform: 'line',
     edgeRadiusRatio: 1,
     edgeController: false,
@@ -70,6 +72,7 @@ let dataModel = {
     edgeOrient: true,
     edgeRecycleIndex: 0,
     edgeSplitNum: 0,
+
     // edgeColorful: false,
 
 
@@ -202,6 +205,13 @@ let dataModel = {
     linkDashLine: true,
     linkDashArray: [5, 5],
     linkDashAnimation: false,
+    linkWaveform: 'line',
+    linkRadiusRatio: 1,
+    linkController: false,
+    linkAngleOffset: 0,
+    linkOrient: true,
+    linkRecycleIndex: 0,
+    linkSplitNum: 0,
 
     // 曲线
     curveShow: false,
