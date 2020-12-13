@@ -74,7 +74,9 @@ export default class Waveform extends Path {
             sweepFlag,
             radiusRatio = 1,
             xAxisRotation = 0,
-            largeArcFlag
+            largeArcFlag,
+            closed,
+            broken
         } = this.options
         let ps = []
         this._forEach(this.points, this.n, (t, index, next) => {
@@ -83,7 +85,7 @@ export default class Waveform extends Path {
             // ps[ps.length] = [this.r, this.r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]
             ps[ps.length] = [t, [r, r, xAxisRotation, largeArcFlag ? 1 : 0, sweepFlag ? 1 : 0, ...next]]
         })
-        return this.d(ps)
+        return this.d(ps, closed, broken)
     }
 
     // 椭圆弧 elliptical arc 椭圆弧

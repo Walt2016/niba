@@ -28,6 +28,9 @@ let dataModel = {
     sort: 'normal',
     segType: 'equiangular',
     api: 'svg',
+    closed: true,
+    broken: false,
+    
 
     // 半径
     radiusShow: false,
@@ -53,6 +56,13 @@ let dataModel = {
     edgeText: false,
     edgeTextColor: 'red',
     edgeTextFontSize: 12,
+    edgeWaveform: 'line',
+    edgeRadiusRatio: 1,
+    edgeController: false,
+    edgeAngleOffset: 0,
+    edgeOrient: true,
+    edgeRecycleIndex: 0,
+    edgeSplitNum: 0,
     // edgeColorful: false,
 
 
@@ -202,6 +212,7 @@ let dataModel = {
     waveOrient: true,
     waveRecycleIndex: 0,
     waveSplitNum: 0,
+
     // 锯齿形
     sawtoothShow: false,
     sawtoothRadiusRatio: 1,

@@ -6,7 +6,7 @@ export default class Path {
     // 链接点 [p1,p2]  =>[[x,y],[x,y]]  通用链接方式 polyline
     d(points, closed, broken) {
         return points.map((t, index) => {
-            return Array.isArray(t[0]) ? this.d(t, closed, broken) : `${ (broken ? index %2 ===0 : index===0) ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
+            return Array.isArray(t[0]) ? this.d(t, false, broken) : `${ (broken ? index %2 ===0 : index===0) ? "M" : t.length ===7 ? "A": t.length ===4 ? "Q" : "L"}${t.join(" ")}`
         }).join(" ") + (closed ? ' z' : '')
     }
     // 闭合线段[p1,p2,p3] p1->p2->p3->p1

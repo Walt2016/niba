@@ -7,7 +7,7 @@ import {
 } from '../points'
 import BaseSvg from './baseSvg'
 import Fractal from './Fractal'
-import Waveform from './WaveForm'
+import Waveform from './Waveform'
 import Axis from './Axis'
 
 export default class DrawSVG extends BaseSvg {
@@ -200,7 +200,22 @@ export default class DrawSVG extends BaseSvg {
         })
         if (options.edgeShow) {
             // 直线
-            ds[ds.length] = this._d(points, true)
+            let t=options.edgeWaveform
+            let props = this._regualrOptions(options, "edge")
+            let wf = new Waveform(points, props, (e) => {
+                e.cps.forEach(t => {
+                    props.controller &&
+                        this._circle(t, 5, {
+                            fill: 'red'
+                        }, this.svg)
+                })
+            })
+            
+            if (wf['_' + t]) {
+                ds[ds.length] = wf['_' + t]()
+            }else{
+                ds[ds.length] = this._d(points, options.closed, options.broken)
+            }
         }
         let showEdge = [...curveEdges, 'edge'].some(t => {
             return options[t + 'Show']
