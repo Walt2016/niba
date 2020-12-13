@@ -1,13 +1,11 @@
 import MidSeg from '../points/MidSeg'
 import _ from '../utils/index'
-
 import './index.css'
 import {
     ArcSeg
 } from '../points'
 import BaseSvg from './baseSvg'
 import Fractal from './Fractal'
-import Waveform from './Waveform'
 import Axis from './Axis'
 
 export default class DrawSVG extends BaseSvg {
@@ -183,10 +181,18 @@ export default class DrawSVG extends BaseSvg {
         curveEdges.forEach(t => {
             if (options[t + 'Show']) {
                 showEdge = true
-                let props = this._regualrOptions(options, t)
+                let opt = this._regualrOptions(options, t)
                 ds[ds.length] = this._d(points, {
                     waveform: t,
-                    ...props
+                    ...opt
+                }, (e) => {
+                    if (opt.controller) {
+                        e.cps.forEach(t => {
+                            this._circle(t, 5, {
+                                fill: 'red'
+                            }, g)
+                        })
+                    }
                 })
             }
         })
@@ -253,39 +259,16 @@ export default class DrawSVG extends BaseSvg {
             ps[ps.length] = t
         })
 
-        // points = points.map(t => [options.o, t])
-
-        // let wf = new Waveform(ps, props, (e) => {
-        //     e.cps.forEach(t => {
-        //         props.controller &&
-        //             this._circle(t, 5, {
-        //                 fill: 'red'
-        //             }, this.svg)
-        //     })
-        // })
-        // // let ds=[]
-        // let d = ""
-        // if (wf['_' + t]) {
-        //     // ds[ds.length] = wf['_' + t]()
-        //     d = wf['_' + t]()
-        // } else {
-        //     // 直线
-        //     // ds[ds.length] = this._d(points, options.closed, options.broken)
-        //     // d = this._d(points.map(t => [options.o, t]))
-        //     d = this._d(ps)
-        // }
-        // let d = this._d(points.map(t => [options.o, t]))
-        let d = this._d(ps, opt)
-        this._path(d, {
-            callback: (e) => {
+        let d = this._d(ps, opt, (e) => {
+            if (opt.controller) {
                 e.cps.forEach(t => {
-                    opt.controller &&
-                        this._circle(t, 5, {
-                            fill: 'red'
-                        }, this.svg)
+                    this._circle(t, 5, {
+                        fill: 'red'
+                    }, groupRadius)
                 })
             }
-        }, groupRadius)
+        })
+        this._path(d, {}, groupRadius)
     }
     // 连接线
     _link(options, g = this.svg) {
@@ -310,6 +293,14 @@ export default class DrawSVG extends BaseSvg {
         let d = this._d(links, {
             ...opt,
             closed: false
+        }, (e) => {
+            if (opt.controller) {
+                e.cps.forEach(t => {
+                    this._circle(t, 5, {
+                        fill: 'red'
+                    }, groupRadius)
+                })
+            }
         })
         this._path(d, {}, groupRadius)
     }

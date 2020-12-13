@@ -132,16 +132,7 @@ export default class BaseSvg {
         closed = closed === undefined ? true : closed
 
         let wf = new Waveform(points, options, callback)
-        // (e) => {
-        //     // e.cps.forEach(t => {
-        //     //     options.controller &&
-        //     //         this._circle(t, 5, {
-        //     //             fill: 'red'
-        //     //         }, this.svg)
-        //     // })
-        // }
         if (wf['_' + waveform]) {
-            // ds[ds.length] = wf['_' + t]()
             return wf['_' + waveform]()
         }
         return new Path().d(points, closed, broken)
