@@ -24,10 +24,10 @@ export default class DrawSVG extends BaseSvg {
     }
     // 图形合成:入口函数
     _draw(options) {
-        // 背景图案
-        if (options.patternShow) {
-            this._pattern(options)
-        }
+        // // 背景图案
+        // if (options.patternShow) {
+        //     this._shapePattern(options)
+        // }
         // 网格坐标
         if (options.gridShow) {
             this.axis._grid(options)
@@ -130,29 +130,30 @@ export default class DrawSVG extends BaseSvg {
         })
     }
 
-    // 图案
-    _pattern(options) {
-        let defs = this._defs(this.svg)
-        let pattern = this._pattern({
-            id: "pattern",
-            x: 100,
-            y: 100,
-            width: 0.2,
-            height: 0.2,
-            patternUnits: options.patternUnits || "objextBoundingBox"
-        }, defs)
-        this._circle([10, 10], 5, {
-            fill: 'red'
-        }, pattern)
+    // // 图案
+    _shapePattern(options) {
+        this._pattern(options, this.svg)
+        // let defs = this._defs(this.svg)
+        // let pattern = this._pattern({
+        //     id: "shape-pattern",
+        //     x: 100,
+        //     y: 100,
+        //     width: 0.2,
+        //     height: 0.2,
+        //     // patternUnits: options.patternUnits || "objextBoundingBox"
+        // }, defs)
+        // this._circle([10, 10], 5, {
+        //     fill: 'red'
+        // }, pattern)
 
-        this._rect({
-            x: 0,
-            y: 0,
-            width,
-            height,
-            fill: "url(#pattern)",
-            stroke: "blue"
-        }, this.svg)
+        // this._rect({
+        //     x: 0,
+        //     y: 0,
+        //     width,
+        //     height,
+        //     fill: "url(#pattern)",
+        //     stroke: "blue"
+        // }, this.svg)
     }
     // 图形
     _shape(options, parent = this.svg) {
@@ -161,6 +162,10 @@ export default class DrawSVG extends BaseSvg {
             width,
             height
         } = this
+        // 背景图案
+        if (options.patternShow) {
+            this._shapePattern(options)
+        }
         let defaultOpt = this._regualrOptions(options)
         let shapeProps = this._shapeProps(defaultOpt)
         let lineProps = this._lineProps(defaultOpt)
@@ -173,6 +178,9 @@ export default class DrawSVG extends BaseSvg {
             ...animationProps,
             ...transformProps
         }, parent)
+
+
+
         let points = options._points || []
 
         let ds = [];
@@ -211,6 +219,7 @@ export default class DrawSVG extends BaseSvg {
                 ...edgeShapeProps,
                 ...edgeLineProps,
                 transform: options.transform,
+                fill: "url(#shape-pattern)",
                 'transform-origin': `${width/2} ${height/2}`
             }, g)
             // 标注文字

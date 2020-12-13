@@ -19,7 +19,7 @@ export default class BaseSvg {
             height,
             props: 'controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
-        ['rect', 'g', 'pattern', 'marker'].forEach(t => {
+        ['rect', 'g', 'marker'].forEach(t => {
             Object.assign(this, {
                 [`_${t}`]: (props, g) => {
                     return this._createEle(t, {
@@ -148,6 +148,21 @@ export default class BaseSvg {
             y2: p2[1],
             ...props
         }, g)
+    }
+    // 图案
+    _pattern(options, g) {
+        let defs = this._defs(g)
+        let pattern = this._createEle("pattern", {
+            id: "shape-pattern",
+            x: 10,
+            y: 10,
+            width: 0.2,
+            height: 0.2
+            // patternUnits: options.patternUnits || "objextBoundingBox"  // userSpaceOnUse
+        }, defs)
+        this._circle([10, 10], 10, {
+            fill: 'red'
+        }, pattern)
     }
 
     // 规则参数
