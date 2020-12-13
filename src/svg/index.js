@@ -199,8 +199,8 @@ export default class DrawSVG extends BaseSvg {
             }
         })
         if (options.edgeShow) {
-            // 直线
-            let t=options.edgeWaveform
+
+            let t = options.edgeWaveform
             let props = this._regualrOptions(options, "edge")
             let wf = new Waveform(points, props, (e) => {
                 e.cps.forEach(t => {
@@ -210,10 +210,11 @@ export default class DrawSVG extends BaseSvg {
                         }, this.svg)
                 })
             })
-            
+
             if (wf['_' + t]) {
                 ds[ds.length] = wf['_' + t]()
-            }else{
+            } else {
+                // 直线
                 ds[ds.length] = this._d(points, options.closed, options.broken)
             }
         }
@@ -271,13 +272,42 @@ export default class DrawSVG extends BaseSvg {
     // 半径
     _radius(options, g) {
         let points = options._points
-        let d = this._d(points.map(t => [options.o, t]))
+
         let opt = this._regualrOptions(options, "radius")
         let props = this._lineProps(opt)
         let groupRadius = this._g({
             id: 'radius',
             ...props
         }, g)
+        let t = options.radiusWaveform
+        let ps = []
+        points.forEach(t => {
+            ps[ps.length] = options.o
+            ps[ps.length] = t
+        })
+
+        // points = points.map(t => [options.o, t])
+
+        let wf = new Waveform(ps, props, (e) => {
+            e.cps.forEach(t => {
+                props.controller &&
+                    this._circle(t, 5, {
+                        fill: 'red'
+                    }, this.svg)
+            })
+        })
+        // let ds=[]
+        let d = ""
+        if (wf['_' + t]) {
+            // ds[ds.length] = wf['_' + t]()
+            d = wf['_' + t]()
+        } else {
+            // 直线
+            // ds[ds.length] = this._d(points, options.closed, options.broken)
+            // d = this._d(points.map(t => [options.o, t]))
+            d = this._d(ps)
+        }
+        // let d = this._d(points.map(t => [options.o, t]))
         this._path(d, {}, groupRadius)
     }
     // 连接线

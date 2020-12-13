@@ -42,6 +42,13 @@ let dataModel = {
     radiusDashAnimation: false,
     radiusLinecap: 'butt',
     rediusMarkerArrow: false,
+    radiusWaveform: 'line',
+    radiusRadiusRatio: 1,
+    radiusController: false,
+    radiusAngleOffset: 0,
+    radiusOrient: true,
+    radiusRecycleIndex: 0,
+    radiusSplitNum: 0,
 
     // 边
     edgeShow: true,

@@ -21,7 +21,7 @@ const _group = (options) => {
 }
 
 const optionsConfig = {
-    color: ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple", 'lime'],
+    color: ["red", "blue", "black", "green", "yellow", "pink", "gray", "purple", 'lime','brown','orange','Navy'],
     shape: ['circle', 'rect', 'line', 'polygon'],
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
