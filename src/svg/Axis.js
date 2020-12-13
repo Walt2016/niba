@@ -186,8 +186,12 @@ export default class Axis extends BaseSvg {
             n: 12,
             sort: 'diagonal' //对角点
         })
+        //false, true
 
-        this._path(this._d(seg.points, false, true), {
+        this._path(this._d(seg.points, {
+            closed: false,
+            broken: true
+        }), {
             // 'stroke-dasharray':0
         }, g)
     }

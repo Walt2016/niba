@@ -307,7 +307,10 @@ export default class DrawSVG extends BaseSvg {
             id: 'link',
             ...props
         }, g)
-        let d = this._d(links, opt)
+        let d = this._d(links, {
+            ...opt,
+            closed: false
+        })
         this._path(d, {}, groupRadius)
     }
     // 顶点

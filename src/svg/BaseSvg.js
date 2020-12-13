@@ -123,7 +123,7 @@ export default class BaseSvg {
         }, g)
     }
     // 链接点 [p1,p2]  =>[[x,y],[x,y]] 
-    _d(points, options, callback) {
+    _d(points, options = {}, callback) {
         let {
             closed,
             broken = false,
