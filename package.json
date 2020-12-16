@@ -1,5 +1,5 @@
 {
-  "name": "mysvg",
+  "name": "Fission",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -7,7 +7,7 @@
     "build": "npx webpack",
     "dev": "webpack-dev-server --open --hot",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve":"serve ./dist"
+    "serve": "serve ./dist"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,6 @@
     "css-loader": "^3.2.0",
     "cssnano": "^4.1.10",
     "html-webpack-plugin": "^4.0.4",
-
     "postcss": "^7.0.27",
     "postcss-cssnext": "^3.1.0",
     "postcss-loader": "^3.0.0",

@@ -12,4 +12,4 @@ day 7 canvas fractal-ray
 2020-2-26 lattice anime
 
 # url
-https://walt2016.github.io/mysvg/dist
+https://walt2016.github.io/fission/dist
