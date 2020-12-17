@@ -216,10 +216,10 @@ export default class DrawSVG extends BaseSvg {
             let edgeShapeProps = this._shapeProps(defaultOpt)
             let edgeLineProps = this._lineProps(opt)
             this._path(ds.join(" "), {
+                fill: "url(#shape-pattern)",
                 ...edgeShapeProps,
                 ...edgeLineProps,
                 transform: options.transform,
-                fill: "url(#shape-pattern)",
                 'transform-origin': `${width/2} ${height/2}`
             }, g)
             // 标注文字
