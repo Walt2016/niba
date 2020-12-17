@@ -6,10 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fission</title>
+    <style>
+        #svg-container {
+            /* width: calc(100% -250px);
+            height: calc(100% -10px); */
+            background-color: rgba(0, 0, 0, 0.1);
+            width: 500px;
+            height: 500px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="routerView"></div>
+    <div id="svg-container"></div>
     <script>
         // document.querySelector('#svg').innerHTML = [...Array(11)]
         //     .map((_, i) => Math.pow(Math.sqrt(2), i))

@@ -15,7 +15,9 @@ export default class DrawSVG extends BaseSvg {
     }
     setup(options) {
         let svg = this._svg()
-        document.body.appendChild(svg);
+        // let root =document.querySelector("svg-container") 
+        // document.body.appendChild(svg);
+        this._append(document.querySelector("#svg-container") || document.body, svg)
         let axis = new Axis(options, svg)
         Object.assign(this, {
             svg,

@@ -241,4 +241,7 @@ export default class BaseSvg {
         //     'transform-origin': `${t[0]}px ${t[1]}px`
         // } : {}
     }
+    _append(parent,child){
+        parent.appendChild(child)
+    }
 }

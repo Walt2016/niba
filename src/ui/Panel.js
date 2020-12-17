@@ -103,7 +103,7 @@ export default class Panel extends BaseDom {
             toolsWrapper.appendChild(tools)
         }
 
-        new Dragger(panelHeader, panel)
+        // new Dragger(panelHeader, panel)
         return panel
     }
 }
