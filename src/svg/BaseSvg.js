@@ -174,13 +174,20 @@ export default class BaseSvg {
     // 渐变
     _gradient(options, g) {
         let defs = this._defs(g)
-        let grad = this._createEle("linearGradient", {
-            x1: "0",
-            x2: "0",
-            y1: "0",
-            y2: '1',
-            id: "shape-gradient"
-        }, defs)
+        let grad
+        if (options.gradientType === "radialGradient") {
+            grad = this._createEle("radialGradient", {
+                id: "shape-gradient"
+            }, defs)
+        } else {
+            grad = this._createEle("linearGradient", {
+                x1: "0",
+                x2: "0",
+                y1: "0",
+                y2: '1',
+                id: "shape-gradient"
+            }, defs)
+        }
 
         this._createEle("stop", {
             offset: '0%',

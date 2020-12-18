@@ -32,7 +32,8 @@ const optionsConfig = {
     patternUnits: ['objextBoundingBox', 'userSpaceOnUse'],
     segType: ['equiangular', 'randomTop'],
     api: ['svg', 'canvas'],
-    waveform: ['line', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical']
+    waveform: ['line', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical'],
+    gradientType:['linearGradient ','radialGradient']
 }
 
 const _options = (options) => {

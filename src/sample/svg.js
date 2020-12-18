@@ -264,7 +264,8 @@ let dataModel = {
     // 渐变
     gradientUse: false,
     gradientColor1: 'red',
-    gradientColor2: 'blue'
+    gradientColor2: 'blue',
+    gradientType: 'linearGradient'
 
 
 
