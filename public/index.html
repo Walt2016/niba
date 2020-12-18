@@ -52,8 +52,8 @@
 <body>
     <div id="tools-container">
         <div class="tools">
-            <div class="zoom-out">放大</div>
-            <div class="zoom-in">缩小</div>
+            <div class="zoom-in">zoomin</div>
+            <div class="zoom-out">zoomout</div>
         </div>
 
     </div>
@@ -77,7 +77,7 @@
                 width,
                 height
             } = viewBox
-            svg.setAttribute("viewBox",[x, y, width/2, height/2])
+            svg.setAttribute("viewBox",[x, y, width*1.1, height*1.1])
         }
 
         let zoomin = document.querySelector(".zoom-in")
@@ -91,7 +91,7 @@
                 width,
                 height
             } = viewBox
-            svg.setAttribute("viewBox",[x, y, width*2, height*2])
+            svg.setAttribute("viewBox",[x, y, width*0.9, height*0.9])
         }
 
     </script>

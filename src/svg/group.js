@@ -42,7 +42,7 @@ const _options = (options) => {
     let regs = Object.keys(optionsConfig)
     regs.forEach(r => {
         let reg = new RegExp(`(${groupConfig.group.map(t => t + r+'\\d?').concat([r+'\\d?']).join("|")})$`, 'i')
-        console.log(reg)
+        // console.log(reg)
         keys.filter(t => reg.test(t)).forEach(t => {
             opt[t] = optionsConfig[r]
         })
