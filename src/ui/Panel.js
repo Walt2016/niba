@@ -82,9 +82,9 @@ export default class Panel extends BaseDom {
                 // this._toggle(el, "down")
                 let panel = this._closest(el, ".panel")
                 this._toggle(panel, "fadeout")
-                let wrapper = this._closest(el, "#wrapper")
-                let btn = this._query("#configBtn", wrapper)
-                this._toggle(btn, "hide")
+                // let wrapper = this._closest(el, "#wrapper")
+                // let btn = this._query("#configBtn", wrapper)
+                // this._toggle(btn, "hide")
             }
         }, panelHeader)
 
