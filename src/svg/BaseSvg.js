@@ -17,7 +17,7 @@ export default class BaseSvg {
         Object.assign(this, {
             width,
             height,
-            props: 'controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['rect', 'g', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -67,8 +67,8 @@ export default class BaseSvg {
         let svg = this._createEle("svg", {
             width: "100%",
             height: "100%",
-            viewBox: `0,0,${width},${height}`,
-            preserveAspectRatio: "XMidYMid meet"
+            viewBox: `0,0,${width},${height}`
+            // preserveAspectRatio: "XMidYMid meet"
         })
         if (Array.isArray(svgDom)) {
             svgDom.forEach(t => {
@@ -166,6 +166,32 @@ export default class BaseSvg {
             fill: 'red'
         }, pattern)
     }
+    //     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">  
+    //     <stop offset="0%" stop-color="red"/>  
+    //     <stop offset="50%" stop-color="black" stop-opacity="0"/>  
+    //     <stop offset="100%" stop-color="blue"/>  
+    //   </linearGradient>  
+    // 渐变
+    _gradient(options, g) {
+        let defs = this._defs(g)
+        let grad = this._createEle("linearGradient", {
+            x1: "0",
+            x2: "0",
+            y1: "0",
+            y2: '1',
+            id: "shape-gradient"
+        }, defs)
+
+        this._createEle("stop", {
+            offset: '0%',
+            'stop-color': options.gradientColor1
+        }, grad)
+        this._createEle("stop", {
+            offset: '100%',
+            'stop-color': options.gradientColor2
+        }, grad)
+
+    }
 
     // 规则参数
     _regualrOptions(options, prefix) {
@@ -246,4 +272,6 @@ export default class BaseSvg {
     _append(parent, child) {
         parent.appendChild(child)
     }
+
+
 }

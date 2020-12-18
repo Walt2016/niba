@@ -157,6 +157,10 @@ export default class DrawSVG extends BaseSvg {
         //     stroke: "blue"
         // }, this.svg)
     }
+    _shapeGradient(options) {
+        this._gradient(options, this.svg)
+
+    }
     // 图形
     _shape(options, parent = this.svg) {
         console.log(options)
@@ -167,6 +171,9 @@ export default class DrawSVG extends BaseSvg {
         // 背景图案
         if (options.patternShow) {
             this._shapePattern(options)
+        }
+        if (options.gradientUse) {
+            this._shapeGradient(options)
         }
         let defaultOpt = this._regualrOptions(options)
         let shapeProps = this._shapeProps(defaultOpt)
@@ -217,13 +224,20 @@ export default class DrawSVG extends BaseSvg {
             let opt = this._regualrOptions(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)
             let edgeLineProps = this._lineProps(opt)
-            this._path(ds.join(" "), {
-                fill: "url(#shape-pattern)",
+            let params = {
+                // fill: options.patternShow ? "url(#shape-pattern)" : options.gradientUse ? "url(#shape-gradient)" : "none",
                 ...edgeShapeProps,
                 ...edgeLineProps,
                 transform: options.transform,
                 'transform-origin': `${width/2} ${height/2}`
-            }, g)
+            }
+            if (options.patternShow) {
+                params.fill = "url(#shape-pattern)"
+            }
+            if (options.gradientUse) {
+                params.fill = "url(#shape-gradient)"
+            }
+            this._path(ds.join(" "), params, g)
             // 标注文字
             if (opt.text) {
                 let midseg = new MidSeg({

@@ -261,6 +261,12 @@ let dataModel = {
     ellipticalRecycleIndex: 0,
     ellipticalSplitNum: 0,
 
+    // 渐变
+    gradientUse: false,
+    gradientColor1: 'red',
+    gradientColor2: 'blue'
+
+
 
     // colorful: false,
     // followMouse:false,
