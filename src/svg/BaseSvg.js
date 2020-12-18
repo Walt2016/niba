@@ -17,9 +17,9 @@ export default class BaseSvg {
         Object.assign(this, {
             width,
             height,
-            props: 'color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
-        ['rect', 'g', 'marker'].forEach(t => {
+        ['g', 'marker'].forEach(t => {
             Object.assign(this, {
                 [`_${t}`]: (props, g) => {
                     return this._createEle(t, {
@@ -151,6 +151,15 @@ export default class BaseSvg {
             ...props
         }, g)
     }
+    _rect(p1, p2, props, g) {
+        this._createEle("rect", {
+            x: p1[0],
+            y: p1[1],
+            width: p2[0] - p1[0],
+            height: p2[1] - p1[0],
+            ...props
+        }, g)
+    }
     // 图案
     _pattern(options, g) {
         let defs = this._defs(g)
@@ -165,6 +174,76 @@ export default class BaseSvg {
         this._circle([10, 10], 10, {
             fill: 'red'
         }, pattern)
+
+        let pat = this._createEle("pattern", {
+            id: "shape-pattern-pat",
+            x: "6%",
+            width: "50%",
+            height: "50%",
+            // patternUnits: "userSpaceOnUse"
+        }, defs)
+        this._createEle("line", {
+            x1: 4,
+            x2: 4,
+            y2: '100%'
+        }, pat)
+        this._createEle("line", {
+            x1: 8,
+            x2: 8,
+            y2: '100%'
+        }, pat)
+        this._createEle("line", {
+            x1: 16,
+            x2: 16,
+            y2: '100%'
+        }, pat)
+
+
+        //     <path d="M-1,1 l2,-2
+        //     M0,4 l4,-4
+        //     M3,5 l2,-2" 
+        //  style="stroke:black; stroke-width:1" />
+
+        let diagonalHatch = this._createEle("pattern", {
+            id: "shape-pattern-diagonalHatch",
+            // x: "6%",
+            width: "4",
+            height: "4",
+            patternUnits: "userSpaceOnUse"
+        }, defs)
+
+        this._path("M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2", {
+            stroke: "black",
+            "stroke-width": 1
+        }, diagonalHatch)
+
+
+        let lv = this._createEle("pattern", {
+            id: "shape-pattern-lv",
+            x: 0,
+            y: 0,
+            width: "20",
+            height: "20",
+            patternUnits: "userSpaceOnUse"
+        }, defs)
+
+        // this._path("M0,0 H 10 V 20 H10 V -10 H -20 V -10 z", {
+        //     stroke: "black",
+        //     "stroke-width": 1,
+        //     fill: "red"
+        // }, lv)
+        this._rect([0, 0], [10, 10], {
+            fill: "red"
+        }, lv)
+        this._rect([10, 10], [20, 20], {
+            fill: "green"
+        }, lv)
+
+
+
+
+
+
     }
     //     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">  
     //     <stop offset="0%" stop-color="red"/>  

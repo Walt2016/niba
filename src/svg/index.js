@@ -232,7 +232,7 @@ export default class DrawSVG extends BaseSvg {
                 'transform-origin': `${width/2} ${height/2}`
             }
             if (options.patternShow) {
-                params.fill = "url(#shape-pattern)"
+                params.fill = (options.patternName === undefined || options.patternName === "default") ? "url(#shape-pattern)" : `url(#shape-pattern-${options.patternName})`
             }
             if (options.gradientUse) {
                 params.fill = "url(#shape-gradient)"

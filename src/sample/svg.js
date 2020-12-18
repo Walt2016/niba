@@ -199,6 +199,7 @@ let dataModel = {
     // 背景
     patternShow: false,
     patternUnits: 'objectBoundingBox',
+    patternName:'circle',
 
     // 连接线
     linkShow: false,

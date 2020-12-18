@@ -33,7 +33,8 @@ const optionsConfig = {
     segType: ['equiangular', 'randomTop'],
     api: ['svg', 'canvas'],
     waveform: ['line', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical'],
-    gradientType:['linearGradient ','radialGradient']
+    gradientType: ['linearGradient ', 'radialGradient'],
+    patternName: ['default', 'pat','diagonalHatch','lv']
 }
 
 const _options = (options) => {
