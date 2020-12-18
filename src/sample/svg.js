@@ -281,6 +281,7 @@ polygon.draw()
 let timmer
 let v = Math.random()
 let ui = new UI.Form({
+    el: "#params-container",
     data: polygon,
     options,
     group,

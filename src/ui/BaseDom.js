@@ -8,8 +8,17 @@ export default class BaseDom {
                 n: 'edge'
             }
         }, options)
+        this.initEl()
         this.setData(options.data)
         console.log(this)
+    }
+    initEl() {
+         // this.el = this._query(options.el)
+        let root = this._div({
+            id: "wrapper"
+        })
+        this._appendTo(this.el, root)
+        this.el = root
     }
     // 渲染接口
     render() {}
@@ -41,13 +50,13 @@ export default class BaseDom {
                     type: "select",
                     options: options[key]
                 }
-            // } else if (label === 'opacity') {
-            //     fields[fields.length] = {
-            //         key,
-            //         label,
-            //         value: data[key],
-            //         type: 'range'
-            //     }
+                // } else if (label === 'opacity') {
+                //     fields[fields.length] = {
+                //         key,
+                //         label,
+                //         value: data[key],
+                //         type: 'range'
+                //     }
             } else {
                 fields[fields.length] = {
                     key,
@@ -159,6 +168,7 @@ export default class BaseDom {
     _appendTo(el, form) {
         el = el ? this._query(el) : document.body
         el.appendChild(form)
+        return el
     }
     // 创建Dom
     _createEle(tag, options, parent) {

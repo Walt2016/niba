@@ -27,8 +27,8 @@ let env = (function () {
         document.body.clientHeight || 400;
 
 
-    wrap.style.width = "calc(100% - 250px)"
-    wrap.style.height = height+'px'
+    // wrap.style.width = "calc(100% - 250px)"
+    // wrap.style.height = height+'px'
 
     let xy = getObjXy(wrap)
 

@@ -7,9 +7,7 @@ export default class Form extends Panel {
     }
     // 实现接口
     render() {
-        let el = this.el ? this.el : this._div({
-            id: "wrapper"
-        })
+        let el = this.el
         let form = this._panelWrap()
         el.appendChild(form)
         this._div({
@@ -24,8 +22,6 @@ export default class Form extends Panel {
                 this._toggle(el, "hide")
             }
         }, el)
-        this._appendTo(null, el)
-        this.el = el
     }
 
     _panelWrap(options) {

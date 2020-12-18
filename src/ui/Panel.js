@@ -4,16 +4,38 @@ import Dragger from "./Dragger"
 export default class Panel extends BaseDom {
     constructor(options) {
         super(options)
+        // this.init()
     }
+    // init() {
+    //     // let el = this.el ? this.el : this._div({
+    //     //     id: "wrapper"
+    //     // })
+
+    //     // if(this.el){
+    //     //     // this.el=this._appendTo(null, el)
+
+    //     // }
+    //     let root = this._div({
+    //         id: "wrapper"
+    //     })
+    //     this._appendTo(this.el, root)
+    //     this.el = root
+    //     debugger
+
+
+
+    //     // this.el = el
+    // }
     // 实现接口
     render() {
-        let el = this.el ? this.el : this._div({
-            id: "wrapper"
-        })
+        // let el = this.el ? this.el : this._div({
+        //     id: "wrapper"
+        // })
+        let el = this.el
         let panel = this._panel()
         el.appendChild(panel)
-        this._appendTo(null, el)
-        this.el = el
+        // this._appendTo(null, el)
+        // this.el = el
     }
     _panel(options) {
         let {

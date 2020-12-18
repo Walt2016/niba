@@ -65,8 +65,10 @@ export default class BaseSvg {
     // svg包围
     _svg(svgDom) {
         let svg = this._createEle("svg", {
-            width,
-            height
+            width: "100%",
+            height: "100%",
+            viewBox: `0,0,${width},${height}`,
+            preserveAspectRatio: "XMidYMid meet"
         })
         if (Array.isArray(svgDom)) {
             svgDom.forEach(t => {
@@ -241,7 +243,7 @@ export default class BaseSvg {
         //     'transform-origin': `${t[0]}px ${t[1]}px`
         // } : {}
     }
-    _append(parent,child){
+    _append(parent, child) {
         parent.appendChild(child)
     }
 }
