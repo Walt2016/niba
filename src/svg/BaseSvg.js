@@ -270,7 +270,7 @@ export default class BaseSvg {
         }, chequer)
 
     }
-    // 条纹
+    // 条纹 竖直
     _stripe(options, g) {
         let {
             stripeSize = 10,
@@ -315,6 +315,55 @@ export default class BaseSvg {
             fill: stripeColor2,
             transform: `skewX(${stripeSkewX})`
         }, stripe)
+    }
+    // 斜条纹线
+    _diagonalStripe(options, g) {
+
+        let {
+            diagonalStripeeSize = 10,
+                diagonalStripeColor1 = "red",
+                diagonalStripeColor2 = "green",
+                diagonalStripeBorderRadius1 = 1,
+                diagonalStripeBorderRadius2 = 1,
+                diagonalStripeRadio = 0.2,
+                diagonalStripeSkewX = 0,
+                diagonalStripeOffset = 0
+        } = options
+        let r = diagonalStripeeSize
+        let defs = this._defs(g)
+        let stripe = this._createEle("pattern", {
+            id: "shape-pattern-diagonalStripe",
+            x: 0,
+            y: 0,
+            width: r * 2,
+            height: r * 2,
+            patternUnits: "userSpaceOnUse"
+        }, defs)
+
+        let offset = diagonalStripeOffset
+        let d = this._d([
+            [
+                [0, 0],
+                [r * 2, r * 2],
+                [r + offset, r * 2],
+                [0, r - offset]
+            ],
+            [
+                [r + offset, 0],
+                [r * 2, 0],
+                [r * 2, r - offset]
+            ]
+        ])
+        this._path(d, {
+            fill: diagonalStripeColor1
+        }, stripe)
+
+        // let d2 = `M${stripeSize},0 h${stripeSize*stripeRadio} v${stripeSize} h${stripeSize*stripeRadio*-1} Z`
+        // this._path(d2, {
+        //     fill: stripeColor2,
+        //     transform: `skewX(${stripeSkewX})`
+        // }, stripe)
+
     }
     //     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">  
     //     <stop offset="0%" stop-color="red"/>  

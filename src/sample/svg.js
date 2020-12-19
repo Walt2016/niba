@@ -282,7 +282,14 @@ let dataModel = {
     stripeColor1: 'red',
     stripeColor2: 'green',
     stripeRadio: 0.2,
-    stripeSkewX:0
+    stripeSkewX: 0,
+
+    diagonalStripeUse: false,
+    diagonalStripeSize: 10,
+    diagonalStripeColor1: 'red',
+    diagonalStripeOffset: 0
+
+
 }
 
 // debugger

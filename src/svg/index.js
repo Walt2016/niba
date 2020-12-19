@@ -142,6 +142,9 @@ export default class DrawSVG extends BaseSvg {
     _shapeStripe(options){
         this._stripe(options, this.svg)
     }
+    _shapeDiagonalStripe(options){
+        this._diagonalStripe(options, this.svg)
+    }
     _shapeGradient(options) {
         this._gradient(options, this.svg)
 
@@ -161,9 +164,13 @@ export default class DrawSVG extends BaseSvg {
         if (options.chequerUse) {
             this._shapeChequer(options)
         }
-        // 格子图案
+        // 条纹图案
         if (options.stripeUse) {
             this._shapeStripe(options)
+        }
+        // 条纹图案
+        if (options.diagonalStripeUse) {
+            this._shapeDiagonalStripe(options)
         }
         // 渐变
         if (options.gradientUse) {
@@ -233,6 +240,9 @@ export default class DrawSVG extends BaseSvg {
             }
             if (options.stripeUse) {
                 params.fill = "url(#shape-pattern-stripe)"
+            }
+            if (options.diagonalStripeUse) {
+                params.fill = "url(#shape-pattern-diagonalStripe)"
             }
             if (options.gradientUse) {
                 params.fill = "url(#shape-gradient)"
