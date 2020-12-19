@@ -161,7 +161,7 @@ let dataModel = {
     axisYSticks: true,
 
     // 背景
-    patternShow:false,
+    patternUse:false,
     patternUnits:'objectBoundingBox'
 
 

@@ -197,9 +197,9 @@ let dataModel = {
     axisYArrow: true,
 
     // 背景
-    patternShow: false,
+    patternUse: false,
     patternUnits: 'objectBoundingBox',
-    patternName:'circle',
+    patternName: 'circle',
 
     // 连接线
     linkShow: false,
@@ -266,14 +266,17 @@ let dataModel = {
     gradientUse: false,
     gradientColor1: 'red',
     gradientColor2: 'blue',
-    gradientType: 'linearGradient'
+    gradientType: 'linearGradient',
 
-
-
-    // colorful: false,
-    // followMouse:false,
-    // animate:false,
-    // drag:false,
+    // 格子
+    chequerUse: false,
+    chequerSize: 10,
+    
+    chequerColor1: 'red',
+    chequerColor2: 'green',
+    chequerBorderRadius1: 1,
+    chequerBorderRadius2: 1,
+    
 }
 
 // debugger

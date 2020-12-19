@@ -17,7 +17,7 @@ export default class BaseSvg {
         Object.assign(this, {
             width,
             height,
-            props: 'name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['g', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -239,10 +239,40 @@ export default class BaseSvg {
             fill: "green"
         }, lv)
 
+    }
+    // 格子图案
+    _chequer(options, g) {
+        let {
+            chequerSize,
+            chequerColor1 = "red",
+            chequerColor2 = "green",
+            chequerBorderRadius1 = 1,
+            chequerBorderRadius2 = 1
+        } = options
+        let defs = this._defs(g)
 
+        let chequer = this._createEle("pattern", {
+            id: "shape-pattern-chequer",
+            x: 0,
+            y: 0,
+            width: chequerSize * 2,
+            height: chequerSize * 2,
+            patternUnits: "userSpaceOnUse"
+        }, defs)
+        this._rect([0, 0], [chequerSize, chequerSize], {
+            fill: chequerColor1,
+            rx: chequerBorderRadius1,
+            ry: chequerBorderRadius1,
+        }, chequer)
+        this._rect([chequerSize, chequerSize], [chequerSize * 2, chequerSize * 2], {
+            fill: chequerColor2,
+            rx: chequerBorderRadius2,
+            ry: chequerBorderRadius2,
+        }, chequer)
 
-
-
+    }
+    // 条纹
+    _stripe() {
 
     }
     //     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">  

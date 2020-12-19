@@ -27,7 +27,7 @@ export default class DrawSVG extends BaseSvg {
     // 图形合成:入口函数
     _draw(options) {
         // // 背景图案
-        // if (options.patternShow) {
+        // if (options.patternUse) {
         //     this._shapePattern(options)
         // }
         // 网格坐标
@@ -135,27 +135,9 @@ export default class DrawSVG extends BaseSvg {
     // // 图案
     _shapePattern(options) {
         this._pattern(options, this.svg)
-        // let defs = this._defs(this.svg)
-        // let pattern = this._pattern({
-        //     id: "shape-pattern",
-        //     x: 100,
-        //     y: 100,
-        //     width: 0.2,
-        //     height: 0.2,
-        //     // patternUnits: options.patternUnits || "objextBoundingBox"
-        // }, defs)
-        // this._circle([10, 10], 5, {
-        //     fill: 'red'
-        // }, pattern)
-
-        // this._rect({
-        //     x: 0,
-        //     y: 0,
-        //     width,
-        //     height,
-        //     fill: "url(#pattern)",
-        //     stroke: "blue"
-        // }, this.svg)
+    }
+    _shapeChequer(options){
+        this._chequer(options, this.svg)
     }
     _shapeGradient(options) {
         this._gradient(options, this.svg)
@@ -169,9 +151,14 @@ export default class DrawSVG extends BaseSvg {
             height
         } = this
         // 背景图案
-        if (options.patternShow) {
+        if (options.patternUse) {
             this._shapePattern(options)
         }
+        // 格子图案
+        if (options.chequerUse) {
+            this._shapeChequer(options)
+        }
+        // 渐变
         if (options.gradientUse) {
             this._shapeGradient(options)
         }
@@ -225,14 +212,17 @@ export default class DrawSVG extends BaseSvg {
             let edgeShapeProps = this._shapeProps(defaultOpt)
             let edgeLineProps = this._lineProps(opt)
             let params = {
-                // fill: options.patternShow ? "url(#shape-pattern)" : options.gradientUse ? "url(#shape-gradient)" : "none",
+                // fill: options.patternUse ? "url(#shape-pattern)" : options.gradientUse ? "url(#shape-gradient)" : "none",
                 ...edgeShapeProps,
                 ...edgeLineProps,
                 transform: options.transform,
                 'transform-origin': `${width/2} ${height/2}`
             }
-            if (options.patternShow) {
+            if (options.patternUse) {
                 params.fill = (options.patternName === undefined || options.patternName === "default") ? "url(#shape-pattern)" : `url(#shape-pattern-${options.patternName})`
+            }
+            if (options.chequerUse) {
+                params.fill = "url(#shape-pattern-chequer)"
             }
             if (options.gradientUse) {
                 params.fill = "url(#shape-gradient)"
