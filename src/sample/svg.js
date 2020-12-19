@@ -271,12 +271,18 @@ let dataModel = {
     // 格子
     chequerUse: false,
     chequerSize: 10,
-    
     chequerColor1: 'red',
     chequerColor2: 'green',
     chequerBorderRadius1: 1,
     chequerBorderRadius2: 1,
-    
+
+    // 条纹
+    stripeUse: false,
+    stripeSize: 10,
+    stripeColor1: 'red',
+    stripeColor2: 'green',
+    stripeRadio: 0.2,
+    stripeSkewX:0
 }
 
 // debugger

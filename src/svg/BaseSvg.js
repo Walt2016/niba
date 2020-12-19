@@ -17,7 +17,7 @@ export default class BaseSvg {
         Object.assign(this, {
             width,
             height,
-            props: 'borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'skewX,borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['g', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -250,7 +250,6 @@ export default class BaseSvg {
             chequerBorderRadius2 = 1
         } = options
         let defs = this._defs(g)
-
         let chequer = this._createEle("pattern", {
             id: "shape-pattern-chequer",
             x: 0,
@@ -272,8 +271,50 @@ export default class BaseSvg {
 
     }
     // 条纹
-    _stripe() {
+    _stripe(options, g) {
+        let {
+            stripeSize = 10,
+                stripeColor1 = "red",
+                stripeColor2 = "green",
+                stripeBorderRadius1 = 1,
+                stripeBorderRadius2 = 1,
+                stripeRadio = 0.2,
+                stripeSkewX = 0
+        } = options
+        let defs = this._defs(g)
+        let stripe = this._createEle("pattern", {
+            id: "shape-pattern-stripe",
+            x: 0,
+            y: 0,
+            width: stripeSize * 2,
+            height: stripeSize,
+            patternUnits: "userSpaceOnUse"
+        }, defs)
+        // let d = "M0,0 H10 L 20,10  V-10 Z"
+        // let d = "M0,0 H10  V10 Z"
+        // 三角形
+        // let d = `M0,0 h${stripeSize} v${stripeSize} Z`
+        // this._path(d, {
+        //     fill: stripeColor1
+        // }, stripe)
 
+        // let d2 = `M${stripeSize},${stripeSize} h${stripeSize} v${stripeSize} Z`
+        // this._path(d2, {
+        //     fill: stripeColor2
+        // }, stripe)
+
+
+        let d = `M0,0 h${stripeSize*stripeRadio} v${stripeSize} h${stripeSize*stripeRadio*-1} Z`
+        this._path(d, {
+            fill: stripeColor1,
+            transform: `skewX(${stripeSkewX})`
+        }, stripe)
+
+        let d2 = `M${stripeSize},0 h${stripeSize*stripeRadio} v${stripeSize} h${stripeSize*stripeRadio*-1} Z`
+        this._path(d2, {
+            fill: stripeColor2,
+            transform: `skewX(${stripeSkewX})`
+        }, stripe)
     }
     //     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">  
     //     <stop offset="0%" stop-color="red"/>  
