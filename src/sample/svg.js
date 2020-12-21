@@ -198,8 +198,13 @@ let dataModel = {
 
     // 背景
     patternUse: false,
-    patternUnits: 'objectBoundingBox',
-    patternName: 'circle',
+    // patternUnits: 'objectBoundingBox',
+    patternName: 'chequer',
+    patternColor1: 'red',
+    patternColor2: 'red',
+    patternSize: 10,
+    patternOffset: 0,
+    patternSkewX: 0,
 
     // 连接线
     linkShow: false,

@@ -1,6 +1,7 @@
 import config from '../config'
 import _ from '../utils/index'
 import Waveform from './Waveform'
+import Pattern from './Pattern'
 let {
     env,
     center
@@ -17,7 +18,7 @@ export default class BaseSvg {
         Object.assign(this, {
             width,
             height,
-            props: 'skewX,borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            props: 'size,skewX,borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['g', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -162,82 +163,118 @@ export default class BaseSvg {
     }
     // 图案
     _pattern(options, g) {
+        let {
+            size = 10,
+                name = "diagonalStripe",
+                color1 = 'red',
+                color2 = 'red',
+                skewX = 0
+        } = options
+
         let defs = this._defs(g)
-        let pattern = this._createEle("pattern", {
+        let patternWarper = this._createEle("pattern", {
             id: "shape-pattern",
-            x: 10,
-            y: 10,
-            width: 0.2,
-            height: 0.2
-            // patternUnits: options.patternUnits || "objextBoundingBox"  // userSpaceOnUse
-        }, defs)
-        this._circle([10, 10], 10, {
-            fill: 'red'
-        }, pattern)
-
-        let pat = this._createEle("pattern", {
-            id: "shape-pattern-pat",
-            x: "6%",
-            width: "50%",
-            height: "50%",
-            // patternUnits: "userSpaceOnUse"
-        }, defs)
-        this._createEle("line", {
-            x1: 4,
-            x2: 4,
-            y2: '100%'
-        }, pat)
-        this._createEle("line", {
-            x1: 8,
-            x2: 8,
-            y2: '100%'
-        }, pat)
-        this._createEle("line", {
-            x1: 16,
-            x2: 16,
-            y2: '100%'
-        }, pat)
-
-
-        //     <path d="M-1,1 l2,-2
-        //     M0,4 l4,-4
-        //     M3,5 l2,-2" 
-        //  style="stroke:black; stroke-width:1" />
-
-        let diagonalHatch = this._createEle("pattern", {
-            id: "shape-pattern-diagonalHatch",
-            // x: "6%",
-            width: "4",
-            height: "4",
-            patternUnits: "userSpaceOnUse"
-        }, defs)
-
-        this._path("M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2", {
-            stroke: "black",
-            "stroke-width": 1
-        }, diagonalHatch)
-
-
-        let lv = this._createEle("pattern", {
-            id: "shape-pattern-lv",
             x: 0,
             y: 0,
-            width: "20",
-            height: "20",
+            width: size * 2,
+            height: size * 2,
             patternUnits: "userSpaceOnUse"
         }, defs)
+        let pattern = new Pattern(options)
+        let d = pattern["_" + name] ? pattern["_" + name]() : pattern["_diagonalStripe"]()
 
-        // this._path("M0,0 H 10 V 20 H10 V -10 H -20 V -10 z", {
+        if (Array.isArray(d)) {
+            d.forEach((t, index) => {
+                this._path(t, {
+                    fill: options['color' + (index + 1)],
+                    transform: `skewX(${skewX})`
+                }, patternWarper)
+            })
+
+        } else {
+            this._path(d, {
+                fill: color1,
+                transform: `skewX(${skewX})`
+            }, patternWarper)
+        }
+
+
+
+        // let pattern = this._createEle("pattern", {
+        //     id: "shape-pattern",
+        //     x: 10,
+        //     y: 10,
+        //     width: 0.2,
+        //     height: 0.2
+        //     // patternUnits: options.patternUnits || "objextBoundingBox"  // userSpaceOnUse
+        // }, defs)
+        // this._circle([10, 10], 10, {
+        //     fill: 'red'
+        // }, pattern)
+
+        // let pat = this._createEle("pattern", {
+        //     id: "shape-pattern-pat",
+        //     x: "6%",
+        //     width: "50%",
+        //     height: "50%",
+        //     // patternUnits: "userSpaceOnUse"
+        // }, defs)
+        // this._createEle("line", {
+        //     x1: 4,
+        //     x2: 4,
+        //     y2: '100%'
+        // }, pat)
+        // this._createEle("line", {
+        //     x1: 8,
+        //     x2: 8,
+        //     y2: '100%'
+        // }, pat)
+        // this._createEle("line", {
+        //     x1: 16,
+        //     x2: 16,
+        //     y2: '100%'
+        // }, pat)
+
+
+        // //     <path d="M-1,1 l2,-2
+        // //     M0,4 l4,-4
+        // //     M3,5 l2,-2" 
+        // //  style="stroke:black; stroke-width:1" />
+
+        // let diagonalHatch = this._createEle("pattern", {
+        //     id: "shape-pattern-diagonalHatch",
+        //     // x: "6%",
+        //     width: "4",
+        //     height: "4",
+        //     patternUnits: "userSpaceOnUse"
+        // }, defs)
+
+        // this._path("M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2", {
         //     stroke: "black",
-        //     "stroke-width": 1,
+        //     "stroke-width": 1
+        // }, diagonalHatch)
+
+
+        // let lv = this._createEle("pattern", {
+        //     id: "shape-pattern-lv",
+        //     x: 0,
+        //     y: 0,
+        //     width: "20",
+        //     height: "20",
+        //     patternUnits: "userSpaceOnUse"
+        // }, defs)
+
+        // // this._path("M0,0 H 10 V 20 H10 V -10 H -20 V -10 z", {
+        // //     stroke: "black",
+        // //     "stroke-width": 1,
+        // //     fill: "red"
+        // // }, lv)
+        // this._rect([0, 0], [10, 10], {
         //     fill: "red"
         // }, lv)
-        this._rect([0, 0], [10, 10], {
-            fill: "red"
-        }, lv)
-        this._rect([10, 10], [20, 20], {
-            fill: "green"
-        }, lv)
+        // this._rect([10, 10], [20, 20], {
+        //     fill: "green"
+        // }, lv)
 
     }
     // 格子图案
@@ -281,36 +318,38 @@ export default class BaseSvg {
                 stripeRadio = 0.2,
                 stripeSkewX = 0
         } = options
+        let r = stripeSize
+        let radio = stripeRadio
         let defs = this._defs(g)
         let stripe = this._createEle("pattern", {
             id: "shape-pattern-stripe",
             x: 0,
             y: 0,
-            width: stripeSize * 2,
-            height: stripeSize,
+            width: r * 2,
+            height: r,
             patternUnits: "userSpaceOnUse"
         }, defs)
         // let d = "M0,0 H10 L 20,10  V-10 Z"
         // let d = "M0,0 H10  V10 Z"
         // 三角形
-        // let d = `M0,0 h${stripeSize} v${stripeSize} Z`
+        // let d = `M0,0 h${r} v${r} Z`
         // this._path(d, {
         //     fill: stripeColor1
         // }, stripe)
 
-        // let d2 = `M${stripeSize},${stripeSize} h${stripeSize} v${stripeSize} Z`
+        // let d2 = `M${r},${r} h${r} v${r} Z`
         // this._path(d2, {
         //     fill: stripeColor2
         // }, stripe)
 
 
-        let d = `M0,0 h${stripeSize*stripeRadio} v${stripeSize} h${stripeSize*stripeRadio*-1} Z`
+        let d = `M0,0 h${r*radio} v${r} h${r*radio*-1} Z`
         this._path(d, {
             fill: stripeColor1,
             transform: `skewX(${stripeSkewX})`
         }, stripe)
 
-        let d2 = `M${stripeSize},0 h${stripeSize*stripeRadio} v${stripeSize} h${stripeSize*stripeRadio*-1} Z`
+        let d2 = `M${r},0 h${r*radio} v${r} h${r*radio*-1} Z`
         this._path(d2, {
             fill: stripeColor2,
             transform: `skewX(${stripeSkewX})`

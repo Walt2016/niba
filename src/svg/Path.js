@@ -41,6 +41,23 @@ export default class Path {
             })
         }).join(" ")
     }
+    // 长方形
+    rect(p, width, height) {
+        return this.d([p,
+            [p[0] + width, p[1]],
+            [p[0] + width, p[1] + height],
+            [p[0], p[1] + height]
+        ])
+    }
+    // 圆形
+    circle(p, r) {
+        // return this.d([
+        //     [0, r],
+        //     [r, r, 0, 0, 1, 0, r]
+        // ])
+
+        return this.ellipse2path(p[0],p[1],r,r)
+    }
 
 
     rect2path(x, y, width, height, rx, ry) {

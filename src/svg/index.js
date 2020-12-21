@@ -136,13 +136,13 @@ export default class DrawSVG extends BaseSvg {
     _shapePattern(options) {
         this._pattern(options, this.svg)
     }
-    _shapeChequer(options){
+    _shapeChequer(options) {
         this._chequer(options, this.svg)
     }
-    _shapeStripe(options){
+    _shapeStripe(options) {
         this._stripe(options, this.svg)
     }
-    _shapeDiagonalStripe(options){
+    _shapeDiagonalStripe(options) {
         this._diagonalStripe(options, this.svg)
     }
     _shapeGradient(options) {
@@ -158,7 +158,8 @@ export default class DrawSVG extends BaseSvg {
         } = this
         // 背景图案
         if (options.patternUse) {
-            this._shapePattern(options)
+            let opt = this._regualrOptions(options, "pattern")
+            this._shapePattern(opt)
         }
         // 格子图案
         if (options.chequerUse) {
@@ -233,7 +234,7 @@ export default class DrawSVG extends BaseSvg {
                 'transform-origin': `${width/2} ${height/2}`
             }
             if (options.patternUse) {
-                params.fill = (options.patternName === undefined || options.patternName === "default") ? "url(#shape-pattern)" : `url(#shape-pattern-${options.patternName})`
+                params.fill = "url(#shape-pattern)"
             }
             if (options.chequerUse) {
                 params.fill = "url(#shape-pattern-chequer)"

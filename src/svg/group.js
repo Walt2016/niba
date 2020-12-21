@@ -34,7 +34,7 @@ const optionsConfig = {
     api: ['svg', 'canvas'],
     waveform: ['line', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical'],
     gradientType: ['linearGradient ', 'radialGradient'],
-    patternName: ['default', 'pat','diagonalHatch','lv']
+    patternName: ['chequer','diagonalStripe','dot']
 }
 
 const _options = (options) => {
