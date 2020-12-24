@@ -15,8 +15,6 @@ export default class DrawSVG extends BaseSvg {
     }
     setup(options) {
         let svg = this._svg()
-        // let root =document.querySelector("svg-container") 
-        // document.body.appendChild(svg);
         this._append(document.querySelector("#svg-container") || document.body, svg)
         let axis = new Axis(options, svg)
         Object.assign(this, {
@@ -31,21 +29,21 @@ export default class DrawSVG extends BaseSvg {
         //     this._shapePattern(options)
         // }
         // 网格坐标
-        if (options.gridShow) {
+        if (this._show(options, "grid")) {
             this.axis._grid(options)
         }
         // 极坐标
-        if (options.polarShow) {
+        if (this._show(options, "polar")) {
             this.axis._polar(options)
         }
         // x轴
-        if (options.axisXShow || options.axisYShow) {
+        if (this._show(options, "axisX") || this._show(options, "axisY")) {
             this.axis._marker()
         }
-        if (options.axisXShow) {
+        if (this._show(options, "axisX")) {
             this.axis._axisX(options)
         }
-        if (options.axisYShow) {
+        if (this._show(options, "axisY")) {
             this.axis._axisY(options)
         }
         // 图形
@@ -54,35 +52,36 @@ export default class DrawSVG extends BaseSvg {
 
     // 规则图形
     _regularShape(name, points, options, root = this.svg) {
-        let opt = this._regualrOptions(options, name)
-        let defaultProps = Object.assign(this._lineProps(opt), this._shapeProps(opt))
+        // let opt = this._options(options, name)
+        let defaultProps = Object.assign(this._lineProps(options), this._shapeProps(options))
         let g = this._g({
             id: name,
             ...defaultProps
         }, root)
 
         let props = {}
-        let colors = _.colorCircle(points.length, opt.colorfulOpacity || 1)
+        let r = options.radius
+        let colors = _.colorCircle(points.length, options.colorfulOpacity || 1)
         points.forEach((t, index) => {
             // 动画发光效果辅助
-            if (opt.animationTwinkle) {
+            if (options.animationTwinkle) {
                 Object.assign(props, {
                     style: `animation:twinkle 1s infinite linear`, //;transform-origin: ${t[0]}px ${t[1]}px
                     'transform-origin': `${t[0]}px ${t[1]}px`
                 })
             }
             // debugger
-            if (opt.colorful) {
+            if (options.colorful) {
                 Object.assign(props, {
                     fill: colors[index],
                     stroke: colors[index],
                 })
             }
 
-            switch (opt.shape) {
+            switch (options.shape) {
                 case "rect":
                     // 正方形
-                    let width = _.sin(45) * opt.radius || 5
+                    let width = _.sin(45) * r || 5
                     Object.assign(props, {
                         x: t[0] - width / 2,
                         y: t[1] - width / 2,
@@ -91,7 +90,7 @@ export default class DrawSVG extends BaseSvg {
                     })
                     break;
                 case "line":
-                    let r = opt.radius / 2
+                    r = r / 2
                     Object.assign(props, {
                         x1: t[0] - r,
                         y1: t[1] - r,
@@ -102,7 +101,7 @@ export default class DrawSVG extends BaseSvg {
                 case "polygon":
                     let seg = new ArcSeg({
                         o: t,
-                        r: opt.radius,
+                        r: r,
                         n: options.n
                     })
                     Object.assign(props, {
@@ -115,18 +114,18 @@ export default class DrawSVG extends BaseSvg {
                     Object.assign(props, {
                         cx: t[0],
                         cy: t[1],
-                        r: opt.radius || 5
+                        r: r || 5
                         // filter: 'url(#f3)'
                     })
                     break;
             }
-            this._createEle(opt.shape || 'circle', props, g)
+            this._createEle(options.shape || 'circle', props, g)
 
             // 标注文字
-            if (opt.text) {
+            if (options.text) {
                 this._text(t, index, {
-                    fill: opt.textColor || opt.color || 'black',
-                    'font-size': opt.textFontSize || 12
+                    fill: options.textColor || options.color || 'black',
+                    'font-size': options.textFontSize || 12
                 }, g)
             }
         })
@@ -152,38 +151,34 @@ export default class DrawSVG extends BaseSvg {
     // 图形
     _shape(options, parent = this.svg) {
         console.log(options)
-        let {
-            width,
-            height
-        } = this
         // 背景图案
-        if (options.patternUse) {
-            let opt = this._regualrOptions(options, "pattern")
+        if (this._show(options, "pattern")) {
+            let opt = this._options(options, "pattern")
             this._shapePattern(opt)
         }
         // 格子图案
-        if (options.chequerUse) {
+        if (this._show(options, "chequer")) {
             this._shapeChequer(options)
         }
         // 条纹图案
-        if (options.stripeUse) {
+        if (this._show(options, "stripe")) {
             this._shapeStripe(options)
         }
         // 条纹图案
-        if (options.diagonalStripeUse) {
+        if (this._show(options, "diagonalStripe")) {
             this._shapeDiagonalStripe(options)
         }
         // 渐变
-        if (options.gradientUse) {
+        if (this._show(options, "gradient")) {
             this._shapeGradient(options)
         }
-        let defaultOpt = this._regualrOptions(options)
+        let defaultOpt = this._options(options)
         let shapeProps = this._shapeProps(defaultOpt)
         let lineProps = this._lineProps(defaultOpt)
-        let animationProps = this._animationProps(this._regualrOptions(options, "animation"))
-        let transformProps = this._transformProps(this._regualrOptions(options, "transform"))
+        let animationProps = this._animationProps(this._options(options, "animation"))
+        let transformProps = this._transformProps(this._options(options, "transform"))
         let g = this._g({
-            id: options.fractalUse ? `shape${options.fractalLevel}` : "shape",
+            id: this._show(options, "fractal") ? `shape${options.fractalLevel}` : "shape",
             ...shapeProps,
             ...lineProps,
             ...animationProps,
@@ -198,9 +193,9 @@ export default class DrawSVG extends BaseSvg {
         let showEdge = false;
         let curveEdges = ['edge', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical']
         curveEdges.forEach(t => {
-            if (options[t + 'Show']) {
+            if (this._show(options, t)) {
                 showEdge = true
-                let opt = this._regualrOptions(options, t)
+                let opt = this._options(options, t)
                 ds[ds.length] = this._d(points, {
                     waveform: t,
                     ...opt
@@ -222,30 +217,30 @@ export default class DrawSVG extends BaseSvg {
             }
         })
         if (showEdge) { // 有边
-            let defaultOpt = this._regualrOptions(options)
-            let opt = this._regualrOptions(options, "edge")
+            let defaultOpt = this._options(options)
+            let opt = this._options(options, "edge")
             let edgeShapeProps = this._shapeProps(defaultOpt)
             let edgeLineProps = this._lineProps(opt)
             let params = {
                 // fill: options.patternUse ? "url(#shape-pattern)" : options.gradientUse ? "url(#shape-gradient)" : "none",
                 ...edgeShapeProps,
                 ...edgeLineProps,
-                transform: options.transform,
-                'transform-origin': `${width/2} ${height/2}`
+                // transform: this._options(options, "transform").name,
+                // 'transform-origin': `${width/2} ${height/2}`
             }
-            if (options.patternUse) {
+            if (this._show(options, "pattern")) {
                 params.fill = "url(#shape-pattern)"
             }
-            if (options.chequerUse) {
+            if (this._show(options, "chequer")) {
                 params.fill = "url(#shape-pattern-chequer)"
             }
-            if (options.stripeUse) {
+            if (this._show(options, "stripe")) {
                 params.fill = "url(#shape-pattern-stripe)"
             }
-            if (options.diagonalStripeUse) {
+            if (this._show(options, "diagonalStripe")) {
                 params.fill = "url(#shape-pattern-diagonalStripe)"
             }
-            if (options.gradientUse) {
+            if (this._show(options, "gradient")) {
                 params.fill = "url(#shape-gradient)"
             }
             this._path(ds.join(" "), params, g)
@@ -266,11 +261,19 @@ export default class DrawSVG extends BaseSvg {
         }
 
         ['radius', 'link', 'vertex', 'center', 'excircle', 'incircle'].forEach(t => {
-            options[t + 'Show'] && this['_' + t] && this['_' + t](options, g)
+            this._show(options, t) && this['_' + t] && this['_' + t](this._options(options, t), g)
         })
         // 分形
-        if (options.fractalUse) {
-            let colors = _.colorCircle(points.length, options.fractalColorfulOpacity || 1)
+        if (this._show(options, "fractal")) {
+            // debugger
+            let colors = _.colorCircle(points.length, options.fractal.colorfulOpacity || 1)
+            // // let fractalOptions = this._options(options, "fractal")
+            // new Fractal(this._shape.bind(this), {
+            //     // ...fractalOptions,
+            //     ...options,
+            //     _points: options._points,
+            //     _colors: colors
+            // })
             new Fractal(this._shape.bind(this), Object.assign(options, {
                 _colors: colors
             }))
@@ -286,30 +289,31 @@ export default class DrawSVG extends BaseSvg {
     }
     // 半径
     _radius(options, g) {
-        let points = options._points
+        let points = this.options._points || []
 
-        let opt = this._regualrOptions(options, "radius")
-        let props = this._lineProps(opt)
+        // let opt = this._options(options, "radius")
+        let props = this._lineProps(options)
         let groupRadius = this._g({
             id: 'radius',
             ...props
         }, g)
         // let waveform = opt.waveform
         let ps = []
+        let o = this.options.o
         points.forEach(t => {
-            ps[ps.length] = options.o
+            ps[ps.length] = o
             ps[ps.length] = t
         })
 
-        let d = this._d(ps, opt, (e) => {
-            if (opt.controlPoint) {
+        let d = this._d(ps, options, (e) => {
+            if (options.controlPoint) {
                 e.cps.forEach(t => {
                     this._circle(t, 5, {
                         fill: 'red'
                     }, groupRadius)
                 })
             }
-            if (opt.controlLink) {
+            if (options.controlLink) {
                 this._path(this._d(e.cps, {
                     closed: false,
                     broken: true
@@ -320,7 +324,7 @@ export default class DrawSVG extends BaseSvg {
     }
     // 连接线
     _link(options, g = this.svg) {
-        let points = options._points
+        let points = this.options._points || []
         let n = points.length
         let links = []
         points.forEach((t, index) => {
@@ -332,24 +336,24 @@ export default class DrawSVG extends BaseSvg {
             }
         })
 
-        let opt = this._regualrOptions(options, "link")
-        let props = this._lineProps(opt)
+        // let opt = this._options(options, "link")
+        let props = this._lineProps(options)
         let groupRadius = this._g({
             id: 'link',
             ...props
         }, g)
         let d = this._d(links, {
-            ...opt,
+            ...options,
             closed: false
         }, (e) => {
-            if (opt.controlPoint) {
+            if (options.controlPoint) {
                 e.cps.forEach(t => {
                     this._circle(t, 5, {
                         fill: 'red'
                     }, groupRadius)
                 })
             }
-            if (opt.controlLink) {
+            if (options.controlLink) {
                 this._path(this._d(e.cps, {
                     closed: false,
                     broken: true
@@ -360,27 +364,32 @@ export default class DrawSVG extends BaseSvg {
     }
     // 顶点
     _vertex(options, g) {
-        this._regularShape('vertex', options._points, options, g)
+        let points = this.options._points || []
+        this._regularShape('vertex', points, options, g)
     }
     // 圆心
     _center(options, g) {
-        this._regularShape('center', [options.o], options, g)
+        let o = this.options.o
+        this._regularShape('center', [o], options, g)
     }
     // 旁切圆
     _excircle(options, g) {
-        this._regularShape('excircle', [options.o], {
+        let o = this.options.o
+        let r = this.options.r
+        this._regularShape('excircle', [o], {
             ...options,
-            'excircleRadius': options.r
+            radius: r
         }, g)
     }
     // 内切圆
     _incircle(options, g) {
-        let points = options._points || []
-        let r = _.dis(options.o, _.mid.apply(null, points.slice(0, 2)))
+        let o = this.options.o
+        let points = this.options._points || []
+        let r = _.dis(o, _.mid.apply(null, points.slice(0, 2)))
 
-        this._regularShape('incircle', [options.o], {
+        this._regularShape('incircle', [o], {
             ...options,
-            'incircleRadius': r
+            radius: r
         }, g)
     }
 }

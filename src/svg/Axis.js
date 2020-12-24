@@ -32,7 +32,7 @@ export default class Axis extends BaseSvg {
             svg,
             step
         } = this
-        let opt = this._regualrOptions(options, id)
+        let opt = this._options(options, id)
         if (opt.arrow) {
             this._axisArrow()
         }
@@ -122,7 +122,7 @@ export default class Axis extends BaseSvg {
             height,
             svg
         } = this
-        let opt = this._regualrOptions(options, "grid")
+        let opt = this._options(options, "grid")
         let props = this._lineProps(opt)
         let g = this._g({
             ...props,
@@ -165,7 +165,7 @@ export default class Axis extends BaseSvg {
             height,
             svg
         } = this
-        let opt = this._regualrOptions(options, "polar")
+        let opt = this._options(options, "polar")
         let props = this._lineProps(opt)
         let g = this._g({
             ...props,

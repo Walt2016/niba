@@ -23,9 +23,9 @@ export default class BaseEntity {
 
             if (options[key]) {
                 switch (key) {
-                    case "api":
-                        this.setDraw(options[key])
-                        break;
+                    // case "api":
+                    //     this.setDraw(options[key])
+                    //     break;
                     case "colorful":
                         this.setEnumerable("colors", new Colors())
                         break;
@@ -33,21 +33,33 @@ export default class BaseEntity {
             }
         }
         if (draw) {
-            // 
             if (_.type(draw) === "string") {
-                // this.api = draw
-                this.setDraw(draw)
-            } else {
-                this.setEnumerable("draw", draw)
+                this.setEnumerable("api", draw)
             }
+            // this.draw = draw
+            // 
+            // if (_.type(draw) === "string") {
+            //     // this.api = draw
+            //     this.setDraw(options, draw)
+            // } else {
+            //     this.setEnumerable("draw", draw)
+            // }
         }
     }
-    setDraw(draw) {
-        if (draw === 'svg') {
-            this.setEnumerable("draw", new DrawSVG())
+    setDraw(options, api) {
+        if (api === 'svg') {
+            this.setEnumerable("draw", new DrawSVG(options))
         } else {
-            this.setEnumerable("draw", new DrawCanvas())
+            this.setEnumerable("draw", new DrawCanvas(options))
         }
+    }
+    initDraw() {
+        if (_.type(this._api) === "string") {
+            this.setDraw(this, this._api)
+        }
+        // else {
+        //     // this.setEnumerable("draw", draw)
+        // }
     }
     // 根据切割机 设置点
     setPoints(options) {
@@ -223,19 +235,31 @@ export default class BaseEntity {
 
     // 接口
     draw() {
-        if (this.api === 'svg') {
-            this.drawSVG()
+        // debugger
+        if (this._draw) {
+            this._draw._draw(this)
         } else {
-            this.drawCanvas(this._ctx)
+            this.initDraw()
+            this._draw._draw(this)
         }
+        // this._draw._draw(this)
+        // if (this.api === 'svg') {
+        //     this.drawSVG()
+        // } else {
+        //     this.drawCanvas(this._ctx)
+        // }
     }
     // 从新画
     redraw(options) {
-        if (this.api === 'svg') {
-            this.redrawSVG(options)
-        } else {
-            this.redrawCanvase(options)
-        }
+        this.reset().update(options)
+        this._draw.clear()
+        this._draw._draw(this)
+        // this.drawSVG()
+        // if (this.api === 'svg') {
+        //     this.redrawSVG(options)
+        // } else {
+        //     this.redrawCanvase(options)
+        // }
     }
     drawCanvas(ctx = this._ctx) {
         // this._draw.line.call(this, ctx)

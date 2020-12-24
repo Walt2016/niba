@@ -36,19 +36,17 @@ export default class Form extends Panel {
             title
         } = options || this
         let tools = this._tools(btns.length > 0 ? btns : btn, fields)
+        // 输入事件
         this['input'] = (e) => {
             // debugger
-            console.log(e)
+            // console.log(e)
             let btn = btns.filter(t => t.name === "submit")[0]
             // debugger
             let dataModel = this._dataModel(fields, form)
             btn && btn.click(dataModel)
             // 保存local
             localStorage.setItem("dataModel", JSON.stringify(dataModel))
-            // this.data._draw._shape(dataModel)
-            // this.data.drawSVG(dataModel)
-
-            // tools.fi
+            // this.data.draw(dataModel)
         }
 
 

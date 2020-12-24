@@ -13,7 +13,7 @@ export default class BaseDom {
         console.log(this)
     }
     initEl() {
-         // this.el = this._query(options.el)
+        // this.el = this._query(options.el)
         let root = this._div({
             id: "wrapper"
         })
@@ -31,46 +31,95 @@ export default class BaseDom {
     // 解析
     parser(data = this.data) {
         if (_.type(data) === "object") {
-            this.fields = this.parseFields(data, this.options, this.labels)
-            if (this.group) {
-                this.group = this.groupFields(this.group, this.fields)
-            }
+            this.fields = []
+            this.group = []
+            // this.fields = 
+            this.parseFields(data, this.options, this.labels)
+
+            // if (this.group) {
+            //     this.group = this.groupFieldsByConfig(this.group, this.fields)
+            // }
         }
     }
     // 入参转换 dataModel 数据 options 参数  labels参数字典
-    parseFields(data = {}, options = {}, labels = {}) {
-        let fields = []
+    parseFields(data = {}, options = {}, labels = {}, group) {
+        // let fields = []
         for (let key in data) {
-            let label = labels[key] ? labels[key] : key;
-            if (options[key]) {
-                fields[fields.length] = {
-                    key,
-                    label,
-                    value: data[key],
-                    type: "select",
-                    options: options[key]
-                }
-                // } else if (label === 'opacity') {
-                //     fields[fields.length] = {
-                //         key,
-                //         label,
-                //         value: data[key],
-                //         type: 'range'
-                //     }
+            let child = data[key]
+            if (_.type(child) === "object") {
+
+                this.parseFields(child, options, labels, key)
             } else {
-                fields[fields.length] = {
-                    key,
+                let label = labels[key] ? labels[key] : key;
+                let field = {
+                    key: group ? [group, "$", key].join("") : key,
                     label,
                     value: data[key],
                     type: _.type(data[key])
                 }
+                // if (options[key]) {
+                //     field = {
+                //         key: group ? _.camelCase(group, key) : key,
+                //         label,
+                //         value: data[key],
+                //         type: "select",
+                //         options: options[key]
+                //     }
+                // } else {
+                //     field = {
+                //         key: group ? _.camelCase(group, key) : key,
+                //         label,
+                //         value: data[key],
+                //         type: _.type(data[key])
+                //     }
+                // }
+                // debugger
+                if (group) {
+                    if (options[group] && options[group][key] || options[key]) {
+                        field.type = "select"
+                        field.options = options[group] ? options[group][key] : options[key]
+                    }
+                } else {
+                    if (options[key]) {
+                        field.type = "select"
+                        field.options = options[key]
+                    }
+                }
+
+
+                this.fields[this.fields.length] = field
+                // 分组
+                this.groupFields(group || "shape", field)
+                // if (group) {
+                //     let g = this.group.filter(t => t.label === group)
+                //     if (g[0]) {
+                //         g[0].fields.push(field)
+                //     } else {
+                //         this.group[this.group.length] = {
+                //             label: group,
+                //             fields: [field]
+                //         }
+                //     }
+                // }
             }
 
         }
-        return fields
+        // return this.fields
     }
     // 字段分组
-    groupFields(group, fields) {
+    groupFields(group, field) {
+        let g = this.group.filter(t => t.label === group)
+        if (g[0]) {
+            g[0].fields.push(field)
+        } else {
+            this.group[this.group.length] = {
+                label: group,
+                fields: [field]
+            }
+        }
+    }
+    // 字段分组
+    groupFieldsByConfig(group, fields) {
         return group.map(item => {
             for (let key in item) {
                 return {
@@ -94,9 +143,25 @@ export default class BaseDom {
         let model = {}
         if (fields) {
             fields.forEach(t => {
-                model[t.key] = this._get(t, form)
+                let val = this._get(t, form)
+                // 分组
+                let arr = t.key.split("$")
+                if (arr.length === 2) {
+                    let group = arr[0]
+                    let child = model[group]
+                    if (_.type(child) === "object") {
+                        child[arr[1]] = val
+                    } else {
+                        model[group] = {}
+                        model[group][arr[1]] = val
+                    }
+                } else {
+                    model[t.key] = val
+                }
+
             })
         }
+        // debugger
         return model
     }
 

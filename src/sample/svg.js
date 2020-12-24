@@ -27,293 +27,338 @@ let dataModel = {
     linejoin: 'arcs',
     sort: 'normal',
     segType: 'equiangular',
-    api: 'svg',
-
-
+    // api: 'svg',
 
     // 半径
-    radiusShow: false,
-    radiusLineWidth: 1,
-    radiusColor: 'red',
-    radiusOpacity: 1,
-    radiusDashLine: false,
-    radiusDashArray: [5, 5],
-    radiusDashAnimation: false,
-    radiusLinecap: 'butt',
-    radiusClosed: true,
-    radiusBroken: false,
-    rediusMarkerArrow: false,
-    radiusWaveform: 'line',
-    radiusRadiusRatio: 1,
-    radiusController: false,
-    radiusAngleOffset: 0,
-    radiusOrient: true,
-    radiusRecycleIndex: 0,
-    radiusSplitNum: 0,
+    radius: {
+        show: false,
+        lineWidth: 1,
+        color: 'red',
+        opacity: 1,
+        dashLine: false,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        linecap: 'butt',
+        closed: true,
+        broken: false,
+        markerArrow: false,
+        waveform: 'line',
+        ratio: 1,
+        controller: false,
+        angleOffset: 0,
+        orient: true,
+        recycleIndex: 0,
+        splitNum: 0
+    },
 
 
     // 边
-    edgeShow: true,
-    edgeLineWidth: 1,
-    edgeColor: 'red',
-    edgeOpacity: 1,
-    edgeDashLine: false,
-    edgeDashArray: [5, 5],
-    edgeLinejoin: 'arcs',
-    edgeDashAnimation: false,
-    edgeAnimationTwinkle: false,
-    edgeText: false,
-    edgeTextColor: 'red',
-    edgeTextFontSize: 12,
-    edgeClosed: true,
-    edgeBroken: false,
-    edgeWaveform: 'line',
-    edgeRadiusRatio: 1,
-    edgeControlPoint: false,
-    edgeControlLink: false,
-    edgeAngleOffset: 0,
-    edgeOrient: true,
-    edgeRecycleIndex: 0,
-    edgeSplitNum: 0,
-
-    // edgeColorful: false,
+    edge: {
+        show: true,
+        lineWidth: 1,
+        color: 'red',
+        opacity: 1,
+        dashLine: false,
+        dashArray: [5, 5],
+        linejoin: 'arcs',
+        dashAnimation: false,
+        animationTwinkle: false,
+        text: false,
+        textColor: 'red',
+        textFontSize: 12,
+        closed: true,
+        broken: false,
+        waveform: 'line',
+        radiusRatio: 1,
+        controlPoint: false,
+        controlLink: false,
+        angleOffset: 0,
+        orient: true,
+        recycleIndex: 0,
+        splitNum: 0,
+    },
 
 
     // 中心点
-    centerShow: false,
-    centerFill: true,
-    centerColor: 'red',
-    centerRadius: 8,
-    centerShape: 'circle',
-    centerOpacity: 0.5,
-    centerLineWidth: 1,
-    centerDashLine: false,
-    centerDashArray: [5, 5],
-    centerDashAnimation: false,
+    center: {
+        show: false,
+        fill: true,
+        color: 'red',
+        radius: 8,
+        shape: 'circle',
+        opacity: 0.5,
+        lineWidth: 1,
+        dashLine: false,
+        dashArray: [5, 5],
+        dashAnimation: false,
+    },
 
     // 顶点
-    vertexShow: false,
-    vertexFill: true,
-    vertexColor: 'red',
-    vertexRadius: 5,
-    vertexShape: 'circle',
-    vertexOpacity: 0.5,
-    vertexLineWidth: 1,
-    vertexDashLine: false,
-    vertexDashArray: [5, 5],
-    vertexDashAnimation: false,
-    vertexAnimationTwinkle: false,
-    vertexText: false,
-    vertexTextColor: 'red',
-    vertexTextFontSize: 12,
-    vertexColorful: false,
-    vertexColorfulOpacity: 0.5,
+    vertex: {
+        show: false,
+        fill: true,
+        color: 'red',
+        radius: 5,
+        shape: 'circle',
+        opacity: 0.5,
+        lineWidth: 1,
+        dashLine: false,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        animationTwinkle: false,
+        text: false,
+        textColor: 'red',
+        textFontSize: 12,
+        colorful: false,
+        colorfulOpacity: 0.5,
+    },
 
     // 旁切圆
-    excircleShow: false,
-    excircleFill: false,
-    excircleLineWidth: 1,
-    excircleOpacity: 0.5,
-    excircleDashLine: false,
-    excircleDashArray: [5, 5],
-    excircleDashAnimation: false,
-    excircleColor: 'red',
+    excircle: {
+        show: false,
+        fill: false,
+        lineWidth: 1,
+        opacity: 0.5,
+        dashLine: false,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        color: 'red'
+    },
 
     // 内切圆
-    incircleShow: false,
-    incircleFill: false,
-    incircleLineWidth: 1,
-    incircleOpacity: 0.5,
-    incircleDashLine: false,
-    incircleDashArray: [5, 5],
-    incircleDashAnimation: false,
-    incircleColor: 'red',
+    incircle: {
+        show: false,
+        fill: false,
+        lineWidth: 1,
+        opacity: 0.5,
+        dashLine: false,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        color: 'red',
+    },
 
 
     // 网格坐标
-    gridShow: false,
-    gridLineWidth: 1,
-    gridOpacity: 0.5,
-    gridDashLine: true,
-    gridDashArray: [5, 5],
-    gridDashAnimation: false,
-    gridInterval: 100,
-    gridColor: 'black',
-    gridRotate: 0,
+    grid: {
+        show: false,
+        lineWidth: 1,
+        opacity: 0.5,
+        dashLine: true,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        interval: 100,
+        color: 'black',
+        rotate: 0,
+    },
 
     // 极坐标
-    polarShow: false,
-    polarLineWidth: 1,
-    polarOpacity: 0.5,
-    polarDashLine: true,
-    polarDashArray: [5, 5],
-    polarDashAnimation: false,
-    polarInterval: 100,
-    polarColor: 'black',
-
+    polar: {
+        show: false,
+        lineWidth: 1,
+        opacity: 0.5,
+        dashLine: true,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        interval: 100,
+        color: 'black',
+    },
 
 
     // 分形
-    fractalUse: false,
-    fractalType: 'midSeg',
-    fractalLevel: 3,
-    fractalOffset: 0.5,
-    fractalTimerUse: false,
-    fractalTimerDelay: 500,
-    fractalColorful: false,
-    fractalColorfulOpacity: 0.5,
+    fractal: {
+        use: false,
+        type: 'midSeg',
+        level: 3,
+        offset: 0.5,
+        timerUse: false,
+        timerDelay: 500,
+        colorful: false,
+        colorfulOpacity: 0.5,
+    },
 
     // 动画
-    animationUse: false,
-    animationName: 'rotate',
-    animationDuration: 1,
-    animationIterationCount: 'infinite',
+    animation: {
+        use: false,
+        name: 'rotate',
+        duration: 1,
+        iterationCount: 'infinite',
+
+    },
 
     // 变形
-    transformUse: false,
-    transformName: 'scale',
-    transformPropA: 2,
-    transformPropB: 2,
+    transform: {
+        use: false,
+        name: 'scale',
+        propA: 2,
+        propB: 2,
+
+    },
 
     // 坐标轴
-    axisXShow: false,
-    axisXLineWidth: 1,
-    axisXColor: 'black',
-    axisXOpacity: 0.5,
-    axisXDashLine: false,
-    axisXDashArray: [5, 5],
-    axisXDashAnimation: false,
-    axisXSticks: true,
-    axisXArrow: true,
+    axisX: {
+        show: false,
+        lineWidth: 1,
+        color: 'black',
+        opacity: 0.5,
+        dashLine: false,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        sticks: true,
+        arrow: true,
+    },
+    axisY: {
+        show: false,
+        lineWidth: 1,
+        color: 'black',
+        opacity: 0.5,
+        dashLine: false,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        sticks: true,
+        arrow: true,
 
-    axisYShow: false,
-    axisYLineWidth: 1,
-    axisYColor: 'black',
-    axisYOpacity: 0.5,
-    axisYDashLine: false,
-    axisYDashArray: [5, 5],
-    axisYDashAnimation: false,
-    axisYSticks: true,
-    axisYArrow: true,
+    },
 
     // 背景
-    patternUse: false,
-    // patternUnits: 'objectBoundingBox',
-    patternName: 'chequer',
-    patternColor1: 'red',
-    patternColor2: 'red',
-    patternSize: 10,
-    patternOffset: 0,
-    patternSkewX: 0,
+    pattern: {
+        use: false,
+        // Units: 'objectBoundingBox',
+        name: 'chequer',
+        color1: 'red',
+        color2: 'red',
+        size: 10,
+        offset: 0,
+        skewX: 0,
+        opacity: 1,
+
+    },
 
     // 连接线
-    linkShow: false,
-    linkLineWidth: 1,
-    linkColor: 'black',
-    linkOpacity: 0.5,
-    linkDashLine: true,
-    linkDashArray: [5, 5],
-    linkDashAnimation: false,
-    linkWaveform: 'line',
-    linkRadiusRatio: 1,
-    linkControlPoint: false,
-    linkControlLink: false,
-    linkAngleOffset: 0,
-    linkOrient: true,
-    linkRecycleIndex: 0,
-    linkSplitNum: 0,
+    link: {
+        show: false,
+        lineWidth: 1,
+        color: 'black',
+        opacity: 0.5,
+        dashLine: true,
+        dashArray: [5, 5],
+        dashAnimation: false,
+        waveform: 'line',
+        radiusRatio: 1,
+        controlPoint: false,
+        controlLink: false,
+        angleOffset: 0,
+        orient: true,
+        recycleIndex: 0,
+        splitNum: 0,
+    },
 
     // 曲线
-    curveShow: false,
-    curveRadiusRatio: 1,
-    curveControlPoint: false,
-    curveControlLink: false,
-    curveAngleOffset: 0,
-    curveOrient: true,
-    curveRecycleIndex: 0,
-    curveSplitNum: 0,
+    curve: {
+        show: false,
+        radiusRatio: 1,
+        controlPoint: false,
+        controlLink: false,
+        angleOffset: 0,
+        orient: true,
+        recycleIndex: 0,
+        splitNum: 0,
+    },
+
     // 波浪形
-    waveShow: false,
-    waveRadiusRatio: 1,
-    waveControlPoint: false,
-    waveControlLink: false,
-    waveAngleOffset: 0,
-    waveOrient: true,
-    waveRecycleIndex: 0,
-    waveSplitNum: 0,
+    wave: {
+        show: false,
+        radiusRatio: 1,
+        controlPoint: false,
+        controlLink: false,
+        angleOffset: 0,
+        orient: true,
+        recycleIndex: 0,
+        splitNum: 0,
+    },
 
     // 锯齿形
-    sawtoothShow: false,
-    sawtoothRadiusRatio: 1,
-    sawtoothControlPoint: false,
-    sawtoothControlLink: false,
-    sawtoothAngleOffset: 0,
-    sawtoothOrient: true,
-    sawtoothRecycleIndex: 0,
-    sawtoothSplitNum: 0,
+    sawtooth: {
+        show: false,
+        radiusRatio: 1,
+        controlPoint: false,
+        controlLink: false,
+        angleOffset: 0,
+        orient: true,
+        recycleIndex: 0,
+        splitNum: 0,
+    },
 
     // 半圆
-    semicircleShow: false,
-    semicircleSweepFlag: true,
-    semicircleRecycleIndex: 0,
-    semicircleSplitNum: 0,
+    semicircle: {
+        show: false,
+        sweepFlag: true,
+        recycleIndex: 0,
+        splitNum: 0,
+    },
+
 
     // 椭圆弧
-    ellipticalShow: false,
-    ellipticalSweepFlag: true,
-    ellipticalRadiusRatio: 1,
-    ellipticalXAxisRotation: 0,
-    ellipticalLargeArcFlag: false,
-    ellipticalRecycleIndex: 0,
-    ellipticalSplitNum: 0,
+    elliptical: {
+        show: false,
+        sweepFlag: true,
+        radiusRatio: 1,
+        xAxisRotation: 0,
+        largeArcFlag: false,
+        recycleIndex: 0,
+        splitNum: 0,
+    },
 
     // 渐变
-    gradientUse: false,
-    gradientColor1: 'red',
-    gradientColor2: 'blue',
-    gradientType: 'linearGradient',
+    gradient: {
+        use: false,
+        color1: 'red',
+        color2: 'blue',
+        type: 'linearGradient',
+    },
 
     // 格子
-    chequerUse: false,
-    chequerSize: 10,
-    chequerColor1: 'red',
-    chequerColor2: 'green',
-    chequerBorderRadius1: 1,
-    chequerBorderRadius2: 1,
+    chequer: {
+        use: false,
+        size: 10,
+        color1: 'red',
+        color2: 'green',
+        borderRadius1: 1,
+        borderRadius2: 1,
+    },
 
     // 条纹
-    stripeUse: false,
-    stripeSize: 10,
-    stripeColor1: 'red',
-    stripeColor2: 'green',
-    stripeRadio: 0.2,
-    stripeSkewX: 0,
+    stripe: {
+        use: false,
+        size: 10,
+        color1: 'red',
+        color2: 'green',
+        radio: 0.2,
+        skewX: 0,
+    },
 
-    diagonalStripeUse: false,
-    diagonalStripeSize: 10,
-    diagonalStripeColor1: 'red',
-    diagonalStripeOffset: 0
-
-
+    diagonalStripe: {
+        use: false,
+        size: 10,
+        color1: 'red',
+        offset: 0
+    }
 }
 
 // debugger
 // let polygon = new Polygon(dataModel, draw)
-// let polygon = new Polygon(dataModel, "svg")
-let polygon = new Polygon(dataModel)
-let group = Group._group(polygon)
+let polygon = new Polygon(dataModel, "svg")
+// let polygon = new Polygon(dataModel)
+// let group = Group._group(polygon)
 let options = Group._options(polygon)
-
-// polygon.draw(ctx)
-// polygon.drawSVG()
+// debugger
 polygon.draw()
-let timmer
-let v = Math.random()
+// let timmer
+// let v = Math.random()
 let ui = new UI.Form({
     el: "#params-container",
     data: polygon,
     options,
-    group,
+    group:true,
     btns: [{
             text: "apply",
             name: 'submit',
@@ -321,7 +366,7 @@ let ui = new UI.Form({
                 console.log(e)
                 // polygon.redrawSVG(e)
                 polygon.redraw(e)
-                timmer && clearTimeout(timmer)
+                // timmer && clearTimeout(timmer)
             }
         },
         // {

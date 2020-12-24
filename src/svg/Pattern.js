@@ -62,6 +62,7 @@ export default class Pattern extends Path {
             r,
             offset
         } = this
+        r *= offset || 1
         return [this.rect([0, 0], r, r), this.rect([r, r], r, r)]
         // return [this.rect([0, 0], r, r), this.rect([r, r], r, r)].join(" ")
     }
@@ -73,6 +74,7 @@ export default class Pattern extends Path {
             offset
         } = this
         r = r / 2
+        r *= offset || 1
         return [this.circle([r, r], r), this.circle([3 * r, 3 * r], r)]
     }
 

@@ -15,10 +15,12 @@ export default class BaseSvg {
         this._init(options)
     }
     _init(options) {
+
         Object.assign(this, {
             width,
             height,
-            props: 'size,skewX,borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
+            options
+            // props: 'size,skewX,borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['g', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -168,7 +170,8 @@ export default class BaseSvg {
                 name = "diagonalStripe",
                 color1 = 'red',
                 color2 = 'red',
-                skewX = 0
+                skewX = 0,
+                opacity = 1
         } = options
 
         let defs = this._defs(g)
@@ -182,100 +185,28 @@ export default class BaseSvg {
         }, defs)
         let pattern = new Pattern(options)
         let d = pattern["_" + name] ? pattern["_" + name]() : pattern["_diagonalStripe"]()
+        let params = {}
+        if (skewX) {
+            params.transform = `skewX(${skewX})`
+        }
+        if (opacity) {
+            params.opacity = opacity
+        }
 
         if (Array.isArray(d)) {
             d.forEach((t, index) => {
                 this._path(t, {
+                    ...params,
                     fill: options['color' + (index + 1)],
-                    transform: `skewX(${skewX})`
                 }, patternWarper)
             })
 
         } else {
             this._path(d, {
-                fill: color1,
-                transform: `skewX(${skewX})`
+                ...params,
+                fill: color1
             }, patternWarper)
         }
-
-
-
-        // let pattern = this._createEle("pattern", {
-        //     id: "shape-pattern",
-        //     x: 10,
-        //     y: 10,
-        //     width: 0.2,
-        //     height: 0.2
-        //     // patternUnits: options.patternUnits || "objextBoundingBox"  // userSpaceOnUse
-        // }, defs)
-        // this._circle([10, 10], 10, {
-        //     fill: 'red'
-        // }, pattern)
-
-        // let pat = this._createEle("pattern", {
-        //     id: "shape-pattern-pat",
-        //     x: "6%",
-        //     width: "50%",
-        //     height: "50%",
-        //     // patternUnits: "userSpaceOnUse"
-        // }, defs)
-        // this._createEle("line", {
-        //     x1: 4,
-        //     x2: 4,
-        //     y2: '100%'
-        // }, pat)
-        // this._createEle("line", {
-        //     x1: 8,
-        //     x2: 8,
-        //     y2: '100%'
-        // }, pat)
-        // this._createEle("line", {
-        //     x1: 16,
-        //     x2: 16,
-        //     y2: '100%'
-        // }, pat)
-
-
-        // //     <path d="M-1,1 l2,-2
-        // //     M0,4 l4,-4
-        // //     M3,5 l2,-2" 
-        // //  style="stroke:black; stroke-width:1" />
-
-        // let diagonalHatch = this._createEle("pattern", {
-        //     id: "shape-pattern-diagonalHatch",
-        //     // x: "6%",
-        //     width: "4",
-        //     height: "4",
-        //     patternUnits: "userSpaceOnUse"
-        // }, defs)
-
-        // this._path("M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2", {
-        //     stroke: "black",
-        //     "stroke-width": 1
-        // }, diagonalHatch)
-
-
-        // let lv = this._createEle("pattern", {
-        //     id: "shape-pattern-lv",
-        //     x: 0,
-        //     y: 0,
-        //     width: "20",
-        //     height: "20",
-        //     patternUnits: "userSpaceOnUse"
-        // }, defs)
-
-        // // this._path("M0,0 H 10 V 20 H10 V -10 H -20 V -10 z", {
-        // //     stroke: "black",
-        // //     "stroke-width": 1,
-        // //     fill: "red"
-        // // }, lv)
-        // this._rect([0, 0], [10, 10], {
-        //     fill: "red"
-        // }, lv)
-        // this._rect([10, 10], [20, 20], {
-        //     fill: "green"
-        // }, lv)
-
     }
     // 格子图案
     _chequer(options, g) {
@@ -438,22 +369,44 @@ export default class BaseSvg {
 
     }
 
-    // 规则参数
-    _regualrOptions(options, prefix) {
+    // 获取对象参数  对象名称
+    _options(options, moduleName) {
+        if (_.type(options[moduleName]) === "object") {
+            return options[moduleName]
+        }
         let opt = {};
-        this.props.forEach(t => {
-            if (prefix) {
-                let name = _.camelCase([prefix, t])
-                if (options[name]) {
-                    opt[t] = options[name]
-                }
-            } else {
-                if (options[t]) {
-                    opt[t] = options[t]
-                }
+
+        for (let key in options) {
+            if (_.type(options[key]) !== "object") {
+                opt[key] = options[key]
             }
-        })
-        return opt
+        }
+        return opt;
+
+
+        // // flat 格式属性
+        // let opt = {};
+        // this.props.forEach(t => {
+        //     if (moduleName) {
+        //         let name = _.camelCase([moduleName, t])
+        //         if (options[name]) {
+        //             opt[t] = options[name]
+        //         }
+        //     } else {
+        //         if (options[t]) {
+        //             opt[t] = options[t]
+        //         }
+        //     }
+        // })
+        // return opt
+    }
+    // 判断模块是否显示
+    _show(options, moduleName) {
+        if (_.type(options[moduleName]) === "object") {
+            return options[moduleName].show || options[moduleName].use
+        }
+        // flat 格式属性
+        return options[_.camelCase([moduleName, "show"])] || options[_.camelCase([moduleName, "use"])]
     }
     // 线条属性
     _lineProps(opt = {}) {
