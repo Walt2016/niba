@@ -131,47 +131,36 @@ export default class DrawSVG extends BaseSvg {
         })
     }
 
-    // // 图案
-    _shapePattern(options) {
-        this._pattern(options, this.svg)
-    }
-    _shapeChequer(options) {
-        this._chequer(options, this.svg)
-    }
-    _shapeStripe(options) {
-        this._stripe(options, this.svg)
-    }
-    _shapeDiagonalStripe(options) {
-        this._diagonalStripe(options, this.svg)
-    }
-    _shapeGradient(options) {
-        this._gradient(options, this.svg)
-
-    }
     // 图形
     _shape(options, parent = this.svg) {
-        console.log(options)
-        // 背景图案
-        if (this._show(options, "pattern")) {
-            let opt = this._options(options, "pattern")
-            this._shapePattern(opt)
-        }
-        // 格子图案
-        if (this._show(options, "chequer")) {
-            this._shapeChequer(options)
-        }
-        // 条纹图案
-        if (this._show(options, "stripe")) {
-            this._shapeStripe(options)
-        }
-        // 条纹图案
-        if (this._show(options, "diagonalStripe")) {
-            this._shapeDiagonalStripe(options)
-        }
-        // 渐变
-        if (this._show(options, "gradient")) {
-            this._shapeGradient(options)
-        }
+        console.log(options);
+        // 背景图案 格子图案 条纹图案  渐变
+        ["pattern", "chequer", "stripe", "diagonalStripe", "gradient"].forEach(t => {
+            if (this._show(options, t)) {
+                this["_" + t] && this["_" + t](this._options(options, t), this.svg)
+                // this._pattern(this._options(options, t), this.svg)
+            }
+        })
+        // // 背景图案
+        // if (this._show(options, "pattern")) {
+        //     this._pattern(this._options(options, "pattern"), this.svg)
+        // }
+        // // 格子图案
+        // if (this._show(options, "chequer")) {
+        //     this._chequer(this._options(options, "chequer"), this.svg)
+        // }
+        // // 条纹图案
+        // if (this._show(options, "stripe")) {
+        //     this._stripe(this._options(options, "stripe"), this.svg)
+        // }
+        // // 条纹图案
+        // if (this._show(options, "diagonalStripe")) {
+        //     this._diagonalStripe(this._options(options, "diagonalStripe"), this.svg)
+        // }
+        // // 渐变
+        // if (this._show(options, "gradient")) {
+        //     this._gradient(this._options(options, "gradient"), this.svg)
+        // }
         let defaultOpt = this._options(options)
         let shapeProps = this._shapeProps(defaultOpt)
         let lineProps = this._lineProps(defaultOpt)
@@ -185,10 +174,7 @@ export default class DrawSVG extends BaseSvg {
             ...transformProps
         }, parent)
 
-
-
         let points = options._points || []
-
         let ds = [];
         let showEdge = false;
         let curveEdges = ['edge', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical']
@@ -290,14 +276,11 @@ export default class DrawSVG extends BaseSvg {
     // 半径
     _radius(options, g) {
         let points = this.options._points || []
-
-        // let opt = this._options(options, "radius")
         let props = this._lineProps(options)
         let groupRadius = this._g({
             id: 'radius',
             ...props
         }, g)
-        // let waveform = opt.waveform
         let ps = []
         let o = this.options.o
         points.forEach(t => {
@@ -335,8 +318,6 @@ export default class DrawSVG extends BaseSvg {
                 links[links.length] = next
             }
         })
-
-        // let opt = this._options(options, "link")
         let props = this._lineProps(options)
         let groupRadius = this._g({
             id: 'link',

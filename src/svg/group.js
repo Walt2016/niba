@@ -25,15 +25,12 @@ const optionsConfig = {
     shape: ['circle', 'rect', 'line', 'polygon'],
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
-    // fractalType: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce', 'tree', 'radiusRatio', 'vertexMirror', 'edgeMirror'],
     fractal: {
         type: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce', 'tree', 'radiusRatio', 'vertexMirror', 'edgeMirror'],
     },
-    // animationName: ['rotate', 'twinkle', 'shift', 'loading'],
     animation: {
         name: ['rotate', 'twinkle', 'shift', 'loading'],
     },
-    // transformName: ['scale', 'translate', 'rotate', 'skew'],
     transform: {
         name: ['scale', 'translate', 'rotate', 'skew'],
     },
@@ -42,7 +39,6 @@ const optionsConfig = {
     segType: ['equiangular', 'randomTop'],
     // api: ['svg', 'canvas'],
     waveform: ['line', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical'],
-    // gradient_type: ['linearGradient ', 'radialGradient'],
     gradient: {
         type: ['linearGradient ', 'radialGradient'],
     },
@@ -50,7 +46,6 @@ const optionsConfig = {
         name: ['chequer', 'diagonalStripe', 'dot'],
         units: ['objextBoundingBox', 'userSpaceOnUse'],
     }
-    // pattern_name: ['chequer','diagonalStripe','dot']
 }
 
 const _options = (options) => {

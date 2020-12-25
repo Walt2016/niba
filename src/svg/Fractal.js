@@ -48,31 +48,10 @@ export default class Fractal {
     // 边镜像
     _edgeMirror(options) {
         let {
-            level,
-            // _points: points
+            level
         } = options
         let midPoints = _.mid2(this.points)
         midPoints.forEach(t => {
-            let mirrorPoints = _.mirror2(this.points, t)
-            this.draw(Object.assign({}, this.options, {
-                _points: mirrorPoints,
-                fractal:{
-                    ...options,
-                    level,
-                    use: level > 1
-                }
-                
-            }))
-        })
-    }
-    // 顶点镜像
-    _vertexMirror(options) {
-        let {
-            level,
-            // _points: points
-        } = options
-
-        this.points.forEach(t => {
             let mirrorPoints = _.mirror2(this.points, t)
             this.draw(Object.assign({}, this.options, {
                 _points: mirrorPoints,
@@ -84,41 +63,47 @@ export default class Fractal {
 
             }))
         })
-
-
+    }
+    // 顶点镜像
+    _vertexMirror(options) {
+        this.points.forEach(t => {
+            let mirrorPoints = _.mirror2(this.points, t)
+            this.draw(Object.assign({}, this.options, {
+                _points: mirrorPoints,
+                fractal: {
+                    ...options,
+                    // level,
+                    use: options.level > 1
+                }
+            }))
+        })
     }
     _radiusRatio(options) {
         let {
             level,
-            offset,
-            // _points: points,
+            offset
             // curveRadiusRatio
         } = options
         level = level - 1
         radiusRatio -= offset * level
         this.draw(Object.assign({}, this.options, {
             _points: this.points,
-            // curveRadiusRatio,
             curve: {
                 ...this.options.curve,
                 radiusRatio
             },
-
             fractal: {
                 ...options,
                 level,
                 use: level > 1
             }
-
         }))
-
     }
     _midSeg(options) {
         // debugger
         let {
             level,
-            offset,
-            // _points: points
+            offset
         } = options
         // level = level - 1
         let midseg = new MidSeg({
@@ -140,7 +125,7 @@ export default class Fractal {
         let {
             level,
             offset,
-            // _points: points
+
         } = options
         this.draw(Object.assign({}, this.options, {
             _points: this.points,
@@ -199,7 +184,7 @@ export default class Fractal {
             offset,
             timerUse,
             timerDelay,
-            // _points: points
+
         } = options
 
         this.points.forEach((t, index) => {
@@ -233,7 +218,7 @@ export default class Fractal {
             offset,
             timerUse,
             timerDelay,
-            // _points: points
+
         } = options
         this.points.forEach((t, index) => {
             let fn = () => {

@@ -211,46 +211,46 @@ export default class BaseSvg {
     // 格子图案
     _chequer(options, g) {
         let {
-            chequerSize,
-            chequerColor1 = "red",
-            chequerColor2 = "green",
-            chequerBorderRadius1 = 1,
-            chequerBorderRadius2 = 1
+            size,
+            color1 = "red",
+            color2 = "green",
+            borderRadius1 = 1,
+            borderRadius2 = 1
         } = options
+        let r = size
         let defs = this._defs(g)
         let chequer = this._createEle("pattern", {
             id: "shape-pattern-chequer",
             x: 0,
             y: 0,
-            width: chequerSize * 2,
-            height: chequerSize * 2,
+            width: r * 2,
+            height: r * 2,
             patternUnits: "userSpaceOnUse"
         }, defs)
-        this._rect([0, 0], [chequerSize, chequerSize], {
-            fill: chequerColor1,
-            rx: chequerBorderRadius1,
-            ry: chequerBorderRadius1,
+        this._rect([0, 0], [r, r], {
+            fill: color1,
+            rx: borderRadius1,
+            ry: borderRadius1,
         }, chequer)
-        this._rect([chequerSize, chequerSize], [chequerSize * 2, chequerSize * 2], {
-            fill: chequerColor2,
-            rx: chequerBorderRadius2,
-            ry: chequerBorderRadius2,
+        this._rect([r, r], [r * 2, r * 2], {
+            fill: color2,
+            rx: borderRadius2,
+            ry: borderRadius2,
         }, chequer)
 
     }
     // 条纹 竖直
     _stripe(options, g) {
         let {
-            stripeSize = 10,
-                stripeColor1 = "red",
-                stripeColor2 = "green",
-                stripeBorderRadius1 = 1,
-                stripeBorderRadius2 = 1,
-                stripeRadio = 0.2,
-                stripeSkewX = 0
+            size = 10,
+                color1 = "red",
+                color2 = "green",
+                borderRadius1 = 1,
+                borderRadius2 = 1,
+                radio = 0.2,
+                skewX = 0
         } = options
-        let r = stripeSize
-        let radio = stripeRadio
+        let r = size
         let defs = this._defs(g)
         let stripe = this._createEle("pattern", {
             id: "shape-pattern-stripe",
@@ -276,30 +276,30 @@ export default class BaseSvg {
 
         let d = `M0,0 h${r*radio} v${r} h${r*radio*-1} Z`
         this._path(d, {
-            fill: stripeColor1,
-            transform: `skewX(${stripeSkewX})`
+            fill: color1,
+            transform: `skewX(${skewX})`
         }, stripe)
 
         let d2 = `M${r},0 h${r*radio} v${r} h${r*radio*-1} Z`
         this._path(d2, {
-            fill: stripeColor2,
-            transform: `skewX(${stripeSkewX})`
+            fill: color2,
+            transform: `skewX(${skewX})`
         }, stripe)
     }
     // 斜条纹线
     _diagonalStripe(options, g) {
 
         let {
-            diagonalStripeeSize = 10,
-                diagonalStripeColor1 = "red",
-                diagonalStripeColor2 = "green",
-                diagonalStripeBorderRadius1 = 1,
-                diagonalStripeBorderRadius2 = 1,
-                diagonalStripeRadio = 0.2,
-                diagonalStripeSkewX = 0,
-                diagonalStripeOffset = 0
+            size = 10,
+                color1 = "red",
+                color2 = "green",
+                borderRadius1 = 1,
+                borderRadius2 = 1,
+                radio = 0.2,
+                skewX = 0,
+                offset = 0
         } = options
-        let r = diagonalStripeeSize
+        let r = size
         let defs = this._defs(g)
         let stripe = this._createEle("pattern", {
             id: "shape-pattern-diagonalStripe",
@@ -310,7 +310,6 @@ export default class BaseSvg {
             patternUnits: "userSpaceOnUse"
         }, defs)
 
-        let offset = diagonalStripeOffset
         let d = this._d([
             [
                 [0, 0],
@@ -325,15 +324,8 @@ export default class BaseSvg {
             ]
         ])
         this._path(d, {
-            fill: diagonalStripeColor1
+            fill: color1
         }, stripe)
-
-        // let d2 = `M${stripeSize},0 h${stripeSize*stripeRadio} v${stripeSize} h${stripeSize*stripeRadio*-1} Z`
-        // this._path(d2, {
-        //     fill: stripeColor2,
-        //     transform: `skewX(${stripeSkewX})`
-        // }, stripe)
-
     }
     //     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">  
     //     <stop offset="0%" stop-color="red"/>  
@@ -344,7 +336,7 @@ export default class BaseSvg {
     _gradient(options, g) {
         let defs = this._defs(g)
         let grad
-        if (options.gradientType === "radialGradient") {
+        if (options.type === "radialGradient") {
             grad = this._createEle("radialGradient", {
                 id: "shape-gradient"
             }, defs)
@@ -357,15 +349,24 @@ export default class BaseSvg {
                 id: "shape-gradient"
             }, defs)
         }
+        let list = [1, 2],
+            len = list.length
+        list.forEach((t, index) => {
+            this._createEle("stop", {
+                offset: 100 * index / (len - 1) + '%',
+                'stop-color': options['color' + (index + 1)]
+            }, grad)
+        })
 
-        this._createEle("stop", {
-            offset: '0%',
-            'stop-color': options.gradientColor1
-        }, grad)
-        this._createEle("stop", {
-            offset: '100%',
-            'stop-color': options.gradientColor2
-        }, grad)
+
+        // this._createEle("stop", {
+        //     offset: '0%',
+        //     'stop-color': options.color1
+        // }, grad)
+        // this._createEle("stop", {
+        //     offset: '100%',
+        //     'stop-color': options.color2
+        // }, grad)
 
     }
 
