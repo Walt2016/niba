@@ -24,6 +24,8 @@ export default class DrawSVG extends BaseSvg {
     }
     // 图形合成:入口函数
     _draw(options) {
+        // debugger
+        // this.options = options
         // // 背景图案
         // if (options.patternUse) {
         //     this._shapePattern(options)
@@ -133,41 +135,21 @@ export default class DrawSVG extends BaseSvg {
 
     // 图形
     _shape(options, parent = this.svg) {
+        this.options = options
         console.log(options);
         // 背景图案 格子图案 条纹图案  渐变
         ["pattern", "chequer", "stripe", "diagonalStripe", "gradient"].forEach(t => {
             if (this._show(options, t)) {
                 this["_" + t] && this["_" + t](this._options(options, t), this.svg)
-                // this._pattern(this._options(options, t), this.svg)
             }
         })
-        // // 背景图案
-        // if (this._show(options, "pattern")) {
-        //     this._pattern(this._options(options, "pattern"), this.svg)
-        // }
-        // // 格子图案
-        // if (this._show(options, "chequer")) {
-        //     this._chequer(this._options(options, "chequer"), this.svg)
-        // }
-        // // 条纹图案
-        // if (this._show(options, "stripe")) {
-        //     this._stripe(this._options(options, "stripe"), this.svg)
-        // }
-        // // 条纹图案
-        // if (this._show(options, "diagonalStripe")) {
-        //     this._diagonalStripe(this._options(options, "diagonalStripe"), this.svg)
-        // }
-        // // 渐变
-        // if (this._show(options, "gradient")) {
-        //     this._gradient(this._options(options, "gradient"), this.svg)
-        // }
         let defaultOpt = this._options(options)
         let shapeProps = this._shapeProps(defaultOpt)
         let lineProps = this._lineProps(defaultOpt)
         let animationProps = this._animationProps(this._options(options, "animation"))
         let transformProps = this._transformProps(this._options(options, "transform"))
         let g = this._g({
-            id: this._show(options, "fractal") ? `shape${options.fractalLevel}` : "shape",
+            id: this._show(options, "fractal") ? `shape${options.fractal.level}` : "shape",
             ...shapeProps,
             ...lineProps,
             ...animationProps,
@@ -176,8 +158,17 @@ export default class DrawSVG extends BaseSvg {
 
         let points = options._points || []
         let ds = [];
-        let showEdge = false;
+        // let showEdge = false;
         let curveEdges = ['edge', 'semicircle', 'sawtooth', 'wave', 'curve', 'elliptical']
+        // 未定义边，默认显示边
+        let showEdge = curveEdges.every(t => !options[t])
+        if (showEdge) {
+            ds[ds.length] = this._d(points, {
+                closed: true,
+                ...options
+            })
+        }
+        // 定义了边，根据定义显示
         curveEdges.forEach(t => {
             if (this._show(options, t)) {
                 showEdge = true
@@ -202,6 +193,7 @@ export default class DrawSVG extends BaseSvg {
                 })
             }
         })
+
         if (showEdge) { // 有边
             let defaultOpt = this._options(options)
             let opt = this._options(options, "edge")
@@ -213,22 +205,12 @@ export default class DrawSVG extends BaseSvg {
                 ...edgeLineProps,
                 // transform: this._options(options, "transform").name,
                 // 'transform-origin': `${width/2} ${height/2}`
-            }
-            if (this._show(options, "pattern")) {
-                params.fill = "url(#shape-pattern)"
-            }
-            if (this._show(options, "chequer")) {
-                params.fill = "url(#shape-pattern-chequer)"
-            }
-            if (this._show(options, "stripe")) {
-                params.fill = "url(#shape-pattern-stripe)"
-            }
-            if (this._show(options, "diagonalStripe")) {
-                params.fill = "url(#shape-pattern-diagonalStripe)"
-            }
-            if (this._show(options, "gradient")) {
-                params.fill = "url(#shape-gradient)"
-            }
+            };
+            ['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(t => {
+                if (this._show(options, t)) {
+                    params.fill = `url(#shape-${t})`
+                }
+            })
             this._path(ds.join(" "), params, g)
             // 标注文字
             if (opt.text) {
@@ -251,15 +233,7 @@ export default class DrawSVG extends BaseSvg {
         })
         // 分形
         if (this._show(options, "fractal")) {
-            // debugger
             let colors = _.colorCircle(points.length, options.fractal.colorfulOpacity || 1)
-            // // let fractalOptions = this._options(options, "fractal")
-            // new Fractal(this._shape.bind(this), {
-            //     // ...fractalOptions,
-            //     ...options,
-            //     _points: options._points,
-            //     _colors: colors
-            // })
             new Fractal(this._shape.bind(this), Object.assign(options, {
                 _colors: colors
             }))

@@ -12,7 +12,8 @@ import Polygon from '../entity/Polygon'
 import UI from '../ui'
 import Group from '../svg/group'
 let dataModel = {
-    // 全局
+    // 图形  全局
+    // global: {
     o: [width / 2, height / 2],
     r: 100,
     n: 6,
@@ -27,8 +28,7 @@ let dataModel = {
     linejoin: 'arcs',
     sort: 'normal',
     segType: 'equiangular',
-    // api: 'svg',
-
+    // },
     // 半径
     radius: {
         show: false,
@@ -50,8 +50,6 @@ let dataModel = {
         recycleIndex: 0,
         splitNum: 0
     },
-
-
     // 边
     edge: {
         show: true,
@@ -353,7 +351,7 @@ let ui = new UI.Form({
     el: "#params-container",
     data: polygon,
     options,
-    group:true,
+    group: true,
     btns: [{
             text: "apply",
             name: 'submit',

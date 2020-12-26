@@ -220,7 +220,7 @@ export default class BaseSvg {
         let r = size
         let defs = this._defs(g)
         let chequer = this._createEle("pattern", {
-            id: "shape-pattern-chequer",
+            id: "shape-chequer",
             x: 0,
             y: 0,
             width: r * 2,
@@ -253,7 +253,7 @@ export default class BaseSvg {
         let r = size
         let defs = this._defs(g)
         let stripe = this._createEle("pattern", {
-            id: "shape-pattern-stripe",
+            id: "shape-stripe",
             x: 0,
             y: 0,
             width: r * 2,
@@ -302,7 +302,7 @@ export default class BaseSvg {
         let r = size
         let defs = this._defs(g)
         let stripe = this._createEle("pattern", {
-            id: "shape-pattern-diagonalStripe",
+            id: "shape-diagonalStripe",
             x: 0,
             y: 0,
             width: r * 2,
@@ -375,8 +375,10 @@ export default class BaseSvg {
         if (_.type(options[moduleName]) === "object") {
             return options[moduleName]
         }
+        if (!moduleName && options.global) {
+            return options.global
+        }
         let opt = {};
-
         for (let key in options) {
             if (_.type(options[key]) !== "object") {
                 opt[key] = options[key]
@@ -429,7 +431,8 @@ export default class BaseSvg {
             fill: opt.color || 'red',
             'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity
         } : {
-            fill: 'transparent',
+            // fill: 'transparent',
+            fill: 'none'
         }
     }
     // 动画属性

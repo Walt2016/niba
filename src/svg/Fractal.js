@@ -20,11 +20,11 @@ export default class Fractal {
 
         let {
             level,
-            offset = 0,
+            // offset = 0,
             timerUse,
             timerDelay = 500,
             colorful,
-            _points: points,
+            // _points: points,
             _colors: colors,
             type
         } = fractalOptions
@@ -67,12 +67,13 @@ export default class Fractal {
     // 顶点镜像
     _vertexMirror(options) {
         this.points.forEach(t => {
+            let o = _.mirror(this.options.o, t)
             let mirrorPoints = _.mirror2(this.points, t)
             this.draw(Object.assign({}, this.options, {
                 _points: mirrorPoints,
+                o,
                 fractal: {
                     ...options,
-                    // level,
                     use: options.level > 1
                 }
             }))
@@ -81,8 +82,8 @@ export default class Fractal {
     _radiusRatio(options) {
         let {
             level,
-            offset
-            // curveRadiusRatio
+            offset,
+            radiusRatio
         } = options
         level = level - 1
         radiusRatio -= offset * level
@@ -110,9 +111,10 @@ export default class Fractal {
             points: this.points,
             offset: offset
         })
-        let params = Object.assign({}, this.options, {
+        let r = _.dis(midseg.points[0], this.options.o)
+        let params = Object.assign(this.options, {
             _points: midseg.points,
-            r: _.dis(midseg.points[0], options.o),
+            r,
             fractal: {
                 ...options,
                 level,
