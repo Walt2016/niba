@@ -7,6 +7,7 @@ import {
 import BaseSvg from './baseSvg'
 import Fractal from './Fractal'
 import Axis from './Axis'
+import PointPath from './PointPath'
 
 export default class DrawSVG extends BaseSvg {
     constructor(options) {
@@ -229,7 +230,7 @@ export default class DrawSVG extends BaseSvg {
             }
         }
 
-        ['radius', 'link', 'vertex', 'center', 'excircle', 'incircle', 'sin'].forEach(t => {
+        ['radius', 'link', 'vertex', 'center', 'excircle', 'incircle', 'sin', 'cos', 'tan'].forEach(t => {
             this._show(options, t) && this['_' + t] && this['_' + t](this._options(options, t), g)
         })
         // 分形
@@ -239,6 +240,25 @@ export default class DrawSVG extends BaseSvg {
                 _colors: colors
             }))
         }
+        // 路径
+        if (this._show(options, "path")) {
+            let opt = this._options(options, "path")
+            let points = new PointPath({
+                ...opt,
+                o: options.o
+            })["_" + opt.name]()
+            // debugger
+            points.forEach(t => {
+                this._shape(Object.assign({}, options, {
+                    o: t,
+                    _points: _.move(options._points, options.o, t),
+                    path: {
+                        use: false
+                    }
+                }))
+            })
+        }
+
     }
 
     // 半径
@@ -345,20 +365,37 @@ export default class DrawSVG extends BaseSvg {
     // 正玄曲线
     // y=Asin(ωx+φ)+k
     _sin(options, g = this.svg) {
-        let {
-            num = 360,
-                r = 100,
-                k = 0,
-                a = 0,
-                w = 1
-        } = options
         let o = this.options.o || [0, 0]
-        let points = Array.from({
-            length: num
-        }, (t, i) => [i * 360 / num + o[0] - 180, r * _.sin(w * (i * 360 / num - 180) - a) + o[1] - k].map(t => _.twoDecimal(t))).join(" ")
-
+        let points = new PointPath({
+            ...options,
+            o
+        })._sin().join(" ")
         this._createEle("polyline", {
-            id: 'polyline',
+            id: 'sin',
+            points
+        }, g)
+    }
+    // 余弦
+    _cos(options, g = this.svg) {
+        let o = this.options.o || [0, 0]
+        let points = new PointPath({
+            ...options,
+            o
+        })._cos().join(" ")
+        this._createEle("polyline", {
+            id: 'cos',
+            points
+        }, g)
+    }
+    // 正切
+    _tan(options, g = this.svg) {
+        let o = this.options.o || [0, 0]
+        let points = new PointPath({
+            ...options,
+            o
+        })._tan().join(" ")
+        this._createEle("polyline", {
+            id: 'tan',
             points
         }, g)
     }

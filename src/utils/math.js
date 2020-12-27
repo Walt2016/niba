@@ -12,6 +12,10 @@ const cos = (a = 0) => {
     return Math.cos(a * Math.PI / 180)
 }
 
+const tan = (a = 0) => {
+    return Math.tan(a * Math.PI / 180)
+}
+
 // 极坐标
 const polar = (o = [0, 0], r = 0, a = 0) => {
     return [o[0] + r * cos(a), o[1] + r * sin(a)].map(t => twoDecimal(t))
@@ -62,6 +66,17 @@ const mid2 = (points) => {
     })
 }
 
+// 移动
+const move = (points, o, t) => {
+    let deta = [t[0] - o[0], t[1] - o[1]]
+    if(Array.isArray(points[0])){
+        return points.map(p => [p[0] + deta[0], p[1] + deta[1]])
+    }else{
+        let p=points
+        return [p[0] + deta[0], p[1] + deta[1]]
+    }
+}
+
 export default {
     sin,
     cos,
@@ -73,5 +88,7 @@ export default {
     mirror2,
     mid2,
     split,
-    twoDecimal
+    twoDecimal,
+    tan,
+    move
 }

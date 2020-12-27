@@ -113,7 +113,7 @@ export default class Fractal {
             offset: offset
         })
         let r = _.dis(midseg.points[0], this.options.o)
-        let params = Object.assign({},this.options, {
+        let params = Object.assign({}, this.options, {
             _points: midseg.points,
             r,
             fractal: {
@@ -246,6 +246,84 @@ export default class Fractal {
             }
             timerUse ? setTimeout(fn, level * timerDelay * (index + 1)) : fn()
         })
+    }
+    // 正玄
+    _sin(options) {
+
+        let {
+            num = 36,
+                r = 100,
+                k = 0,
+                a = 0,
+                w = 1
+        } = options
+        let o = this.options.o || [0, 0]
+        let points = Array.from({
+            length: num
+        }, (t, i) => [i * 360 / num + o[0] - 180, r * _.sin(w * (i * 360 / num - 180) - a) + o[1] - k].map(t => _.twoDecimal(t)))
+
+        points.forEach(t => {
+
+            let fn = () => {
+                let o = t
+                let r = this.options.r //* Math.pow(offset, level)
+                let seg = new ArcSeg({
+                    ...this.options,
+                    o,
+                    // r
+                })
+                this.draw(Object.assign({}, this.options, {
+                    o,
+                    r,
+                    _points: seg.points, // .slice(0, 3),
+                    fractal: {
+                        use: false
+                    }
+
+                }))
+            }
+            fn()
+        })
+
+    }
+
+    _circle(options) {
+
+        let {
+            num = 36,
+                r = 100,
+                k = 0,
+                a = 0,
+                w = 1
+        } = options
+        let o = this.options.o || [0, 0]
+        let points = Array.from({
+            length: num
+        }, (t, i) => _.polar(o, r, a + i* 360 / num))
+
+        points.forEach(t => {
+
+            let fn = () => {
+                let o = t
+                let r = this.options.r //* Math.pow(offset, level)
+                let seg = new ArcSeg({
+                    ...this.options,
+                    o,
+                    // r
+                })
+                this.draw(Object.assign({}, this.options, {
+                    o,
+                    r,
+                    _points: seg.points, // .slice(0, 3),
+                    fractal: {
+                        use: false
+                    }
+
+                }))
+            }
+            fn()
+        })
+
     }
 
 }

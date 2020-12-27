@@ -352,7 +352,35 @@ let dataModel = {
         k: 0,
         a: 0,
         w: 1
+    },
+    cos: {
+        show: false,
+        num: 360,
+        r: 100,
+        k: 0,
+        a: 0,
+        w: 1
+    },
+    tan: {
+        show: false,
+        num: 360,
+        r: 100,
+        k: 0,
+        a: 0,
+        w: 1
+
+    },
+    // 路径
+    path: {
+        use: false,
+        name: 'sin',
+        num: 90,
+        r: 100,
+        k: 0,
+        a: 0,
+        w: 1
     }
+
 }
 
 

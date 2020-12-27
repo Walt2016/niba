@@ -26,7 +26,7 @@ const optionsConfig = {
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
     fractal: {
-        type: ['midSeg', 'vertexMirror', 'edgeMirror', 'reproduce', 'tree'], //, 'zoom', 'scale', 'rotate', 'radiusRatio', 
+        type: ['midSeg', 'vertexMirror', 'edgeMirror', 'reproduce', 'tree', 'sin', 'circle'], //, 'zoom', 'scale', 'rotate', 'radiusRatio', 
     },
     animation: {
         name: ['rotate', 'twinkle', 'shift', 'loading'],
@@ -45,6 +45,9 @@ const optionsConfig = {
     pattern: {
         name: ['chequer', 'diagonalStripe', 'dot'],
         units: ['objextBoundingBox', 'userSpaceOnUse'],
+    },
+    path: {
+        name: ['circle', 'sin', 'cos','line']
     }
 }
 
