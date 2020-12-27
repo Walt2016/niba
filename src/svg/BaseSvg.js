@@ -474,6 +474,11 @@ export default class BaseSvg {
     _append(parent, child) {
         parent.appendChild(child)
     }
-
-
+    clear(div = this.svg) {
+        while (div.hasChildNodes()) //当div下还存在子节点时 循环继续
+        {
+            div.removeChild(div.firstChild);
+        }
+        return this
+    }
 }

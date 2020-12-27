@@ -1,4 +1,7 @@
 // 几何数学计算
+// Two decimal places
+const twoDecimal = (n) => +n.toFixed(2)
+
 
 // 角度转弧度
 const sin = (a = 0) => {
@@ -11,11 +14,11 @@ const cos = (a = 0) => {
 
 // 极坐标
 const polar = (o = [0, 0], r = 0, a = 0) => {
-    return [+(o[0] + r * cos(a)).toFixed(2), +(o[1] + r * sin(a)).toFixed(2)]
+    return [o[0] + r * cos(a), o[1] + r * sin(a)].map(t => twoDecimal(t))
 }
 // 中点
 const mid = (p1 = [0, 0], p2 = [0, 0]) => {
-    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]
+    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2].map(t => twoDecimal(t))
 }
 
 // 距离
@@ -69,5 +72,6 @@ export default {
     mirror,
     mirror2,
     mid2,
-    split
+    split,
+    twoDecimal
 }

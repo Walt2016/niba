@@ -206,7 +206,6 @@ export default class DrawSVG extends BaseSvg {
                 // transform: this._options(options, "transform").name,
                 // 'transform-origin': `${width/2} ${height/2}`
             };
-            // if(options)
 
             ['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(t => {
                 if (this._show(options, t)) {
@@ -230,7 +229,7 @@ export default class DrawSVG extends BaseSvg {
             }
         }
 
-        ['radius', 'link', 'vertex', 'center', 'excircle', 'incircle'].forEach(t => {
+        ['radius', 'link', 'vertex', 'center', 'excircle', 'incircle', 'sin'].forEach(t => {
             this._show(options, t) && this['_' + t] && this['_' + t](this._options(options, t), g)
         })
         // 分形
@@ -241,14 +240,7 @@ export default class DrawSVG extends BaseSvg {
             }))
         }
     }
-    clear() {
-        let div = this.svg
-        while (div.hasChildNodes()) //当div下还存在子节点时 循环继续
-        {
-            div.removeChild(div.firstChild);
-        }
-        return this
-    }
+
     // 半径
     _radius(options, g) {
         let points = this.options._points || []
@@ -347,6 +339,27 @@ export default class DrawSVG extends BaseSvg {
         this._regularShape('incircle', [o], {
             ...options,
             radius: r
+        }, g)
+    }
+
+    // 正玄曲线
+    // y=Asin(ωx+φ)+k
+    _sin(options, g = this.svg) {
+        let {
+            num = 360,
+                r = 100,
+                k = 0,
+                a = 0,
+                w = 1
+        } = options
+        let o = this.options.o || [0, 0]
+        let points = Array.from({
+            length: num
+        }, (t, i) => [i * 360 / num + o[0] - 180, r * _.sin(w * (i * 360 / num - 180) - a) + o[1] - k].map(t => _.twoDecimal(t))).join(" ")
+
+        this._createEle("polyline", {
+            id: 'polyline',
+            points
         }, g)
     }
 }

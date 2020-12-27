@@ -343,6 +343,15 @@ let dataModel = {
         type: 'linearGradient',
         color1: 'red',
         color2: 'blue'
+    },
+    // 正玄
+    sin: {
+        show: false,
+        num: 360,
+        r: 100,
+        k: 0,
+        a: 0,
+        w: 1
     }
 }
 
