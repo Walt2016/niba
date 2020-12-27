@@ -206,6 +206,8 @@ export default class DrawSVG extends BaseSvg {
                 // transform: this._options(options, "transform").name,
                 // 'transform-origin': `${width/2} ${height/2}`
             };
+            // if(options)
+
             ['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(t => {
                 if (this._show(options, t)) {
                     params.fill = `url(#shape-${t})`

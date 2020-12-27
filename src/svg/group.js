@@ -26,7 +26,7 @@ const optionsConfig = {
     linecap: ['butt', 'round', 'square', 'inherit'],
     linejoin: ['arcs', 'bevel', 'miter', 'miter-clip', 'round'],
     fractal: {
-        type: ['midSeg', 'zoom', 'scale', 'rotate', 'reproduce', 'tree', 'radiusRatio', 'vertexMirror', 'edgeMirror'],
+        type: ['midSeg', 'vertexMirror', 'edgeMirror', 'reproduce', 'tree'], //, 'zoom', 'scale', 'rotate', 'radiusRatio', 
     },
     animation: {
         name: ['rotate', 'twinkle', 'shift', 'loading'],

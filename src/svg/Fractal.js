@@ -52,15 +52,16 @@ export default class Fractal {
         } = options
         let midPoints = _.mid2(this.points)
         midPoints.forEach(t => {
+            let o = _.mirror(this.options.o, t)
             let mirrorPoints = _.mirror2(this.points, t)
             this.draw(Object.assign({}, this.options, {
                 _points: mirrorPoints,
+                o,
                 fractal: {
                     ...options,
                     level,
                     use: level > 1
                 }
-
             }))
         })
     }
@@ -112,7 +113,7 @@ export default class Fractal {
             offset: offset
         })
         let r = _.dis(midseg.points[0], this.options.o)
-        let params = Object.assign(this.options, {
+        let params = Object.assign({},this.options, {
             _points: midseg.points,
             r,
             fractal: {
@@ -127,8 +128,8 @@ export default class Fractal {
         let {
             level,
             offset,
-
         } = options
+        // debugger
         this.draw(Object.assign({}, this.options, {
             _points: this.points,
             fractal: {
@@ -194,7 +195,7 @@ export default class Fractal {
                 let o = t
                 let r = this.options.r * Math.pow(offset, level)
                 let seg = new ArcSeg({
-                    ...options,
+                    ...this.options,
                     o,
                     r
                 })

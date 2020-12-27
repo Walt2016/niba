@@ -217,19 +217,7 @@ let dataModel = {
 
     },
 
-    // 背景
-    pattern: {
-        use: false,
-        // Units: 'objectBoundingBox',
-        name: 'chequer',
-        color1: 'red',
-        color2: 'red',
-        size: 10,
-        offset: 0,
-        skewX: 0,
-        opacity: 1,
 
-    },
 
     // 连接线
     link: {
@@ -249,6 +237,8 @@ let dataModel = {
         recycleIndex: 0,
         splitNum: 0,
     },
+
+
 
     // 曲线
     curve: {
@@ -306,13 +296,20 @@ let dataModel = {
         splitNum: 0,
     },
 
-    // 渐变
-    gradient: {
+    // 背景
+    pattern: {
         use: false,
-        type: 'linearGradient',
+        // Units: 'objectBoundingBox',
+        name: 'chequer',
         color1: 'red',
-        color2: 'blue'
+        color2: 'red',
+        size: 10,
+        offset: 0,
+        skewX: 0,
+        opacity: 1,
+
     },
+
 
     // 格子
     chequer: {
@@ -339,6 +336,13 @@ let dataModel = {
         size: 10,
         color1: 'red',
         offset: 0
+    },
+    // 渐变
+    gradient: {
+        use: false,
+        type: 'linearGradient',
+        color1: 'red',
+        color2: 'blue'
     }
 }
 
@@ -357,54 +361,13 @@ let ui = new UI.Form({
             name: 'submit',
             click: (e) => {
                 console.log(e)
-                // polygon.redrawSVG(e)
                 polygon.redraw(e)
-                // timmer && clearTimeout(timmer)
             }
         },
-        // {
-        //     text: 'rotate',
-        //     name: 'rotate',
-        //     click: (e) => {
-        //         polygon.redrawSVG(e)
-        //         let edge = document.querySelector("[name='angle']")
-        //         let btn = document.querySelector("[name='rotate']")
-        //         timmer && clearTimeout(timmer)
-        //         timmer = setTimeout(() => {
-        //             edge.value = Number(edge.value) + Number(edge.getAttribute("step"))
-        //             if (edge.value > 360) {
-        //                 edge.value = 0
-        //             }
-        //             btn.click()
-        //         }, 17)
-        //     }
-        // },
         {
             text: 'reset',
             name: 'reset'
-
-        },
-        // {
-        //     text: 'move',
-        //     name: 'move',
-        //     click: (e) => {
-        //         // debugger
-        //         polygon.redrawSVG(e)
-        //         let o = document.querySelector("[name='o']")
-        //         let btn = document.querySelector("[name='move']")
-        //         console.log(o.value)
-        //         let [x, y] = o.value.split(",").map(t => Number(t))
-        //         console.log(x, y)
-        //         timmer && clearTimeout(timmer)
-        //         timmer = setTimeout(() => {
-        //             x += v
-        //             y += v
-        //             o.value = [x, y].map(t => +Number(t).toFixed(2))
-        //             btn.click()
-        //         }, 17)
-        //     }
-
-        // }
+        }
     ]
 })
 console.log(ui)
