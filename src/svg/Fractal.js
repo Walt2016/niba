@@ -48,12 +48,13 @@ export default class Fractal {
     // 边镜像
     _edgeMirror(options) {
         let {
-            level
+            level,
+            radio = 1
         } = options
         let midPoints = _.mid2(this.points)
         midPoints.forEach(t => {
             let o = _.mirror(this.options.o, t)
-            let mirrorPoints = _.mirror2(this.points, t)
+            let mirrorPoints = _.mirror(this.points, t, radio)
             this.draw(Object.assign({}, this.options, {
                 _points: mirrorPoints,
                 o,
@@ -67,15 +68,19 @@ export default class Fractal {
     }
     // 顶点镜像
     _vertexMirror(options) {
+        let {
+            level,
+            radio = 1
+        } = options
         this.points.forEach(t => {
             let o = _.mirror(this.options.o, t)
-            let mirrorPoints = _.mirror2(this.points, t)
+            let mirrorPoints = _.mirror(this.points, t,radio)
             this.draw(Object.assign({}, this.options, {
                 _points: mirrorPoints,
                 o,
                 fractal: {
                     ...options,
-                    use: options.level > 1
+                    use: level > 1
                 }
             }))
         })
@@ -299,7 +304,7 @@ export default class Fractal {
         let o = this.options.o || [0, 0]
         let points = Array.from({
             length: num
-        }, (t, i) => _.polar(o, r, a + i* 360 / num))
+        }, (t, i) => _.polar(o, r, a + i * 360 / num))
 
         points.forEach(t => {
 

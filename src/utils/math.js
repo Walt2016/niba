@@ -35,8 +35,11 @@ const atan = (p1 = [0, 0], p2 = [0, 0]) => {
 }
 
 // 镜像
-const mirror = (p, o) => {
-    return [2 * o[0] - p[0], 2 * o[1] - p[1]]
+const mirror = (p, o, radio = 1) => {
+    if (Array.isArray(p[0])) {
+        return p.map(t => mirror(t, o, radio))
+    }
+    return [(radio + 1) * o[0] - radio * p[0], (radio + 1) * o[1] - radio * p[1]]
 }
 
 // 线段分割： 分割数量
@@ -69,10 +72,10 @@ const mid2 = (points) => {
 // 移动
 const move = (points, o, t) => {
     let deta = [t[0] - o[0], t[1] - o[1]]
-    if(Array.isArray(points[0])){
+    if (Array.isArray(points[0])) {
         return points.map(p => [p[0] + deta[0], p[1] + deta[1]])
-    }else{
-        let p=points
+    } else {
+        let p = points
         return [p[0] + deta[0], p[1] + deta[1]]
     }
 }

@@ -168,6 +168,7 @@ let dataModel = {
         type: 'midSeg',
         level: 3,
         offset: 0.5,
+        radio: 1,
         timerUse: false,
         timerDelay: 500,
         colorful: false,
