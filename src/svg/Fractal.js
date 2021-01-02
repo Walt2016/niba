@@ -8,6 +8,7 @@ export default class Fractal {
         this.draw = draw
         this.options = options
         this.points = options._points
+        let colors = options._colors
         let fractalOptions = options.fractal
 
         Object.assign(fractalOptions, {
@@ -25,7 +26,7 @@ export default class Fractal {
             timerDelay = 500,
             colorful,
             // _points: points,
-            _colors: colors,
+            // _colors: colors,
             type
         } = fractalOptions
 

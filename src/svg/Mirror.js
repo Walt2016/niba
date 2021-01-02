@@ -8,6 +8,7 @@ export default class mirror {
         this.draw = draw
         this.options = options
         this.points = options._points
+        let colors = options._colors
         let mirrorOptions = options.mirror
 
         Object.assign(mirrorOptions, {
@@ -25,9 +26,10 @@ export default class mirror {
             timerDelay = 500,
             colorful,
             // _points: points,
-            _colors: colors,
+            // _colors: colors,
             type
         } = mirrorOptions
+        // debugger
 
 
         if (colorful && colors) {
