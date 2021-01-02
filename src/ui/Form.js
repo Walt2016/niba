@@ -119,7 +119,7 @@ export default class Form extends Panel {
                 class: "form-group-item close",
             }, formGroupWrap)
             let formGroupItemHeader = this._div({
-                class: "form-group-item-header",
+                class: "form-group-item-header" + (t.status ? " show" : ""),
                 text: t.label,
                 click: (e) => {
                     let el = e.target
@@ -138,9 +138,15 @@ export default class Form extends Panel {
                 }
             }, formGroupItemHeader)
 
+            this._div({
+                text: "show",
+                class: "status"
+            }, formGroupItemHeader)
+
             let formGroupItemBody = this._div({
                 class: "form-group-item-body"
             }, formGroup)
+            // debugger
 
             t.fields.forEach(t => {
                 this._formItem({
@@ -191,7 +197,11 @@ export default class Form extends Panel {
                 this._trueorfalse({
                     class: 'form-item-checkbox',
                     name: key,
-                    ...field
+                    ...field,
+                    // event:(e)=>{
+                    //     console.log(e)
+
+                    // }
                 }, formItem)
                 break;
             case "select":
@@ -379,7 +389,20 @@ export default class Form extends Panel {
         return this._createEle("input", {
             ...field,
             type: "checkbox",
-            checked: field.value ? true : undefined
+            checked: field.value ? true : undefined,
+            click: (e) => {
+                console.log(e)
+                let el = e.target
+                if (el.name.indexOf("$show") > 0 || el.name.indexOf("$use") > 0) {
+                    let gItem = this._closest(el, ".form-group-item")
+                    let header = this._query(".form-group-item-header", gItem)
+                    if (el.checked) {
+                        this._addClass(header, "show")
+                    } else {
+                        this._removeClass(header, "show")
+                    }
+                }
+            }
         }, parent);
     }
 }

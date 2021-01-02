@@ -86,13 +86,22 @@ const center = points => {
 }
 
 // 放大缩小
-const scale = (points, radio) => {
-    let o = center(points)
-    return points.map(t => {
-        let deta = [t[0] - o[0], t[1] - o[1]]
-        return [o[0] + deta[0] * radio, o[1] + deta[1] * radio]
-    })
+const scale = (p, radio, o) => {
+    if (isMatrix(p)) {
+        o = o || center(p)
+        return p.map(t => {
+            let deta = [t[0] - o[0], t[1] - o[1]]
+            return [o[0] + deta[0] * radio, o[1] + deta[1] * radio]
+        })
+    }
+    let deta = [p[0] - o[0], p[1] - o[1]]
+    return [o[0] + deta[0] * radio, o[1] + deta[1] * radio]
+
+
 }
+// const zoom =(o,p,radio)=>{
+
+// }
 
 // 线段分割： 分割数量
 const split = (p1, p2, splitNum) => {
@@ -131,5 +140,6 @@ export default {
     twoDecimal,
     tan,
     move,
-    includedAngle
+    includedAngle,
+    scale
 }

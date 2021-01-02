@@ -244,6 +244,7 @@ body {
 
 .form-group-item {
     border-bottom: 1px solid #ccc;
+
 }
 
 .form-group-item:last-child {
@@ -261,6 +262,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .form-group-item-body {
@@ -290,6 +292,24 @@ body {
     transition: 0.5s;
     display: inline-block;
     cursor: pointer;
+}
+
+.form-group-item-header {
+    padding-left: 25px;
+}
+
+.form-group-item-header .icon {
+    position: absolute;
+    left: 5px;
+    top: 8px
+}
+
+.form-group-item-header .status{
+    display: none;
+    font-size: 12px;
+}
+.form-group-item-header.show .status{
+    display: block;
 }
 
 .icon.up {

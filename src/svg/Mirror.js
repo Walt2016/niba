@@ -54,12 +54,17 @@ export default class mirror {
             ratio = 1,
             startPoint,
             startIndex,
-            refraction
+            refraction,
+            offset = 1
         } = options
         let midPoints = _.mid(this.points)
         // debugger
         midPoints.forEach((t, index) => {
+
             let r = this.options.r * ratio
+
+            t = _.scale(t, offset, this.options.o)
+
             let o = _.mirror(this.options.o, t, ratio, refraction)
             let mirrorPoints = _.mirror(this.points, t, ratio, refraction)
             this.draw(Object.assign({}, this.options, {
@@ -81,9 +86,11 @@ export default class mirror {
         let {
             level,
             ratio = 1,
-            refraction
+            refraction,
+            offset = 1
         } = options
         this.points.forEach(t => {
+            t = _.scale(t, offset, this.options.o)
             let r = this.options.r * ratio
             let o = _.mirror(this.options.o, t, ratio, refraction)
             let mirrorPoints = _.mirror(this.points, t, ratio, refraction)
