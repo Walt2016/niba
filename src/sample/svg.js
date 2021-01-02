@@ -173,6 +173,20 @@ let dataModel = {
         timerDelay: 500,
         colorful: false,
         colorfulOpacity: 0.5,
+        refraction: 0
+    },
+    // 镜像
+    mirror:{
+        use: false,
+        type: 'vertex',
+        level: 3,
+        offset: 0.5,
+        radio: 1,
+        timerUse: false,
+        timerDelay: 500,
+        colorful: false,
+        colorfulOpacity: 0.5,
+        refraction: 0
     },
 
     // 动画

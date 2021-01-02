@@ -1,19 +1,23 @@
 // 几何数学计算
 // Two decimal places
 const twoDecimal = (n) => +n.toFixed(2)
-
+// matrix ( a2-D array),
+const isMatrix = (p) => Array.isArray(p[0])
+// 角度转弧度
+const deg2rad = (a) => a * Math.PI / 180
+const rad2deg = (r) => twoDecimal(r * 180 / Math.PI)
 
 // 角度转弧度
 const sin = (a = 0) => {
-    return Math.sin(a * Math.PI / 180)
+    return Math.sin(deg2rad(a))
 }
 
 const cos = (a = 0) => {
-    return Math.cos(a * Math.PI / 180)
+    return Math.cos(deg2rad(a))
 }
 
 const tan = (a = 0) => {
-    return Math.tan(a * Math.PI / 180)
+    return Math.tan(deg2rad(a))
 }
 
 // 极坐标
@@ -22,6 +26,13 @@ const polar = (o = [0, 0], r = 0, a = 0) => {
 }
 // 中点
 const mid = (p1 = [0, 0], p2 = [0, 0]) => {
+    if (isMatrix(p1)) {
+        let n = p1.length
+        return p1.map((t, index) => {
+            let next = p1[index + 1 >= n ? 0 : index + 1]
+            return mid(t, next)
+        })
+    }
     return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2].map(t => twoDecimal(t))
 }
 
@@ -31,13 +42,34 @@ const dis = (p1 = [0, 0], p2 = [0, 0]) => {
 }
 // 夹角
 const atan = (p1 = [0, 0], p2 = [0, 0]) => {
-    return Math.atan2(p2[1] - p1[1], p2[0] - p1[0]) * 180 / Math.PI
+    return rad2deg(Math.atan2(p2[1] - p1[1], p2[0] - p1[0]))
 }
 
+// 三点夹角
+// cosO = (OA*OA + OB*OB - AB*AB ) / 2*OA*OB
+const includedAngle = (A, O, B) => {
+    let OA = dis(O, A)
+    let OB = dis(O, B)
+    let AB = dis(A, B)
+    let cosO = (OA * OA + OB * OB - AB * AB) / (2 * OA * OB)
+    return rad2deg(Math.acos(cosO))
+}
+
+
 // 镜像
-const mirror = (p, o, radio = 1) => {
-    if (Array.isArray(p[0])) {
-        return p.map(t => mirror(t, o, radio))
+// Angle of Refraction折射角
+// index of Refraction折射角
+const mirror = (p, o, radio = 1, refraction) => {
+    if (isMatrix(p)) {
+        return p.map(t => mirror(t, o, radio, refraction))
+    }
+    if (refraction) {
+        let r = dis(p, o) * radio
+        let a = atan(p, o)
+        return polar(o, r, a + refraction)
+    }
+    if (radio === 1) {
+        return [2 * o[0] - p[0], 2 * o[1] - p[1]]
     }
     return [(radio + 1) * o[0] - radio * p[0], (radio + 1) * o[1] - radio * p[1]]
 }
@@ -53,29 +85,12 @@ const split = (p1, p2, splitNum) => {
     })
 }
 
-
-// 多个点的镜像
-const mirror2 = (points, o) => {
-    return points.map(t => {
-        return mirror(t, o)
-    })
-}
-// 多个点的中点
-const mid2 = (points) => {
-    let n = points.length
-    return points.map((t, index) => {
-        let next = points[index + 1 >= n ? 0 : index + 1]
-        return mid(t, next)
-    })
-}
-
 // 移动
-const move = (points, o, t) => {
-    let deta = [t[0] - o[0], t[1] - o[1]]
-    if (Array.isArray(points[0])) {
-        return points.map(p => [p[0] + deta[0], p[1] + deta[1]])
+const move = (p, from, to) => {
+    let deta = [to[0] - from[0], to[1] - from[1]]
+    if (isMatrix(p)) {
+        return p.map(t => [t[0] + deta[0], t[1] + deta[1]])
     } else {
-        let p = points
         return [p[0] + deta[0], p[1] + deta[1]]
     }
 }
@@ -88,10 +103,9 @@ export default {
     dis,
     atan,
     mirror,
-    mirror2,
-    mid2,
     split,
     twoDecimal,
     tan,
-    move
+    move,
+    includedAngle
 }

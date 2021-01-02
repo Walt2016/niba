@@ -47,7 +47,10 @@ const optionsConfig = {
         units: ['objextBoundingBox', 'userSpaceOnUse'],
     },
     path: {
-        name: ['circle', 'sin', 'cos','line']
+        name: ['circle', 'sin', 'cos', 'line']
+    },
+    mirror: {
+        type: ['vertex', 'edge']
     }
 }
 

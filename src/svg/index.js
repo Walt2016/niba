@@ -6,6 +6,7 @@ import {
 } from '../points'
 import BaseSvg from './baseSvg'
 import Fractal from './Fractal'
+import Mirror from './Mirror'
 import Axis from './Axis'
 import PointPath from './PointPath'
 
@@ -237,6 +238,13 @@ export default class DrawSVG extends BaseSvg {
         if (this._show(options, "fractal")) {
             let colors = _.colorCircle(points.length, options.fractal.colorfulOpacity || 1)
             new Fractal(this._shape.bind(this), Object.assign(options, {
+                _colors: colors
+            }))
+        }
+        // 镜像
+        if (this._show(options, "mirror")) {
+            let colors = _.colorCircle(points.length, options.fractal.colorfulOpacity || 1)
+            new Mirror(this._shape.bind(this), Object.assign(options, {
                 _colors: colors
             }))
         }

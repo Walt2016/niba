@@ -3,19 +3,19 @@ import MidSeg from '../points/MidSeg'
 import {
     ArcSeg
 } from '../points'
-export default class Fractal {
+export default class mirror {
     constructor(draw, options) {
         this.draw = draw
         this.options = options
         this.points = options._points
-        let fractalOptions = options.fractal
+        let mirrorOptions = options.mirror
 
-        Object.assign(fractalOptions, {
+        Object.assign(mirrorOptions, {
             offset: 0,
             timerDelay: 500
         }, {
-            ...fractalOptions,
-            level: fractalOptions.level - 1
+            ...mirrorOptions,
+            level: mirrorOptions.level - 1
         })
 
         let {
@@ -27,7 +27,7 @@ export default class Fractal {
             // _points: points,
             _colors: colors,
             type
-        } = fractalOptions
+        } = mirrorOptions
 
 
         if (colorful && colors) {
@@ -41,12 +41,12 @@ export default class Fractal {
         let fn = this['_' + type]
         if (fn) {
             timerUse ? setTimeout(() => {
-                fn.call(this, fractalOptions)
-            }, level * timerDelay) : fn.call(this, fractalOptions)
+                fn.call(this, mirrorOptions)
+            }, level * timerDelay) : fn.call(this, mirrorOptions)
         }
     }
     // 边镜像
-    _edgeMirror(options) {
+    _edge(options) {
         let {
             level,
             radio = 1,
@@ -64,7 +64,7 @@ export default class Fractal {
                 _points: mirrorPoints,
                 o,
                 r,
-                fractal: {
+                mirror: {
                     startPoint: t,
                     startIndex: index,
                     ...options,
@@ -75,7 +75,7 @@ export default class Fractal {
         })
     }
     // 顶点镜像
-    _vertexMirror(options) {
+    _vertex(options) {
         let {
             level,
             radio = 1,
@@ -89,7 +89,7 @@ export default class Fractal {
                 _points: mirrorPoints,
                 o,
                 r,
-                fractal: {
+                mirror: {
                     ...options,
                     use: level > 1
                 }
@@ -110,7 +110,7 @@ export default class Fractal {
                 ...this.options.curve,
                 radiusRatio
             },
-            fractal: {
+            mirror: {
                 ...options,
                 level,
                 use: level > 1
@@ -132,7 +132,7 @@ export default class Fractal {
         let params = Object.assign({}, this.options, {
             _points: midseg.points,
             r,
-            fractal: {
+            mirror: {
                 ...options,
                 level,
                 use: level > 1,
@@ -148,7 +148,7 @@ export default class Fractal {
         // debugger
         this.draw(Object.assign({}, this.options, {
             _points: this.points,
-            fractal: {
+            mirror: {
                 ...options.
                 level,
                 use: level > 1,
@@ -168,7 +168,7 @@ export default class Fractal {
         })
         this.draw(Object.assign({}, this.options, {
             _points: seg.points,
-            fractal: {
+            mirror: {
                 ...options,
                 level,
                 use: level > 1,
@@ -190,7 +190,7 @@ export default class Fractal {
             _points: seg.points,
 
             angle: this.options.angle + offset,
-            fractal: {
+            mirror: {
                 ...options,
                 level,
                 use: level > 1,
@@ -219,7 +219,7 @@ export default class Fractal {
                     o,
                     r,
                     _points: seg.points,
-                    fractal: {
+                    mirror: {
                         ...options,
                         level,
                         use: level > 1
@@ -252,7 +252,7 @@ export default class Fractal {
                     o,
                     r,
                     _points: seg.points.slice(0, 3),
-                    fractal: {
+                    mirror: {
                         ...options,
                         level,
                         use: level > 1
@@ -292,7 +292,7 @@ export default class Fractal {
                     o,
                     r,
                     _points: seg.points, // .slice(0, 3),
-                    fractal: {
+                    mirror: {
                         use: false
                     }
 
@@ -331,7 +331,7 @@ export default class Fractal {
                     o,
                     r,
                     _points: seg.points, // .slice(0, 3),
-                    fractal: {
+                    mirror: {
                         use: false
                     }
 
