@@ -21,12 +21,9 @@ export default class Fractal {
 
         let {
             level,
-            // offset = 0,
             timerUse,
             timerDelay = 500,
             colorful,
-            // _points: points,
-            // _colors: colors,
             type
         } = fractalOptions
 
@@ -50,7 +47,7 @@ export default class Fractal {
     _edgeMirror(options) {
         let {
             level,
-            radio = 1,
+            ratio = 1,
             startPoint,
             startIndex,
             refraction
@@ -58,9 +55,9 @@ export default class Fractal {
         let midPoints = _.mid(this.points)
         // debugger
         midPoints.forEach((t, index) => {
-            let r = this.options.r * radio
-            let o = _.mirror(this.options.o, t, radio, refraction)
-            let mirrorPoints = _.mirror(this.points, t, radio, refraction)
+            let r = this.options.r * ratio
+            let o = _.mirror(this.options.o, t, ratio, refraction)
+            let mirrorPoints = _.mirror(this.points, t, ratio, refraction)
             this.draw(Object.assign({}, this.options, {
                 _points: mirrorPoints,
                 o,
@@ -79,13 +76,13 @@ export default class Fractal {
     _vertexMirror(options) {
         let {
             level,
-            radio = 1,
+            ratio = 1,
             refraction
         } = options
         this.points.forEach(t => {
-            let r = this.options.r * radio
-            let o = _.mirror(this.options.o, t, radio, refraction)
-            let mirrorPoints = _.mirror(this.points, t, radio, refraction)
+            let r = this.options.r * ratio
+            let o = _.mirror(this.options.o, t, ratio, refraction)
+            let mirrorPoints = _.mirror(this.points, t, ratio, refraction)
             this.draw(Object.assign({}, this.options, {
                 _points: mirrorPoints,
                 o,

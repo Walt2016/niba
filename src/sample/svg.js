@@ -168,25 +168,25 @@ let dataModel = {
         type: 'midSeg',
         level: 3,
         offset: 0.5,
-        radio: 1,
+        ratio: 1,
         timerUse: false,
         timerDelay: 500,
         colorful: false,
-        colorfulOpacity: 0.5,
-        refraction: 0
+        colorfulOpacity: 0.5
+        // refraction: 0
     },
     // 镜像
-    mirror:{
+    mirror: {
         use: false,
         type: 'vertex',
         level: 3,
-        offset: 0.5,
-        radio: 1,
+        // offset: 0.5,
+        ratio: 0.5,
+        refraction: 0,
         timerUse: false,
         timerDelay: 500,
         colorful: false,
         colorfulOpacity: 0.5,
-        refraction: 0
     },
 
     // 动画
@@ -393,7 +393,10 @@ let dataModel = {
         r: 100,
         k: 0,
         a: 0,
-        w: 1
+        w: 1,
+        ratio: 0.5,
+        colorful: false,
+        colorfulOpacity: 0.5
     }
 
 }

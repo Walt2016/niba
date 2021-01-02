@@ -150,8 +150,9 @@ export default class DrawSVG extends BaseSvg {
         let lineProps = this._lineProps(defaultOpt)
         let animationProps = this._animationProps(this._options(options, "animation"))
         let transformProps = this._transformProps(this._options(options, "transform"))
+        let id = options.id || (this._show(options, "fractal") ? `shape${options.fractal.level}` : "shape")
         let g = this._g({
-            id: this._show(options, "fractal") ? `shape${options.fractal.level}` : "shape",
+            id,
             ...shapeProps,
             ...lineProps,
             ...animationProps,
@@ -255,11 +256,22 @@ export default class DrawSVG extends BaseSvg {
                 ...opt,
                 o: options.o
             })["_" + opt.name]()
+            let colors = _.colorCircle(points.length, opt.colorfulOpacity || 1)
+
             // debugger
-            points.forEach(t => {
+            points.forEach((t, index) => {
+                if (opt.colorful && colors) {
+                    let color = colors[index % colors.length]
+                    Object.assign(options, {
+                        color,
+                        fill: color,
+                        'stroke-color': color
+                    })
+                }
                 this._shape(Object.assign({}, options, {
+                    id: 'shape_path_' + index,
                     o: t,
-                    _points: _.move(options._points, options.o, t),
+                    _points: _.move(options._points, options.o, t, Math.pow(opt.ratio, index)),
                     path: {
                         use: false
                     }

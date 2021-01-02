@@ -22,7 +22,7 @@ const tan = (a = 0) => {
 
 // 极坐标
 const polar = (o = [0, 0], r = 0, a = 0) => {
-    return [o[0] + r * cos(a), o[1] + r * sin(a)].map(t => twoDecimal(t))
+    return [o[0] + r * cos(a), o[1] + r * sin(a)] //.map(t => twoDecimal(t))
 }
 // 中点
 const mid = (p1 = [0, 0], p2 = [0, 0]) => {
@@ -74,6 +74,26 @@ const mirror = (p, o, radio = 1, refraction) => {
     return [(radio + 1) * o[0] - radio * p[0], (radio + 1) * o[1] - radio * p[1]]
 }
 
+// 中心点
+const center = points => {
+    let n = points.length
+    let sum = points.reduce((sum, t) => {
+        sum[0] += t[0]
+        sum[1] += t[1]
+        return sum
+    }, [0, 0])
+    return sum.map(t => t / n)
+}
+
+// 放大缩小
+const scale = (points, radio) => {
+    let o = center(points)
+    return points.map(t => {
+        let deta = [t[0] - o[0], t[1] - o[1]]
+        return [o[0] + deta[0] * radio, o[1] + deta[1] * radio]
+    })
+}
+
 // 线段分割： 分割数量
 const split = (p1, p2, splitNum) => {
     let r = dis(p1, p2)
@@ -86,9 +106,13 @@ const split = (p1, p2, splitNum) => {
 }
 
 // 移动
-const move = (p, from, to) => {
+const move = (p, from, to, radio) => {
     let deta = [to[0] - from[0], to[1] - from[1]]
     if (isMatrix(p)) {
+        if (radio) {
+            let points = p.map(t => [t[0] + deta[0], t[1] + deta[1]])
+            return scale(points, radio)
+        }
         return p.map(t => [t[0] + deta[0], t[1] + deta[1]])
     } else {
         return [p[0] + deta[0], p[1] + deta[1]]
