@@ -38,22 +38,19 @@
         .tools {
             display: flex;
             justify-content: flex-start;
+            font-size: 12px;
         }
 
-        .zoom-out,
-        .zoom-in {
-            font-size: 12px;
-            margin-right: 12px;
-            cursor: pointer;
-        }
+ 
     </style>
 </head>
 
 <body>
     <div id="tools-container">
         <div class="tools">
-            <div class="zoom-in">zoomin</div>
-            <div class="zoom-out">zoomout</div>
+            zoom
+            <input type="range" class="zoom" max="2.5" min="0.1" step="0.1" value="1">
+            <div class="zoom-value">1</div>
         </div>
 
     </div>
@@ -66,34 +63,17 @@
         // stroke-width="${2/s}"
         // stroke="hsl(${i*30},55%,55%)"
         // width="10" height="10" x="-5" y="-5"></rect>`).join(',');
-        let zoomout = document.querySelector(".zoom-out")
-        zoomout.onclick = (e) => {
-            let svg = document.querySelector("svg")
-            console.log(svg)
-            let viewBox = svg.viewBox.baseVal
-            let {
-                x,
-                y,
-                width,
-                height
-            } = viewBox
-            svg.setAttribute("viewBox",[x, y, width*1.1, height*1.1])
-        }
 
-        let zoomin = document.querySelector(".zoom-in")
-        zoomin.onclick = (e) => {
+        let zoom = document.querySelector(".zoom")
+        zoom.oninput = (e) => {
+            let val = e.target.value
             let svg = document.querySelector("svg")
-            console.log(svg)
-            let viewBox = svg.viewBox.baseVal
-            let {
-                x,
-                y,
-                width,
-                height
-            } = viewBox
-            svg.setAttribute("viewBox",[x, y, width*0.9, height*0.9])
+            let container = document.querySelector("#svg-container")
+            let height = container.offsetHeight
+            let width = container.offsetWidth
+            svg.setAttribute("viewBox", [0, 0, width / val, height / val])
+            document.querySelector(".zoom-value").innerText = val
         }
-
     </script>
 </body>
 
