@@ -53,12 +53,13 @@ export default class Form extends Panel {
         let form = this._panel({
             title,
             class: 'ui',
-            body: this.group ? this._group() : this._form(),
+            // body: this.group ? this._group() : this._form(),
+            body: this._tabs(),
             tools
         })
+        // this._appendTo(el, this._tab())
         this._appendTo(el, form)
         return form
-
     }
     // 表单
     _form(options) {
@@ -101,19 +102,22 @@ export default class Form extends Panel {
             ) : ""
         }
         return tools
-
     }
+
     // 表单分组
-    _group() {
-        let {
-            group,
-            input = (e) => {
-                console.log(e)
-            }
-        } = this
+    _group(group) {
+        // let {
+        //     group,
+        //     input = (e) => {
+        //         console.log(e)
+        //     }
+        // } = this
+        group = group || this.group
+        let input = this.input
         let formGroupWrap = this._div({
             class: "form-group-wrap"
         })
+        // if (tab) group = group.filter(t => t.tab === tab)
         group.forEach(t => {
             let formGroup = this._div({
                 class: "form-group-item close",
@@ -161,6 +165,62 @@ export default class Form extends Panel {
             // formGroupItemBody.setAttribute("height", height)
         })
         return formGroupWrap
+    }
+    // tabs
+    _tabs() {
+
+        let tabs = this._div({
+            class: 'tabs'
+        })
+        let tabHeader = this._div({
+            class: 'tab-header'
+        }, tabs)
+
+        let tabBody = this._div({
+            class: 'tab-body'
+        }, tabs)
+
+        this.tabs.forEach((t, index) => {
+            console.log(t)
+            let tabName = t.name
+            let actived = index === 0 ? ' actived' : ''
+            let tabHeaderItem = this._div({
+                class: 'tab-header-item' + actived,
+                name: tabName,
+                text: tabName,
+                click: (e) => {
+                    console.log(e.target)
+                    let el = e.target
+                    let sis = this._siblings(el)
+                    sis.forEach(t => this._removeClass(t, "actived"))
+                    this._addClass(el, "actived")
+
+                    // let tabs=this._closest(el,"tabs")
+                    let contents = this._queryAll(".tab-body-content", tabBody)
+                    contents.forEach(t => this._removeClass(t, "actived"))
+                    let content = this._query(".tab-body-content[name='" + tabName + "']", tabBody)
+                    this._addClass(content, "actived")
+
+                }
+            }, tabHeader)
+
+            let items = t.items.map(t => {
+                return this.group.filter(g => g.label === t)[0]
+            })
+            console.log(items)
+            // debugger
+
+            let tabBodyContent = this._div({
+                class: "tab-body-content" + actived,
+                name: tabName,
+                slot: this.group ? this._group(items) : this._form()
+            }, tabBody)
+        })
+
+        if (this.tabs) return tabs
+
+        return this.group ? this._group() : this._form()
+
     }
 
     // 表单单元

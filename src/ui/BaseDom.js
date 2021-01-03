@@ -46,7 +46,7 @@ export default class BaseDom {
         // let fields = []
         for (let key in data) {
             let child = data[key]
-            if (_.type(child) === "object") {
+            if (_.type(child) === "object") { // 子对象分成一组
                 this.parseFields(child, options, labels, key)
             } else {
                 let label = labels[key] ? labels[key] : key;
@@ -202,22 +202,26 @@ export default class BaseDom {
     }
 
     _queryAll(el, parent) {
+        let id = el
         if (parent) {
             if (typeof parent === "string") {
                 if (parent.charAt(0).match(/[\#\.]/)) {
-                    return document.querySelectorAll(parent + " " + el)
+                    id = parent + " " + el
+                } else {
+                    id = "#" + parent + " " + el
                 }
-                return document.querySelectorAll("#" + parent + " " + el)
-            }
-            // return document.querySelectorAll("#" + parent.id + " " + el)
-            if (parent.id) {
-                return document.querySelectorAll("#" + parent.id + " " + el)
             } else {
-                parent.id = this._random()
-                return document.querySelectorAll("#" + parent.id + " " + el)
+                // id=("#" + parent.id + " " + el)
+                if (parent.id) {
+                    id = "#" + parent.id + " " + el
+                } else {
+                    parent.id = this._random()
+                    id = "#" + parent.id + " " + el
+                }
             }
         }
-        return document.querySelectorAll(el)
+        // return document.querySelectorAll(el)
+        return Array.from(document.querySelectorAll(id))
     }
 
     //上溯
@@ -249,7 +253,7 @@ export default class BaseDom {
                     case "class":
                         ele.className = options[key]
                         break;
-                    case "name":
+                        // case "name":
                     case "innertext":
                     case "id":
                     case "innerhtml":
@@ -270,6 +274,10 @@ export default class BaseDom {
                             }
                             ele[key].add(opt);
                         })
+                        break
+                    case "children":
+                    case "slot":
+                        ele.appendChild(options[key])
                         break
                     default:
                         ele.setAttribute(key, options[key])
@@ -406,4 +414,17 @@ export default class BaseDom {
             }
         }
     }
+    // 兄弟节点
+    _siblings(el) {
+        return Array.from(el.parentNode.children)
+        // let els = []
+        // while (el = el.nextSibling) {
+        //     if (el.nodeType === 1) {
+        //         els.push(el)
+        //     }
+        // }
+        // return els
+    }
+
+
 }

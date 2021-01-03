@@ -405,6 +405,7 @@ let dataModel = {
 
 let polygon = new Polygon(dataModel, "svg")
 let options = Group._options(polygon)
+let tabs=Group._tabs()
 // debugger
 polygon.draw()
 let ui = new UI.Form({
@@ -412,6 +413,7 @@ let ui = new UI.Form({
     data: polygon,
     options,
     group: true,
+    tabs,
     btns: [{
             text: "apply",
             name: 'submit',
