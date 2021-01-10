@@ -34,9 +34,8 @@ const config = {
       //   //     presets:['latest']
       //   // }
       // },
-
       {
-        test: /\.css$/,
+        test: /\.css|less$/,
         // use: [
         //   // process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
         //   // MiniCssExtractPlugin.loader,
@@ -83,6 +82,9 @@ const config = {
               ]
             }
           },
+          {
+            loader:'less-loader'
+          }
         ]
       }
       // { test: /\.css$/, use: 'css-loader' }
