@@ -47,6 +47,7 @@ const getParamsUrl = (str = location.href, separator = '&') => {
     }, {});
 }
 
+
 export default {
     firstCapital,
     camelCase,

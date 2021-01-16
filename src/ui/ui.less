@@ -204,11 +204,15 @@ body {
             line-height: 28px;
             width: 80px;
 
+            &:focus {
+                border: 1px solid red;
+            }
+
             &.required {
                 border: 1px solid red;
 
                 &:hover,
-                &.focuse {
+                &:focus {
                     border: 1px solid red;
                 }
             }
@@ -267,11 +271,44 @@ body {
         padding-left: 25px;
         cursor: pointer;
 
+        // .icon {
+        //     position: absolute;
+        //     left: 5px;
+        //     top: 8px
+        // }
+
+
         .icon {
             position: absolute;
             left: 5px;
-            top: 8px
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            border-bottom: 1px solid #333333;
+            border-right: 1px solid #333333;
+            transform: rotate(45deg);
+            transition: 0.5s;
+            display: inline-block;
+            cursor: pointer;
+
+            &.up {
+                transform: rotate(225deg);
+            }
+
+            &.down {
+                transform: rotate(45deg);
+            }
+
+            &.right {
+                transform: rotate(-45deg);
+            }
+
+            &.left {
+                transform: rotate(135deg);
+            }
         }
+
+
 
         .status {
             display: none;
@@ -283,12 +320,17 @@ body {
             line-height: 14px;
             padding: 0 4px;
             background-color: #ccc;
+
         }
 
         &.show {
             .status {
                 display: block;
+                &:hover{
+                    background-color: #000;
+                }
             }
+
         }
     }
 
@@ -298,6 +340,7 @@ body {
         transition-timing-function: ease;
         overflow: hidden;
         overflow-y: auto;
+        height: 0px;
 
         &.hide {
             /* display: none; */
@@ -306,52 +349,24 @@ body {
         }
     }
 
-    &.close {
+    &.open {
         .form-group-item-body {
-            height: 0px;
+            height: auto;
         }
-    }
-}
 
-
-
-
-.icon {
-    width: 8px;
-    height: 8px;
-    border-bottom: 1px solid #333333;
-    border-right: 1px solid #333333;
-    transform: rotate(45deg);
-    transition: 0.5s;
-    display: inline-block;
-    cursor: pointer;
-
-    &.up {
-        transform: rotate(225deg);
-    }
-
-    &.down {
-        transform: rotate(45deg);
-    }
-
-    &.right {
-        transform: rotate(-45deg);
-    }
-
-    &.left {
-        transform: rotate(135deg);
-    }
-
-    &.close {
-        .icon {
-            &.right {
-                transform: rotate(45deg);
+        .form-group-item-header {
+            .icon {
+                &.right {
+                    transform: rotate(45deg);
+                }
             }
+
         }
 
     }
-
 }
+
+
 
 
 

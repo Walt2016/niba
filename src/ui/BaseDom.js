@@ -13,12 +13,12 @@ export default class BaseDom {
         console.log(this)
     }
     initEl() {
-        // this.el = this._query(options.el)
-        let root = this._div({
+        let container = this._query(this.el) || document.body
+        let el = this._div({
             id: "wrapper"
         })
-        this._appendTo(this.el, root)
-        this.el = root
+        this._appendTo(container, el)
+        this.el = el
     }
     // 渲染接口
     render() {}
@@ -52,6 +52,7 @@ export default class BaseDom {
             } else {
                 let label = labels[key] ? labels[key] : key;
                 let field = {
+                    name: key,
                     key: group ? [group, "$", key].join("") : key,
                     label,
                     value: data[key],
@@ -203,10 +204,11 @@ export default class BaseDom {
                 return document.querySelector("#" + parent.id + " " + el)
             }
         }
-        if ("htmldivelement" === _.type(el)) {
-            return el
-        }
-        return document.querySelector(el)
+        return this.isDom(el) ? el : document.querySelector(el)
+        // if ("htmldivelement" === _.type(el)) {
+        //     return el
+        // }
+        // return document.querySelector(el)
     }
 
     _queryAll(el, parent) {
@@ -218,8 +220,7 @@ export default class BaseDom {
                 } else {
                     id = "#" + parent + " " + el
                 }
-            } else {
-                // id=("#" + parent.id + " " + el)
+            } else if (this.isDom(parent)) {
                 if (parent.id) {
                     id = "#" + parent.id + " " + el
                 } else {
@@ -228,7 +229,6 @@ export default class BaseDom {
                 }
             }
         }
-        // return document.querySelectorAll(el)
         return Array.from(document.querySelectorAll(id))
     }
 
@@ -247,9 +247,14 @@ export default class BaseDom {
         }
     }
 
-    _appendTo(el, form) {
-        el = el ? this._query(el) : document.body
-        el.appendChild(form)
+    _appendTo(el, child, props) {
+        // el = el ? this._query(el) : document.body
+        if (Array.isArray(child)) {
+            child.forEach(t => this._appendTo(el, t, props))
+        } else if (child) {
+            props && this._attr(child, props)
+            el.appendChild(child)
+        }
         return el
     }
     // 创建Dom
@@ -351,23 +356,23 @@ export default class BaseDom {
         var arr = el.className.split(" ")
         return arr.indexOf(cls) >= 0
     }
-    _toggle(el, cls) {
-        if (el.length) {
+    _toggle(el, cls, codition) {
+        if (Array.isArray(el)) {
             el.forEach(t => {
-                this._toggle(t, cls)
+                this._toggle(t, cls, codition)
             })
         } else {
-            if (this._hasClass(el, cls)) {
-                this._removeClass(el, cls)
+            if (codition !== undefined) {
+                this[codition ? '_addClass' : '_removeClass'](el, cls)
             } else {
-                this._addClass(el, cls)
+                this[!this._hasClass(el, cls) ? '_addClass' : '_removeClass'](el, cls)
             }
         }
     }
     // get value
     _get(field, form) {
         let key = field.key
-        let formitem = this._query("[name='" + key + "']", form)
+        let formitem = this._query("[key='" + key + "']", form)
         if (formitem) {
             let value = formitem.value
             switch (field.type) {
@@ -395,10 +400,11 @@ export default class BaseDom {
         }
 
     }
+    // set value
     _set(key, value) {
         let field = this.fields.filter(t => t.key === key)[0]
         if (field) {
-            let formitem = this._query("[name='" + field.key + "']")
+            let formitem = this._query("[key='" + field.key + "']")
             switch (field.type) {
                 case "number":
                     formitem.value = Number(value)
@@ -424,13 +430,55 @@ export default class BaseDom {
             }
         }
     }
+    // get or set attribute
+    _attr(el, pops, val) {
+        if (_.type(pops) === "opbject") {
+            Object.keys(pops).forEach(t => el.setAttribute(t, pops[t]))
+        } else if (_.type(pops) === "string") {
+            if (val) {
+                el.setAttribute(pops, val)
+            }
+            return el.getAttribute(pops)
+        }
+
+    }
     // 兄弟节点
     _siblings(el) {
         return Array.from(el.parentNode.children)
     }
     // 判断是dom节点
+    // "htmldivelement" === _.type(el)
     isDom(el) {
         return (typeof HTMLElement === 'function') ? (el instanceof HTMLElement) : (el && (typeof el === 'object') && (el.nodeType === 1) && (typeof el.nodeName === 'string'));
+    }
+
+    // 判断是否为空
+    checkRequired(el) {
+        let key = el.getAttribute('key');
+        let field = this.fields.find(t => t.key === key)
+        // 判断空 校验
+        field.required && this._toggle(el, 'required', el.value === "")
+        // if (field.required) {
+        //     if (el.value === "") {
+        //         this._addClass(el, 'required')
+        //         alert(el.name + "值不能为空")
+        //     } else {
+        //         this._removeClass(el, 'required')
+        //     }
+        // }
+
+
+    }
+
+    stopProp(e){
+            // var e = (evt) ? evt : window.event;
+            if (window.event) {
+                e.cancelBubble = true; // ie下阻止冒泡
+            } else {
+                //e.preventDefault();
+                e.stopPropagation(); // 其它浏览器下阻止冒泡
+            }
+
     }
 
 

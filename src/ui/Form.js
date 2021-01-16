@@ -36,22 +36,10 @@ export default class Form extends Panel {
             title
         } = options || this
         let tools = this._tools(btns.length > 0 ? btns : btn, fields)
-        // 输入事件
-        this['input'] = (e) => {
-            let el = e.target
+        this.dataModelChanged=(el)=>{
+            // let el = e.target
             // el.value
-            // debugger
-            let key = el.getAttribute('key');
-            let field = fields.find(t => t.key === key)
-            // 判断空 校验
-            if (field.required) {
-                if (el.value === "") {
-                    this._addClass(el, 'required')
-                    alert(el.name + "值不能为空")
-                } else {
-                    this._removeClass(el, 'required')
-                }
-            }
+            this.checkRequired(el)
             // console.log(e)
             let btn = btns.filter(t => t.name === "submit")[0]
             // debugger
@@ -60,6 +48,10 @@ export default class Form extends Panel {
             // 保存local
             localStorage.setItem("dataModel", JSON.stringify(dataModel))
             // this.data.draw(dataModel)
+        }
+        // 输入事件
+        this['input'] = (e) => {
+            this.dataModelChanged(e.target)
         }
 
 
@@ -70,7 +62,6 @@ export default class Form extends Panel {
             body: this._tabs(),
             tools
         })
-        // this._appendTo(el, this._tab())
         this._appendTo(el, form)
         return form
     }
@@ -118,22 +109,15 @@ export default class Form extends Panel {
     }
 
     // 表单分组
-    _group(group) {
-        // let {
-        //     group,
-        //     input = (e) => {
-        //         console.log(e)
-        //     }
-        // } = this
-        group = group || this.group
+    _group(group = this.group) {
         let input = this.input
         let formGroupWrap = this._div({
             class: "form-group-wrap"
         })
-        // if (tab) group = group.filter(t => t.tab === tab)
+
         group.forEach(t => {
             let formGroup = this._div({
-                class: "form-group-item close",
+                class: "form-group-item",
             }, formGroupWrap)
             let formGroupItemHeader = this._div({
                 class: "form-group-item-header" + (t.status ? " show" : ""),
@@ -141,10 +125,7 @@ export default class Form extends Panel {
                 click: (e) => {
                     let el = e.target
                     let item = this._closest(el, ".form-group-item")
-                    this._toggle(item, "close")
-                    // let iteml_body = this._query(".form-group-item-body", item)
-                    // iteml_body.style.height = iteml_body.style.height === '0px' ? iteml_body.getAttribute("height") : "0px"
-
+                    this._toggle(item, "open")
                 }
             }, formGroup)
 
@@ -157,13 +138,29 @@ export default class Form extends Panel {
 
             this._div({
                 text: "show",
-                class: "status"
+                class: "status",
+                click: (e) => {
+                    // console.log(e)
+                    // e.preventDefault();
+                    // e.stop
+                    let el = e.target;
+                    let groupItem = this._closest(el, ".form-group-item");
+                    let checkbox = this._query("input[name='show']", groupItem)
+                    console.log(checkbox, checkbox.checked)
+                    checkbox.checked = false
+                    this.dataModelChanged(checkbox)
+
+                    let groupItemHeader = this._closest(el, ".form-group-item-header")
+                    // debugger
+                    this._toggle(groupItemHeader, "show")
+
+                    this.stopProp(e)
+                }
             }, formGroupItemHeader)
 
             let formGroupItemBody = this._div({
                 class: "form-group-item-body"
             }, formGroup)
-            // debugger
 
             t.fields.forEach(t => {
                 this._formItem({
@@ -213,7 +210,6 @@ export default class Form extends Panel {
                     contents.forEach(t => this._removeClass(t, "actived"))
                     let content = this._query(".tab-body-content[name='" + tabName + "']", tabBody)
                     this._addClass(content, "actived")
-
                 }
             }, tabHeader)
 
@@ -466,14 +462,11 @@ export default class Form extends Panel {
             click: (e) => {
                 console.log(e)
                 let el = e.target
-                if (el.name.indexOf("$show") > 0 || el.name.indexOf("$use") > 0) {
-                    let gItem = this._closest(el, ".form-group-item")
-                    let header = this._query(".form-group-item-header", gItem)
-                    if (el.checked) {
-                        this._addClass(header, "show")
-                    } else {
-                        this._removeClass(header, "show")
-                    }
+                let key = this._attr(el, "key")
+                if (key.indexOf("$show") > 0 || key.indexOf("$use") > 0) {
+                    let groupItem = this._closest(el, ".form-group-item")
+                    let header = this._query(".form-group-item-header", groupItem)
+                    this._toggle(header, "show", el.checked)
                 }
             }
         }, parent);
