@@ -38,7 +38,20 @@ export default class Form extends Panel {
         let tools = this._tools(btns.length > 0 ? btns : btn, fields)
         // 输入事件
         this['input'] = (e) => {
+            let el = e.target
+            // el.value
             // debugger
+            let key = el.getAttribute('key');
+            let field = fields.find(t => t.key === key)
+            // 判断空 校验
+            if (field.required) {
+                if (el.value === "") {
+                    this._addClass(el, 'required')
+                    alert(el.name + "值不能为空")
+                } else {
+                    this._removeClass(el, 'required')
+                }
+            }
             // console.log(e)
             let btn = btns.filter(t => t.name === "submit")[0]
             // debugger

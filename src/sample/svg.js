@@ -14,7 +14,7 @@ import Group from '../svg/group'
 let dataModel = {
     // 图形  全局
     // global: {
-    o: [width / 2, height / 2],
+    o: [width / 2, height / 2].map(t => +t.toFixed(2)),
     r: 100,
     n: 6,
     angle: 0,
@@ -405,7 +405,9 @@ let dataModel = {
 
 let polygon = new Polygon(dataModel, "svg")
 let options = Group._options(polygon)
-let tabs=Group._tabs()
+let tabs = Group._tabs()
+let validated = Group.validated
+let required = Group.required
 // debugger
 polygon.draw()
 let ui = new UI.Form({
@@ -414,6 +416,8 @@ let ui = new UI.Form({
     options,
     group: true,
     tabs,
+    validated,
+    required,
     btns: [{
             text: "apply",
             name: 'submit',

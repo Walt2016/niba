@@ -44,6 +44,7 @@ export default class BaseDom {
     // 入参转换 dataModel 数据 options 参数  labels参数字典
     parseFields(data = {}, options = {}, labels = {}, group) {
         // let fields = []
+        // debugger
         for (let key in data) {
             let child = data[key]
             if (_.type(child) === "object") { // 子对象分成一组
@@ -54,8 +55,15 @@ export default class BaseDom {
                     key: group ? [group, "$", key].join("") : key,
                     label,
                     value: data[key],
-                    type: _.type(data[key])
+                    type: _.type(data[key]),
                 }
+                let required = this.required.includes(field.key)
+                if (required) {
+                    Object.assign(field, {
+                        required
+                    })
+                }
+
                 // if (options[key]) {
                 //     field = {
                 //         key: group ? _.camelCase(group, key) : key,
@@ -356,8 +364,10 @@ export default class BaseDom {
             }
         }
     }
+    // get value
     _get(field, form) {
-        let formitem = this._query("[name='" + field.key + "']", form)
+        let key = field.key
+        let formitem = this._query("[name='" + key + "']", form)
         if (formitem) {
             let value = formitem.value
             switch (field.type) {
@@ -417,13 +427,10 @@ export default class BaseDom {
     // 兄弟节点
     _siblings(el) {
         return Array.from(el.parentNode.children)
-        // let els = []
-        // while (el = el.nextSibling) {
-        //     if (el.nodeType === 1) {
-        //         els.push(el)
-        //     }
-        // }
-        // return els
+    }
+    // 判断是dom节点
+    isDom(el) {
+        return (typeof HTMLElement === 'function') ? (el instanceof HTMLElement) : (el && (typeof el === 'object') && (el.nodeType === 1) && (typeof el.nodeName === 'string'));
     }
 
 

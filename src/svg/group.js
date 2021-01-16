@@ -69,29 +69,36 @@ const _options = (options) => {
     // return opt
 }
 const _tabs = () => {
-        return [{
-                name: 'basic',
-                items: ['global', 'vertex', 'radius', 'edge', 'sawtooth', 'wave', 'curve', 'semicircle', 'elliptical', 'link', 'center', 'excircle', 'incircle']
-            }, {
-                name: 'compose',
-                items: ['fractal', 'mirror']
-            }, {
-                name: 'axis',
-                items: ['axisX', 'axisY', 'grid', 'polar']
-            }, {
-                name: 'animation',
-                items: ['animation', 'transform']
-            }, {
-                name: 'pattern',
-                items: ['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient']
-            }, {
-                name: 'path',
-                items: ['path', 'sin', 'cos', 'tan']
-            }]
-        }
+    return [{
+        name: 'basic',
+        items: ['global', 'vertex', 'radius', 'edge', 'sawtooth', 'wave', 'curve', 'semicircle', 'elliptical', 'link', 'center', 'excircle', 'incircle']
+    }, {
+        name: 'compose',
+        items: ['fractal', 'mirror']
+    }, {
+        name: 'axis',
+        items: ['axisX', 'axisY', 'grid', 'polar']
+    }, {
+        name: 'animation',
+        items: ['animation', 'transform']
+    }, {
+        name: 'pattern',
+        items: ['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient']
+    }, {
+        name: 'path',
+        items: ['path', 'sin', 'cos', 'tan']
+    }]
+}
+// 校验
+const required = ['o', 'r', 'n']
 
-        export default {
-            _group,
-            _options,
-            _tabs
-        }
+const validated = {
+}
+
+export default {
+    _group,
+    _options,
+    _tabs,
+    validated,
+    required
+}

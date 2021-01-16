@@ -44,7 +44,7 @@ let env = (function () {
         ...xy
     }
 }())
-let center = [env.cx, env.cy];
+let center = [env.cx, env.cy].map(t => +t.toFixed(2));
 let words = ['stroke', 'fill', 'width'];
 
 export default {

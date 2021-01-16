@@ -203,6 +203,15 @@ body {
             height: 28px;
             line-height: 28px;
             width: 80px;
+
+            &.required {
+                border: 1px solid red;
+
+                &:hover,
+                &.focuse {
+                    border: 1px solid red;
+                }
+            }
         }
 
         .form-item-checkbox {
@@ -328,6 +337,7 @@ body {
     &.right {
         transform: rotate(-45deg);
     }
+
     &.left {
         transform: rotate(135deg);
     }
