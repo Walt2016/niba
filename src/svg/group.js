@@ -93,6 +93,19 @@ const _tabs = () => {
 const required = ['o', 'r', 'n']
 
 const validated = {
+    required: {
+        key: ['o', 'r', 'n'],
+        message: '{0}值不能为空'
+    },
+    opacity: {
+        max: 1,
+        min: 0,
+        message: '{0}值范围[0,1]'
+    },
+    o: {
+        format: /\d+,\d+/,
+        message: '{0}格式[num,num]'
+    }
 }
 
 export default {

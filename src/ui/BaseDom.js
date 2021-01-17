@@ -59,10 +59,18 @@ export default class BaseDom {
                     value: data[key],
                     type: _.type(data[key]),
                 }
+                // 必填项
                 let required = this.required.includes(field.key)
                 if (required) {
                     Object.assign(field, {
                         required
+                    })
+                }
+                // 格式校验
+                let validated = this.validated[field.key]
+                if (validated) {
+                    Object.assign(field, {
+                        validated
                     })
                 }
 
@@ -475,44 +483,107 @@ export default class BaseDom {
     isDom(el) {
         return (typeof HTMLElement === 'function') ? (el instanceof HTMLElement) : (el && (typeof el === 'object') && (el.nodeType === 1) && (typeof el.nodeName === 'string'));
     }
+    // 校验
+    _validate(el) {
+        let callback = (el) => {
+            let field = this._getField(el)
+            this._checkRequired(el, field)
+            let validated = field.validated
 
-    // 判断是否为空
-    _checkRequired(el) {
-        let callback = (el, condition) => {
-            let tips = this._query(".tips")
-            if (condition) {
-                this._addClass(el, 'required')
-                let style = window.getComputedStyle(el)
-                // console.log(style)
-
-                let {
-                    width,
-                    height
-                } = style
-                // let offset = 2 + parseInt(height) //height.replace('px', '')
-                let offset =parseInt(width)
-                let {
-                    offsetLeft,
-                    offsetTop
-                } = el
-                this._addClass(tips, 'show')
-                this._css(tips, {
-                    left: (offsetLeft -offset) + 'px',
-                    top: (offsetTop ) + 'px',
-                    width,
-                    height
-                })
-                tips.innerText = `${el.name}值不能为空`
-
-            } else {
-                this._removeClass(el, 'required')
-                this._removeClass(tips, 'show')
+            if (validated) {
+                let value = el.value
+                validated.max && this._tips(el, field, +value > validated.max, validated.message)
+                validated.min && this._tips(el, field, +value < validated.min, validated.message)
+                validated.format && this._tips(el, field, !validated.format.test(value), validated.message)
             }
         }
         if (el) {
-            let field = this._getField(el)
+            callback(el)
+        } else {
+            // 全量检查
+            this.fields.forEach(t => {
+                let el = this._getFormItem(t)
+                callback(el)
+                // t.validated && this._toggle(el, callback, el.value === "")
+            })
+        }
+    }
+
+    // 提示
+    _tips(el, field, condition, message) {
+        let formItem = this._closest(el, ".form-item")
+        let tips = this._query(".tips", formItem) || this._div({
+            class: 'tips'
+        }, formItem)
+        if (condition) {
+            this._addClass(el, 'required')
+            let style = window.getComputedStyle(el)
+            let {
+                width,
+                height
+            } = style
+            let offset = parseInt(width) + 40
+            let {
+                offsetLeft,
+                offsetTop
+            } = el
+            this._addClass(tips, 'show')
+            this._css(tips, {
+                left: (offsetLeft - offset) + 'px',
+                top: (offsetTop) + 'px',
+                width: offset + 'px',
+                height
+            })
+            // let field = this._getField(el)
+            tips.innerText = message && message.replace(/({\d})/, (_, m) => {
+                return field.label
+            }) || `${field.label}值不能为空`
+            // tips.innerText = `${field.label}值不能为空`
+
+        } else {
+            this._removeClass(el, 'required')
+            this._removeClass(tips, 'show')
+        }
+    }
+
+    // 判断是否为空
+    _checkRequired(el, field) {
+        let callback = (el, condition) => {
+            this._tips(el, field, condition)
+            // let formItem = this._closest(el, ".form-item")
+            // let tips = this._query(".tips", formItem) || this._div({
+            //     class: 'tips'
+            // }, formItem)
+            // if (condition) {
+            //     this._addClass(el, 'required')
+            //     let style = window.getComputedStyle(el)
+            //     let {
+            //         width,
+            //         height
+            //     } = style
+            //     let offset = parseInt(width) + 40
+            //     let {
+            //         offsetLeft,
+            //         offsetTop
+            //     } = el
+            //     this._addClass(tips, 'show')
+            //     this._css(tips, {
+            //         left: (offsetLeft - offset) + 'px',
+            //         top: (offsetTop) + 'px',
+            //         width: offset + 'px',
+            //         height
+            //     })
+            //     // let field = this._getField(el)
+            //     tips.innerText = `${field.label}值不能为空`
+
+            // } else {
+            //     this._removeClass(el, 'required')
+            //     this._removeClass(tips, 'show')
+            // }
+        }
+        if (el) {
+            // let field = this._getField(el)
             // 判断空 校验
-            // field.required && this._toggle(el, 'required', el.value === "")
             field.required && this._toggle(el, callback, el.value === "")
         } else {
             // 全量检查

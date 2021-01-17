@@ -37,7 +37,8 @@ export default class Form extends Panel {
         } = options || this
         let tools = this._tools(btns.length > 0 ? btns : btn, fields)
         this.dataModelChanged = (el) => {
-            this._checkRequired(el)
+            this._validate(el)
+            // this._checkRequired(el)
             let dataModel = this._dataModel(fields, form)
             this.data.redraw(dataModel)
             // let btn = btns.find(t => t.name === "submit")
@@ -61,10 +62,10 @@ export default class Form extends Panel {
         })
         this._appendTo(el, form)
 
-        let tips=this._div({
-            class:'tips'
-        })
-        this._appendTo(el, tips)
+        // let tips=this._div({
+        //     class:'tips'
+        // })
+        // this._appendTo(el, tips)
         return form
     }
     // 表单

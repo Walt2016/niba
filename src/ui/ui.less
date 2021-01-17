@@ -485,8 +485,8 @@ body {
     top: 0;
     width: 100px;
     height: 20px;
-    background-color: rgba(0, 0, 0, 0.1);
-    
+    background-color: rgba(255, 255, 255, 1);
+
     z-index: 999;
     font-size: 10px;
     // line-height: 20px;
@@ -496,6 +496,11 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
+    border: 1px solid red;
+
+    box-shadow: -1px 0px 2px 0px #888888;
+    transition: ease-out 0.3s;
+
     &.show {
         // display: block;
         display: flex;
