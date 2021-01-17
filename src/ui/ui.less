@@ -271,13 +271,6 @@ body {
         padding-left: 25px;
         cursor: pointer;
 
-        // .icon {
-        //     position: absolute;
-        //     left: 5px;
-        //     top: 8px
-        // }
-
-
         .icon {
             position: absolute;
             left: 5px;
@@ -326,7 +319,8 @@ body {
         &.show {
             .status {
                 display: block;
-                &:hover{
+
+                &:hover {
                     background-color: #000;
                 }
             }
@@ -368,11 +362,6 @@ body {
 
 
 
-
-
-// .form-group-item .icon.left {
-//     transform: rotate(135deg);
-// }
 
 .tools {
     display: flex;
@@ -487,5 +476,23 @@ body {
             background-color: #999999;
             border-radius: 10px;
         }
+    }
+}
+
+.tips {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 999;
+    font-size: 10px;
+    line-height: 20px;
+    color: red;
+
+    &.show {
+        display: block;
     }
 }

@@ -36,15 +36,12 @@ export default class Form extends Panel {
             title
         } = options || this
         let tools = this._tools(btns.length > 0 ? btns : btn, fields)
-        this.dataModelChanged=(el)=>{
-            // let el = e.target
-            // el.value
-            this.checkRequired(el)
-            // console.log(e)
-            let btn = btns.filter(t => t.name === "submit")[0]
-            // debugger
+        this.dataModelChanged = (el) => {
+            this._checkRequired(el)
             let dataModel = this._dataModel(fields, form)
-            btn && btn.click(dataModel)
+            this.data.redraw(dataModel)
+            // let btn = btns.find(t => t.name === "submit")
+            // btn && btn.click(dataModel)
             // 保存local
             localStorage.setItem("dataModel", JSON.stringify(dataModel))
             // this.data.draw(dataModel)
@@ -63,6 +60,11 @@ export default class Form extends Panel {
             tools
         })
         this._appendTo(el, form)
+
+        let tips=this._div({
+            class:'tips'
+        })
+        this._appendTo(el, tips)
         return form
     }
     // 表单
@@ -140,11 +142,8 @@ export default class Form extends Panel {
                 text: "show",
                 class: "status",
                 click: (e) => {
-                    // console.log(e)
-                    // e.preventDefault();
-                    // e.stop
-                    let el = e.target;
-                    let groupItem = this._closest(el, ".form-group-item");
+                    let el = e.target
+                    let groupItem = this._closest(el, ".form-group-item")
                     let checkbox = this._query("input[name='show']", groupItem)
                     console.log(checkbox, checkbox.checked)
                     checkbox.checked = false
@@ -154,7 +153,7 @@ export default class Form extends Panel {
                     // debugger
                     this._toggle(groupItemHeader, "show")
 
-                    this.stopProp(e)
+                    this._stopProp(e)
                 }
             }, formGroupItemHeader)
 
@@ -333,7 +332,8 @@ export default class Form extends Panel {
         }, parent)
 
         btn.onclick = (e) => {
-            let form = this._closest(e.target, ".panel").id
+            let el = e.target
+            let form = this._closest(el, ".panel").id
             console.log(fields)
             let dataModel = this._dataModel(fields, form)
 
@@ -348,10 +348,15 @@ export default class Form extends Panel {
             let result = ""
             switch (name) {
                 case "submit":
+                    this.dataModelChanged()
+                    break;
                 case "animate":
                 case "move":
                 case "rotate":
-                    click(dataModel)
+                    console.log(this)
+                    // debugger
+                    // this.data
+                    click.call(this.data, dataModel)
                     // 保存local
                     localStorage.setItem("dataModel", JSON.stringify(dataModel))
                     break;

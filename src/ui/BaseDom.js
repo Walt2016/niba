@@ -12,6 +12,7 @@ export default class BaseDom {
         this.setData(options.data)
         console.log(this)
     }
+    // 初始化el
     initEl() {
         let container = this._query(this.el) || document.body
         let el = this._div({
@@ -362,17 +363,35 @@ export default class BaseDom {
                 this._toggle(t, cls, codition)
             })
         } else {
-            if (codition !== undefined) {
-                this[codition ? '_addClass' : '_removeClass'](el, cls)
-            } else {
-                this[!this._hasClass(el, cls) ? '_addClass' : '_removeClass'](el, cls)
+            if (_.type(cls) === "string") {
+                if (codition !== undefined) {
+                    this[codition ? '_addClass' : '_removeClass'](el, cls)
+                } else {
+                    this[!this._hasClass(el, cls) ? '_addClass' : '_removeClass'](el, cls)
+                }
+            } else if (_.type(cls) === "function") {
+                cls(el, codition)
             }
+        }
+    }
+    _getFormItem(field, form) {
+        let key = field.key
+        let formitem = this._query("[key='" + key + "']", form)
+        return formitem
+    }
+    _getField(el) {
+        let key;
+        if (this.isDom(el)) {
+            key = el.getAttribute('key');
+            return this.fields.find(t => t.key === key)
+        } else if (_.type(el) === "string") {
+            key = el
+            return this.fields.find(t => t.key === key)
         }
     }
     // get value
     _get(field, form) {
-        let key = field.key
-        let formitem = this._query("[key='" + key + "']", form)
+        let formitem = this._getFormItem(field, form)
         if (formitem) {
             let value = formitem.value
             switch (field.type) {
@@ -402,9 +421,9 @@ export default class BaseDom {
     }
     // set value
     _set(key, value) {
-        let field = this.fields.filter(t => t.key === key)[0]
+        let field = this.fields.find(t => t.key === key)
         if (field) {
-            let formitem = this._query("[key='" + field.key + "']")
+            let formitem = this._getFormItem(field, form)
             switch (field.type) {
                 case "number":
                     formitem.value = Number(value)
@@ -432,7 +451,7 @@ export default class BaseDom {
     }
     // get or set attribute
     _attr(el, pops, val) {
-        if (_.type(pops) === "opbject") {
+        if (_.type(pops) === "object") {
             Object.keys(pops).forEach(t => el.setAttribute(t, pops[t]))
         } else if (_.type(pops) === "string") {
             if (val) {
@@ -440,7 +459,12 @@ export default class BaseDom {
             }
             return el.getAttribute(pops)
         }
-
+    }
+    _css(el, pops) {
+        if (_.type(pops) === "object") {
+            let css = Object.keys(pops).map(t => `${t}:${pops[t]}`).join(";")
+            el.setAttribute("style", css)
+        }
     }
     // 兄弟节点
     _siblings(el) {
@@ -453,31 +477,58 @@ export default class BaseDom {
     }
 
     // 判断是否为空
-    checkRequired(el) {
-        let key = el.getAttribute('key');
-        let field = this.fields.find(t => t.key === key)
-        // 判断空 校验
-        field.required && this._toggle(el, 'required', el.value === "")
-        // if (field.required) {
-        //     if (el.value === "") {
-        //         this._addClass(el, 'required')
-        //         alert(el.name + "值不能为空")
-        //     } else {
-        //         this._removeClass(el, 'required')
-        //     }
-        // }
+    _checkRequired(el) {
+        let callback = (el, condition) => {
+            let tips = this._query(".tips")
+            if (condition) {
+                this._addClass(el, 'required')
+                let style = window.getComputedStyle(el)
+                // console.log(style)
 
+                let {
+                    width,
+                    height
+                } = style
+                let offset = 2 + parseInt(height) //height.replace('px', '')
+                let {
+                    offsetLeft,
+                    offsetTop
+                } = el
+                this._addClass(tips, 'show')
+                this._css(tips, {
+                    left: offsetLeft + 'px',
+                    top: (offsetTop + offset) + 'px',
+                    width
+                })
+                tips.innerText = `${el.name}值不能为空`
 
-    }
-
-    stopProp(e){
-            // var e = (evt) ? evt : window.event;
-            if (window.event) {
-                e.cancelBubble = true; // ie下阻止冒泡
             } else {
-                //e.preventDefault();
-                e.stopPropagation(); // 其它浏览器下阻止冒泡
+                this._removeClass(el, 'required')
+                this._removeClass(tips, 'show')
             }
+        }
+        if (el) {
+            let field = this._getField(el)
+            // 判断空 校验
+            // field.required && this._toggle(el, 'required', el.value === "")
+            field.required && this._toggle(el, callback, el.value === "")
+        } else {
+            // 全量检查
+            this.fields.forEach(t => {
+                let el = this._getFormItem(t)
+                t.required && this._toggle(el, callback, el.value === "")
+            })
+        }
+    }
+    // 阻止冒泡
+    _stopProp(e) {
+        // var e = (evt) ? evt : window.event;
+        if (window.event) {
+            e.cancelBubble = true; // ie下阻止冒泡
+        } else {
+            //e.preventDefault();
+            e.stopPropagation(); // 其它浏览器下阻止冒泡
+        }
 
     }
 

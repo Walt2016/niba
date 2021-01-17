@@ -420,11 +420,12 @@ let ui = new UI.Form({
     required,
     btns: [{
             text: "apply",
-            name: 'submit',
-            click: (e) => {
-                console.log(e)
-                polygon.redraw(e)
-            }
+            name: 'submit'
+            // click: (e) => {
+            //     console.log(e,this)
+            //     debugger
+            //     polygon.redraw(e)
+            // }
         },
         {
             text: 'reset',
