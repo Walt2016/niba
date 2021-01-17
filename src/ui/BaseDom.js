@@ -489,16 +489,18 @@ export default class BaseDom {
                     width,
                     height
                 } = style
-                let offset = 2 + parseInt(height) //height.replace('px', '')
+                // let offset = 2 + parseInt(height) //height.replace('px', '')
+                let offset =parseInt(width)
                 let {
                     offsetLeft,
                     offsetTop
                 } = el
                 this._addClass(tips, 'show')
                 this._css(tips, {
-                    left: offsetLeft + 'px',
-                    top: (offsetTop + offset) + 'px',
-                    width
+                    left: (offsetLeft -offset) + 'px',
+                    top: (offsetTop ) + 'px',
+                    width,
+                    height
                 })
                 tips.innerText = `${el.name}值不能为空`
 
