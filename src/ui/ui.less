@@ -180,7 +180,7 @@ body {
         display: flex;
         margin-bottom: 4px;
         height: 30px;
-        position: relative;
+        // position: relative;
 
         /* justify-content: space-between; */
         &:first-child {
@@ -198,7 +198,8 @@ body {
         .form-item-input,
         .form-item-inputnumber,
         .form-item-select,
-        .form-item-checkbox {
+        .form-item-checkbox,
+        .form-item-dropdown {
             border: 1px solid #ccc;
             padding: 0 2px;
             height: 28px;
@@ -334,7 +335,7 @@ body {
         transition-property: all;
         transition-timing-function: ease;
         overflow: hidden;
-        overflow-y: auto;
+        // overflow-y: auto;
         height: 0px;
 
         &.hide {
@@ -453,30 +454,31 @@ body {
 
     .tab-body-content {
         display: none;
+        position: relative;
 
         &.actived {
             display: block;
         }
 
+        height: calc(100vh - 230px);
+        overflow-y: auto;
+
 
         /* 自定义滚动条 */
-        height: calc(100vh - 230px);
-        width: calc(100% - 10px);
-
-        &:hover {
-            overflow-y: auto;
-            width: 100%
-        }
-
-        &::-webkit-scrollbar {
-            width: 10px;
-            background-color: hsla(0, 0%, 40%, .2902);
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background-color: #999999;
-            border-radius: 10px;
-        }
+        // height: calc(100vh - 230px);
+        // width: calc(100% - 10px);
+        // &:hover {
+        //     overflow-y: auto;
+        //     width: 100%
+        // }
+        // &::-webkit-scrollbar {
+        //     width: 10px;
+        //     background-color: hsla(0, 0%, 40%, .2902);
+        // }
+        // &::-webkit-scrollbar-thumb {
+        //     background-color: #999999;
+        //     border-radius: 10px;
+        // }
     }
 }
 
@@ -505,5 +507,36 @@ body {
     &.show {
         // display: block;
         display: flex;
+    }
+}
+
+// 下拉菜单
+.dropdown-menu {
+    position: absolute;
+    // left: 0;
+    right: 4px;
+    top: 30px;
+    background-color: #ffffff;
+    width: 130px;
+    height: 100px;
+    overflow-y: auto;
+    z-index: 9999;
+    // border: 1px solid #000;
+    box-shadow: 0px 2px 2px 0px #888888;
+    display: none;
+
+    &.show {
+        display: block;
+    }
+
+    &-item {
+        height: 20px;
+        line-height: 20px;
+        padding: 2px 4px;
+        cursor: pointer;
+        &:hover,
+        &.actived {
+            background-color: #DDDDDD;
+        }
     }
 }

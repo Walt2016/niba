@@ -276,26 +276,52 @@ export default class BaseDom {
                         ele.className = options[key]
                         break;
                         // case "name":
-                    case "innertext":
                     case "id":
-                    case "innerhtml":
-                    case "value":
                         ele[key] = options[key]
+                        break;
+                    case "innertext":
+                    case "innerhtml":
+                        if (['div'].includes(tag)) {
+                            ele[key] = options[key]
+                        } else {
+                            ele.setAttribute(key, options[key])
+                        }
+                        break;
+                    case "value":
+                        if (['input', 'option'].includes(tag)) {
+                            ele[key] = options[key]
+                        } else {
+                            ele.setAttribute(key, options[key])
+                        }
                         break;
                     case "click": // 点击事件
                         ele.addEventListener("click", options[key], false)
+                        break;
+                    case "focus":
+                        ele.addEventListener("focus", options[key], false)
+                        break;
+                    case "blur":
+                        ele.addEventListener("blur", options[key], false)
+                        break;
+                    case "change":
+                        ele.addEventListener("change", options[key], false)
+                        break;
+                    case "onchange":
+                        ele.onchange = options[key]
                         break;
                     case "input": // 输入事件
                         ele.oninput = options[key]
                         break;
                     case "options": // 下拉选项
-                        options[key].forEach(t => {
-                            let opt = new Option(t, t);
-                            if (options.value === t) {
-                                opt.selected = true
-                            }
-                            ele[key].add(opt);
-                        })
+                        if (tag === "select") {
+                            options[key].forEach(t => {
+                                let opt = new Option(t, t);
+                                if (options.value === t) {
+                                    opt.selected = true
+                                }
+                                ele[key].add(opt);
+                            })
+                        }
                         break
                     case "children":
                     case "slot":
@@ -313,9 +339,10 @@ export default class BaseDom {
     }
 
     _div(options, parent) {
+        let innerText = options["innerText"] || options["text"]
         return this._createEle("div", {
             ...options,
-            innerText: options["text"]
+            innerText
         }, parent)
     }
 
@@ -329,6 +356,12 @@ export default class BaseDom {
     //允许一次加多个样式
     //去重
     _addClass(el, cls) {
+        if (Array.isArray(el)) {
+            el.forEach(t => {
+                this._addClass(t, cls)
+            })
+            return el
+        }
         var arr1 = el.className.split(" ")
         var arr2 = cls.split(" ")
         var obj = {}
@@ -346,6 +379,12 @@ export default class BaseDom {
         return el;
     }
     _removeClass(el, cls) {
+        if (Array.isArray(el)) {
+            el.forEach(t => {
+                this._removeClass(t, cls)
+            })
+            return el
+        }
         var arr1 = el.className.split(" ")
         var arr2 = cls.split(" ")
         var obj = {}
@@ -399,6 +438,9 @@ export default class BaseDom {
     }
     // get value
     _get(field, form) {
+        // if (this.isDom(field)) {
+        //     return this._attr(field, "value")
+        // }
         let formitem = this._getFormItem(field, form)
         if (formitem) {
             let value = formitem.value
@@ -468,6 +510,7 @@ export default class BaseDom {
             return el.getAttribute(pops)
         }
     }
+    // 样式
     _css(el, pops) {
         if (_.type(pops) === "object") {
             let css = Object.keys(pops).map(t => `${t}:${pops[t]}`).join(";")
@@ -477,6 +520,19 @@ export default class BaseDom {
     // 兄弟节点
     _siblings(el) {
         return Array.from(el.parentNode.children)
+    }
+    // 菜单actived
+    _actived(el) {
+        this._removeClass(this._siblings(el), 'actived')
+        this._addClass(el, 'actived')
+    }
+    // 隐藏
+    _hide(el) {
+        this._removeClass(el, 'show')
+    }
+    // 显示
+    _show(el) {
+        this._addClass(el, 'show')
     }
     // 判断是dom节点
     // "htmldivelement" === _.type(el)
@@ -527,7 +583,7 @@ export default class BaseDom {
                 offsetLeft,
                 offsetTop
             } = el
-            this._addClass(tips, 'show')
+            this._show(tips)
             this._css(tips, {
                 left: (offsetLeft - offset) + 'px',
                 top: (offsetTop) + 'px',
@@ -542,7 +598,7 @@ export default class BaseDom {
 
         } else {
             this._removeClass(el, 'required')
-            this._removeClass(tips, 'show')
+            this._hide(tips)
         }
     }
 
@@ -550,36 +606,6 @@ export default class BaseDom {
     _checkRequired(el, field) {
         let callback = (el, condition) => {
             this._tips(el, field, condition)
-            // let formItem = this._closest(el, ".form-item")
-            // let tips = this._query(".tips", formItem) || this._div({
-            //     class: 'tips'
-            // }, formItem)
-            // if (condition) {
-            //     this._addClass(el, 'required')
-            //     let style = window.getComputedStyle(el)
-            //     let {
-            //         width,
-            //         height
-            //     } = style
-            //     let offset = parseInt(width) + 40
-            //     let {
-            //         offsetLeft,
-            //         offsetTop
-            //     } = el
-            //     this._addClass(tips, 'show')
-            //     this._css(tips, {
-            //         left: (offsetLeft - offset) + 'px',
-            //         top: (offsetTop) + 'px',
-            //         width: offset + 'px',
-            //         height
-            //     })
-            //     // let field = this._getField(el)
-            //     tips.innerText = `${field.label}值不能为空`
-
-            // } else {
-            //     this._removeClass(el, 'required')
-            //     this._removeClass(tips, 'show')
-            // }
         }
         if (el) {
             // let field = this._getField(el)
@@ -602,8 +628,5 @@ export default class BaseDom {
             //e.preventDefault();
             e.stopPropagation(); // 其它浏览器下阻止冒泡
         }
-
     }
-
-
 }

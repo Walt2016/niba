@@ -47,11 +47,14 @@ export default class Form extends Panel {
             localStorage.setItem("dataModel", JSON.stringify(dataModel))
             // this.data.draw(dataModel)
         }
-        // 输入事件
+        // 监控子元素的输入事件
         this['input'] = (e) => {
+            console.log(e.target)
             this.dataModelChanged(e.target)
         }
-
+        this['onchange'] = (e) => {
+            console.log("changed")
+        }
 
         let form = this._panel({
             title,
@@ -201,15 +204,9 @@ export default class Form extends Panel {
                 click: (e) => {
                     console.log(e.target)
                     let el = e.target
-                    let sis = this._siblings(el)
-                    sis.forEach(t => this._removeClass(t, "actived"))
-                    this._addClass(el, "actived")
-
-                    // let tabs=this._closest(el,"tabs")
-                    let contents = this._queryAll(".tab-body-content", tabBody)
-                    contents.forEach(t => this._removeClass(t, "actived"))
+                    this._actived(el)
                     let content = this._query(".tab-body-content[name='" + tabName + "']", tabBody)
-                    this._addClass(content, "actived")
+                    this._actived(content)
                 }
             }, tabHeader)
 
@@ -227,9 +224,7 @@ export default class Form extends Panel {
         })
 
         if (this.tabs) return tabs
-
         return this.group ? this._group() : this._form()
-
     }
 
     // 表单单元
@@ -395,10 +390,57 @@ export default class Form extends Panel {
         }
         return btn
     }
+    // 下拉菜单
+    _dropdown(field, parent) {
+        let dropdown = this._div({
+            class: 'dropdown-menu'
+        }, parent)
+        field.class = 'form-item-dropdown'
+        field.focus = (e) => {
+            let el=e.target
+            this._show(dropdown)
+            this._css(dropdown,{
+                top: (el.offsetTop+el.offsetHeight)+'px'
+            })
+        }
+        // field.onchange="console.log(this.value);"
+        // field.onchange=(e) => {
+        //     console.log(e.target)
+        // }
+        // 不会冒泡
+        field.onchange = (el) => {
+            this.dataModelChanged(el)
+            // console.log("onchange")
+            // console.log(e.target)
+        }
+        // field.blur = (e) => {
+        //     // this._removeClass(dropdown, "show")
+        // }
+        let input = this._input(field, parent)
+        field.options.forEach(t => {
+            let actived = t === field.value ? ' actived' : ''
+            this._div({
+                class: 'dropdown-menu-item' + actived,
+                value: t,
+                innerText: t,
+                click: (e) => {
+                    let el = e.target
+                    this._actived(el)
+                    let value = this._attr(el, "value")
+                    input.value = value
+                    // 通过DOM对象赋值不会触发change事件，手动触发
+                    input.onchange(input)
+                    this._hide(dropdown)
+                }
+            }, dropdown)
+        })
+        return dropdown
+    }
 
     // 下拉选项
     _select(field, parent) {
-        return this._createEle("select", field, parent);
+        return this._dropdown(field, parent)
+        // return this._createEle("select", field, parent);
     }
     _inputRange(field, parent) {
         return this._input({
