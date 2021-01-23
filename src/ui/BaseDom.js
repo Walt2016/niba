@@ -281,7 +281,7 @@ export default class BaseDom {
                         break;
                     case "innertext":
                     case "innerhtml":
-                        if (['div'].includes(tag)) {
+                        if (['div','button'].includes(tag)) {
                             ele[key] = options[key]
                         } else {
                             ele.setAttribute(key, options[key])
