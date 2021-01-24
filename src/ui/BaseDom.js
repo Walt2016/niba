@@ -34,27 +34,22 @@ export default class BaseDom {
         if (_.type(data) === "object") {
             this.fields = []
             this.group = []
-            // this.fields = 
             this.parseFields(data, this.options, this.labels)
-
-            // if (this.group) {
-            //     this.group = this.groupFieldsByConfig(this.group, this.fields)
-            // }
         }
     }
     // 入参转换 dataModel 数据 options 参数  labels参数字典
     parseFields(data = {}, options = {}, labels = {}, group) {
-        // let fields = []
-        // debugger
         for (let key in data) {
             let child = data[key]
+            let childGroup = group ? [group, "$", key].join("") : key
             if (_.type(child) === "object") { // 子对象分成一组
-                this.parseFields(child, options, labels, key)
+                // debugger
+                this.parseFields(child, options, labels, childGroup)
             } else {
                 let label = labels[key] ? labels[key] : key;
                 let field = {
                     name: key,
-                    key: group ? [group, "$", key].join("") : key,
+                    key: childGroup,
                     label,
                     value: data[key],
                     type: _.type(data[key]),
@@ -62,16 +57,12 @@ export default class BaseDom {
                 // 必填项
                 let required = this.required.includes(field.key)
                 if (required) {
-                    Object.assign(field, {
-                        required
-                    })
+                    field.required = required
                 }
                 // 格式校验
                 let validated = this.validated[field.key]
                 if (validated) {
-                    Object.assign(field, {
-                        validated
-                    })
+                    field.validated = validated
                 }
 
                 // if (options[key]) {
@@ -111,17 +102,6 @@ export default class BaseDom {
                 }
                 // 分组
                 this.groupFields(group || "global", field, status)
-                // if (group) {
-                //     let g = this.group.filter(t => t.label === group)
-                //     if (g[0]) {
-                //         g[0].fields.push(field)
-                //     } else {
-                //         this.group[this.group.length] = {
-                //             label: group,
-                //             fields: [field]
-                //         }
-                //     }
-                // }
             }
 
         }
@@ -129,10 +109,12 @@ export default class BaseDom {
     }
     // 字段分组
     groupFields(group, field, status) {
-        let g = this.group.filter(t => t.label === group)
-        if (g[0]) {
-            g[0].fields.push(field)
-            if (status) g[0].status = true
+        let label = group.split("$")[0]
+
+        let item = this.group.find(t => t.label === label)
+        if (item) {
+            item.fields.push(field)
+            if (status) item.status = true
         } else {
             this.group[this.group.length] = {
                 label: group,
@@ -148,7 +130,7 @@ export default class BaseDom {
                 return {
                     label: key,
                     fields: item[key].map(t => {
-                        let field = fields.filter(f => f.key.toLocaleLowerCase() === t.toLocaleLowerCase())[0]
+                        let field = fields.find(f => f.key.toLocaleLowerCase() === t.toLocaleLowerCase())
                         // 显示去掉分组前缀
                         let label = field.label.replace(new RegExp(key + "(\\w+)", 'i'), '$1')
                         return {
@@ -167,25 +149,83 @@ export default class BaseDom {
         if (fields) {
             fields.forEach(t => {
                 let val = this._get(t, form)
+                let key = t.key
+                this.storeModel(model, key, val)
                 // 分组
-                let arr = t.key.split("$")
-                if (arr.length === 2) {
-                    let group = arr[0]
-                    let child = model[group]
-                    if (_.type(child) === "object") {
-                        child[arr[1]] = val
-                    } else {
-                        model[group] = {}
-                        model[group][arr[1]] = val
-                    }
-                } else {
-                    model[t.key] = val
-                }
+                // let arr = key.split("$")
+                // 二维
+                // if (arr.length === 2) {
+                //     let group = arr[0]
+                //     let child = model[group]
+                //     if (_.type(child) === "object") {
+                //         child[arr[1]] = val
+                //     } else {
+                //         model[group] = {}
+                //         model[group][arr[1]] = val
+                //     }
+                // } else if (arr.length === 3) { // 三维
+
+                // } else {
+                //     model[key] = val
+                // }
 
             })
         }
         // debugger
         return model
+    }
+    // 支持三级对象{key:{key:{Key:val}}}
+    storeModel(model, key, val) {
+        let arr = key.split("$")
+        if (arr.length === 1) {
+            model[key] = val
+        } else if (arr.length === 2) {
+            let group = arr[0]
+            if (!model[group]) {
+                model[group] = {}
+            }
+            let child = model[group]
+            let childKey = arr[1]
+            child[childKey] = val
+
+        } else if (arr.length === 3) {
+            let key_1 = arr[0]
+            if (!model[key_1]) {
+                model[key_1] = {}
+            }
+            let child_1 = model[key_1]
+            let key_2 = arr[1]
+            if (!child_1[key_2]) {
+                child_1[key_2] = {}
+            }
+            let child_2 = child_1[key_2]
+            let key_3 = arr[2]
+            child_2[key_3] = val
+        }
+        // else if (arr.length > 1) {
+        //     let group = arr[0]
+        //     if (!model[group]) {
+        //         model[group] = {}
+        //     }
+        //     let child = model[group]
+        //     let childKey = arr[1]
+        //     this.storeModel(child, childKey, val)
+
+        //     // if (_.type(child) === "object") {
+        //     //     // child[childKey] = val
+        //     //     this.storeModel(child,childKey,val)
+        //     // } else {
+        //     //     model[group] = {}
+        //     //     model[group][childKey] = val
+        //     //     this.storeModel(model[group],childKey,val)
+        //     // }
+        //     // if (!child) {
+        //     //     model[group] = child = {}
+        //     // }
+
+        //     // this.storeModel(child, childKey, val)
+        // }
+
     }
 
     // 随机数
@@ -281,7 +321,7 @@ export default class BaseDom {
                         break;
                     case "innertext":
                     case "innerhtml":
-                        if (['div','button'].includes(tag)) {
+                        if (['div', 'button'].includes(tag)) {
                             ele[key] = options[key]
                         } else {
                             ele.setAttribute(key, options[key])
@@ -325,7 +365,7 @@ export default class BaseDom {
                         break
                     case "children":
                     case "slot":
-                        ele.appendChild(options[key])
+                        options[key] && ele.appendChild(options[key])
                         break
                     default:
                         ele.setAttribute(key, options[key])
@@ -539,6 +579,9 @@ export default class BaseDom {
     isDom(el) {
         return (typeof HTMLElement === 'function') ? (el instanceof HTMLElement) : (el && (typeof el === 'object') && (el.nodeType === 1) && (typeof el.nodeName === 'string'));
     }
+    inRange(range, value) {
+        return range[0] <= value && value <= range[1]
+    }
     // 校验
     _validate(el) {
         let callback = (el) => {
@@ -551,6 +594,7 @@ export default class BaseDom {
                 validated.max && this._tips(el, field, +value > validated.max, validated.message)
                 validated.min && this._tips(el, field, +value < validated.min, validated.message)
                 validated.format && this._tips(el, field, !validated.format.test(value), validated.message)
+                validated.range && this._tips(el, field, this.inRange(validated.range, +value), validated.message)
             }
         }
         if (el) {

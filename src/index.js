@@ -7,12 +7,18 @@
 // import './route'
 let hash = location.hash
 
-switch (hash) {
+switch (hash.replace('#', '')) {
     case "svg":
         require("./sample/svg")
         break;
     case "canvas":
         require("./sample/canvas")
+        break;
+    case "vertex":
+        require("./sample/vertex")
+        break;
+    case "edge":
+        require("./sample/edge")
         break;
     default:
         require("./sample/svg")

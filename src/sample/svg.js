@@ -109,6 +109,10 @@ let dataModel = {
         textFontSize: 12,
         colorful: false,
         colorfulOpacity: 0.5,
+        // text:{
+        //     show:false,
+        //     color:'red'
+        // }
     },
 
     // 旁切圆

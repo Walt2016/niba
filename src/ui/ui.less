@@ -495,7 +495,6 @@ body {
     // line-height: 20px;
 
     color: red;
-    // display: flex;
     display: none;
     justify-content: center;
     align-items: center;
@@ -533,10 +532,17 @@ body {
         height: 20px;
         line-height: 20px;
         padding: 2px 4px;
+        display: flex;
+        justify-content: space-between;
         cursor: pointer;
         &:hover,
         &.actived {
             background-color: #DDDDDD;
+        }
+        .icon-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
         }
     }
 }

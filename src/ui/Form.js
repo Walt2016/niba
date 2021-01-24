@@ -59,16 +59,10 @@ export default class Form extends Panel {
         let form = this._panel({
             title,
             class: 'ui',
-            // body: this.group ? this._group() : this._form(),
-            body: this._tabs(),
+            body: this.tabs ? this._tabs() : (this.group ? this._group() : this._form()),
             tools
         })
         this._appendTo(el, form)
-
-        // let tips=this._div({
-        //     class:'tips'
-        // })
-        // this._appendTo(el, tips)
         return form
     }
     // 表单
@@ -210,8 +204,9 @@ export default class Form extends Panel {
                 }
             }, tabHeader)
 
-            let items = t.items.map(t => {
-                return this.group.filter(g => g.label === t)[0]
+            let labels = this.group.map(g => g.label)
+            let items = t.items.filter(t => labels.includes(t)).map(t => {
+                return this.group.find(g => g.label === t)
             })
             console.log(items)
             // debugger
@@ -397,25 +392,16 @@ export default class Form extends Panel {
         }, parent)
         field.class = 'form-item-dropdown'
         field.focus = (e) => {
-            let el=e.target
+            let el = e.target
             this._show(dropdown)
-            this._css(dropdown,{
-                top: (el.offsetTop+el.offsetHeight)+'px'
+            this._css(dropdown, {
+                top: (el.offsetTop + el.offsetHeight) + 'px'
             })
         }
-        // field.onchange="console.log(this.value);"
-        // field.onchange=(e) => {
-        //     console.log(e.target)
-        // }
         // 不会冒泡
         field.onchange = (el) => {
             this.dataModelChanged(el)
-            // console.log("onchange")
-            // console.log(e.target)
         }
-        // field.blur = (e) => {
-        //     // this._removeClass(dropdown, "show")
-        // }
         let input = this._input(field, parent)
         field.options.forEach(t => {
             let actived = t === field.value ? ' actived' : ''
@@ -431,7 +417,11 @@ export default class Form extends Panel {
                     // 通过DOM对象赋值不会触发change事件，手动触发
                     input.onchange(input)
                     this._hide(dropdown)
-                }
+                },
+                children: field.name === "color" ? this._div({
+                    class: "icon-color",
+                    style: "background-color:" + t
+                }) : ""
             }, dropdown)
         })
         return dropdown

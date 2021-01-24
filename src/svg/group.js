@@ -98,8 +98,9 @@ const validated = {
         message: '{0}值不能为空'
     },
     opacity: {
-        max: 1,
-        min: 0,
+        // max: 1,
+        // min: 0,
+        range: [0, 1],
         message: '{0}值范围[0,1]'
     },
     o: {
