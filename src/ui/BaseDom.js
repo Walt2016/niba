@@ -151,81 +151,24 @@ export default class BaseDom {
                 let val = this._get(t, form)
                 let key = t.key
                 this.storeModel(model, key, val)
-                // 分组
-                // let arr = key.split("$")
-                // 二维
-                // if (arr.length === 2) {
-                //     let group = arr[0]
-                //     let child = model[group]
-                //     if (_.type(child) === "object") {
-                //         child[arr[1]] = val
-                //     } else {
-                //         model[group] = {}
-                //         model[group][arr[1]] = val
-                //     }
-                // } else if (arr.length === 3) { // 三维
-
-                // } else {
-                //     model[key] = val
-                // }
-
             })
         }
-        // debugger
         return model
     }
     // 支持三级对象{key:{key:{Key:val}}}
     storeModel(model, key, val) {
         let arr = key.split("$")
-        if (arr.length === 1) {
-            model[key] = val
-        } else if (arr.length === 2) {
+        if (arr.length > 1) {
             let group = arr[0]
             if (!model[group]) {
                 model[group] = {}
             }
             let child = model[group]
-            let childKey = arr[1]
-            child[childKey] = val
-
-        } else if (arr.length === 3) {
-            let key_1 = arr[0]
-            if (!model[key_1]) {
-                model[key_1] = {}
-            }
-            let child_1 = model[key_1]
-            let key_2 = arr[1]
-            if (!child_1[key_2]) {
-                child_1[key_2] = {}
-            }
-            let child_2 = child_1[key_2]
-            let key_3 = arr[2]
-            child_2[key_3] = val
+            let childKey = arr.slice(1).join("$")
+            this.storeModel(child, childKey, val)
+        } else if (arr.length === 1) {
+            model[key] = val
         }
-        // else if (arr.length > 1) {
-        //     let group = arr[0]
-        //     if (!model[group]) {
-        //         model[group] = {}
-        //     }
-        //     let child = model[group]
-        //     let childKey = arr[1]
-        //     this.storeModel(child, childKey, val)
-
-        //     // if (_.type(child) === "object") {
-        //     //     // child[childKey] = val
-        //     //     this.storeModel(child,childKey,val)
-        //     // } else {
-        //     //     model[group] = {}
-        //     //     model[group][childKey] = val
-        //     //     this.storeModel(model[group],childKey,val)
-        //     // }
-        //     // if (!child) {
-        //     //     model[group] = child = {}
-        //     // }
-
-        //     // this.storeModel(child, childKey, val)
-        // }
-
     }
 
     // 随机数
@@ -254,10 +197,6 @@ export default class BaseDom {
             }
         }
         return this.isDom(el) ? el : document.querySelector(el)
-        // if ("htmldivelement" === _.type(el)) {
-        //     return el
-        // }
-        // return document.querySelector(el)
     }
 
     _queryAll(el, parent) {
@@ -285,7 +224,7 @@ export default class BaseDom {
     _closest(el, cls) {
         if (!el.parentNode) { //document  ie8不支持parentNode
             return null
-        } else if (cls.charAt(0) === "." && el.className.split(" ").indexOf(cls.substring(1)) >= 0) {
+        } else if (cls.charAt(0) === "." && el.className.split(" ").includes(cls.substring(1))) {
             return el;
         } else if (cls.charAt(0) === "#" && el.id.toLowerCase() === cls.substring(1).toLowerCase()) {
             return el;
@@ -402,20 +341,9 @@ export default class BaseDom {
             })
             return el
         }
-        var arr1 = el.className.split(" ")
-        var arr2 = cls.split(" ")
-        var obj = {}
-        arr1.forEach(t => {
-            obj[t] = 1
-        })
-        arr2.forEach(t => {
-            obj[t] = 1
-        })
-        var keys = []
-        for (var key in obj) {
-            keys.push(key)
-        }
-        el.className = keys.join(" ")
+        var arr1 = el.className.split(" ").map(t => t.toLocaleLowerCase())
+        var arr2 = cls.split(" ").map(t => t.toLocaleLowerCase())
+        el.className = Array.from(new Set([...arr1,...arr2])).join(" ")
         return el;
     }
     _removeClass(el, cls) {
@@ -425,24 +353,20 @@ export default class BaseDom {
             })
             return el
         }
-        var arr1 = el.className.split(" ")
-        var arr2 = cls.split(" ")
+        var arr1 = el.className.split(" ").map(t => t.toLocaleLowerCase())
+        var arr2 = cls.split(" ").map(t => t.toLocaleLowerCase())
         var obj = {}
         arr1.forEach(t => {
             if (arr2.indexOf(t) === -1) {
                 obj[t] = 1
             }
         })
-        var keys = []
-        for (var key in obj) {
-            keys.push(key)
-        }
-        el.className = keys.join(" ")
+        el.className = Object.keys(obj).join(" ")
         return el;
     }
     _hasClass(el, cls) {
-        var arr = el.className.split(" ")
-        return arr.indexOf(cls) >= 0
+        var arr = el.className.split(" ").map(t => t.toLocaleLowerCase())
+        return arr.includes(cls.toLocaleLowerCase())
     }
     _toggle(el, cls, codition) {
         if (Array.isArray(el)) {
