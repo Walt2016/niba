@@ -126,11 +126,8 @@ export default class DrawSVG extends BaseSvg {
             this._createEle(options.shape || 'circle', props, g)
 
             // 标注文字
-            if (options.text) {
-                this._text(t, index, {
-                    fill: options.textColor || options.color || 'black',
-                    'font-size': options.textFontSize || 12
-                }, g)
+            if (options.text && options.text.show) {
+                this._text(t, index,this._textProps(options), g)
             }
         })
     }
@@ -217,14 +214,13 @@ export default class DrawSVG extends BaseSvg {
             })
             this._path(ds.join(" "), params, g)
             // 标注文字
-            if (opt.text) {
+            if (opt.text && opt.text.show) {
                 let midseg = new MidSeg({
                     points
                 })
                 let groupEdgeText = this._g({
                     id: 'edgeText',
-                    fill: opt.textColor || opt.color || 'black',
-                    'font-size': opt.textFontSize || 12
+                    ...this._textProps(opt),
                 }, g)
                 midseg.points.forEach((t, index) => {
                     this._text(t, index, {}, groupEdgeText)

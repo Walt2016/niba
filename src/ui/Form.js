@@ -33,9 +33,10 @@ export default class Form extends Panel {
             fields = [],
             btn,
             btns = [],
-            title
+            title,
+            group = []
         } = options || this
-        let tools = this._tools(btns.length > 0 ? btns : btn, fields)
+        let tools = this._tools(btns.length > 0 ? btns : btn, fields, group)
         this.dataModelChanged = (el) => {
             this._validate(el)
             // this._checkRequired(el)
@@ -88,20 +89,22 @@ export default class Form extends Panel {
     }
 
     // 按钮
-    _tools(btns, fields) {
+    _tools(btns, fields, group) {
         let tools;
         if (Array.isArray(btns)) {
             tools = btns.map(t => {
                 return this._btn(
                     Object.assign(t, {
-                        fields
+                        fields,
+                        group
                     })
                 )
             })
         } else {
             tools = btns ? this._btn(
                 Object.assign(btns, {
-                    fields
+                    fields,
+                    group
                 })
             ) : ""
         }
@@ -159,19 +162,41 @@ export default class Form extends Panel {
                 class: "form-group-item-body"
             }, formGroup)
 
-            t.fields.forEach(t => {
-                this._formItem({
-                    ...t,
-                    input,
-                    form: formGroupWrap
-                }, formGroupItemBody)
-            })
+            this._fieldItem(t.fields, {
+                input,
+                form: formGroupWrap
+            }, formGroupItemBody)
+
+            // t.fields.forEach(t => {
+            //     this._formItem({
+            //         ...t,
+            //         input,
+            //         form: formGroupWrap
+            //     }, formGroupItemBody)
+            // })
             // 计算高度
             // let height = (35 * t.fields.length) + 'px'
             // formGroupItemBody.style.height = height
             // formGroupItemBody.setAttribute("height", height)
         })
         return formGroupWrap
+    }
+    _fieldItem(fields, options, parent) {
+        fields.forEach(t => {
+            if (Array.isArray(t.fields)) {
+                // let itemGroup = this._div({
+                //     text: t.label,
+                //     class: "form-item-group"
+                // }, parent)
+                let fieldset = this._fieldset(t.label, parent)
+                this._fieldItem(t.fields, options, fieldset)
+            } else {
+                this._formItem({
+                    ...t,
+                    ...options
+                }, parent)
+            }
+        })
     }
     // tabs
     _tabs() {
@@ -239,7 +264,7 @@ export default class Form extends Panel {
             class: "form-item-label",
             text: label
         }, formItem)
-        let d = value.toString().split(".")[1]
+        let d = String(value).split(".")[1]
         let step = Math.pow(10, d ? -1 * d.toString().length : 0)
 
         switch (type) {
@@ -313,7 +338,8 @@ export default class Form extends Panel {
         text,
         form,
         name,
-        fields
+        fields,
+        group
     }, parent) {
         let btn = this._createEle("button", {
             type: "button",
@@ -325,7 +351,7 @@ export default class Form extends Panel {
         btn.onclick = (e) => {
             let el = e.target
             let form = this._closest(el, ".panel").id
-            console.log(fields)
+            console.log(fields, group)
             let dataModel = this._dataModel(fields, form)
 
             let inputs = this._queryAll("[name='input']", form)

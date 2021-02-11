@@ -435,6 +435,21 @@ export default class BaseSvg {
             fill: 'none'
         }
     }
+    // 文字属性
+    _textProps(options) {
+        if (options.text) {
+            return {
+                stroke: options.text.color || 'black',
+                fill: options.text.color || 'black',
+                'font-size': options.text.fontSize || 12
+            }
+        }
+        return {
+            stroke: options.textColor || options.color || 'black',
+            fill: options.textColor || options.color || 'black',
+            'font-size': options.textFontSize || 12
+        }
+    }
     // 动画属性
     _animationProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
         return opt.use ? {

@@ -61,9 +61,11 @@ let dataModel = {
         linejoin: 'arcs',
         dashAnimation: false,
         animationTwinkle: false,
-        text: false,
-        textColor: 'red',
-        textFontSize: 12,
+        text: {
+            show: false,
+            color: 'red',
+            fontSize: 12
+        },
         closed: true,
         broken: false,
         waveform: 'line',
@@ -104,15 +106,13 @@ let dataModel = {
         dashArray: [5, 5],
         dashAnimation: false,
         animationTwinkle: false,
-        text: false,
-        textColor: 'red',
-        textFontSize: 12,
+        text: {
+            show: false,
+            color: 'red',
+            fontSize: 12
+        },
         colorful: false,
         colorfulOpacity: 0.5,
-        // text:{
-        //     show:false,
-        //     color:'red'
-        // }
     },
 
     // 旁切圆

@@ -41,7 +41,8 @@ let dataModel = {
         // colorfulOpacity: 0.5,
         text:{
             show:false,
-            color:'red'
+            color:'red',
+            fontSize : 12
         }
     },
 

@@ -41,15 +41,14 @@ export default class BaseDom {
     parseFields(data = {}, options = {}, labels = {}, group) {
         for (let key in data) {
             let child = data[key]
-            let childGroup = group ? [group, "$", key].join("") : key
+            let fieldKey = group ? [group, "$", key].join("") : key
             if (_.type(child) === "object") { // 子对象分成一组
-                // debugger
-                this.parseFields(child, options, labels, childGroup)
+                this.parseFields(child, options, labels, fieldKey)
             } else {
                 let label = labels[key] ? labels[key] : key;
                 let field = {
                     name: key,
-                    key: childGroup,
+                    key: fieldKey,
                     label,
                     value: data[key],
                     type: _.type(data[key]),
@@ -64,50 +63,38 @@ export default class BaseDom {
                 if (validated) {
                     field.validated = validated
                 }
-
-                // if (options[key]) {
-                //     field = {
-                //         key: group ? _.camelCase(group, key) : key,
-                //         label,
-                //         value: data[key],
-                //         type: "select",
-                //         options: options[key]
-                //     }
-                // } else {
-                //     field = {
-                //         key: group ? _.camelCase(group, key) : key,
-                //         label,
-                //         value: data[key],
-                //         type: _.type(data[key])
-                //     }
-                // }
-                // debugger
-                if (group) {
-                    if (_.type(options[group]) === "object" && Array.isArray((options[group][key])) || Array.isArray(options[key])) {
-                        field.type = "select"
-                        field.options = options[group] ? options[group][key] : options[key]
-                    }
-                } else {
-                    if (Array.isArray(options[key])) {
-                        field.type = "select"
-                        field.options = options[key]
-                    }
+                // 下来选项
+                let fieldOptions = this.getOptions(options, fieldKey);
+                if (Array.isArray(fieldOptions)) {
+                    field.type = "select"
+                    field.options = fieldOptions
                 }
-
-
+                // 装载field
                 this.fields[this.fields.length] = field
+                // 展示状态
                 let status = false
                 if (key === "show" || key === "use") {
                     status = field.value
                 }
-                // 分组
-                this.groupFields(group || "global", field, status)
-            }
+                // 二级分组
+                // this.groupFields(group || "global", field, status)
 
+                this.storeGgroup(this.group, field, status)
+            }
         }
-        // return this.fields
     }
-    // 字段分组
+    // 下拉选项
+    getOptions(options, fieldKey) {
+        if (!options) return
+        let arr = fieldKey.split("$")
+        let key = arr[0]
+        if (arr.length > 1) {
+            return this.getOptions(options[key] || options, arr.slice(1).join("$"))
+        } else if (arr.length === 1) {
+            return options[key]
+        }
+    }
+    // 字段分组 二级分组
     groupFields(group, field, status) {
         let label = group.split("$")[0]
 
@@ -120,6 +107,35 @@ export default class BaseDom {
                 label: group,
                 fields: [field],
                 status
+            }
+        }
+    }
+    // 分组
+    storeGgroup(group, field, status, groupkey) {
+        let arr = (groupkey || field.key).split("$")
+        if (!groupkey) {
+            groupkey = arr.length > 1 ? arr[0] : 'global'
+        }
+
+        let item = group.find(t => t.key === groupkey)
+        if (item) {
+            if (arr.length === 1 || arr.length === 2) {
+                item.fields.push(field)
+                if (status) item.status = true
+            } else if (arr.length === 3) {
+                let childKey = arr.slice(0, 2).join("$")
+                let childgroup = item.fields
+
+                this.storeGgroup(childgroup, field, status, childKey)
+            }
+        } else {
+            if (Array.isArray(group)) {
+                group.push({
+                    label: groupkey.split("$").pop(),
+                    key: groupkey,
+                    fields: [field],
+                    status
+                })
             }
         }
     }
@@ -155,7 +171,7 @@ export default class BaseDom {
         }
         return model
     }
-    // 支持三级对象{key:{key:{Key:val}}}
+    // 多级对象 {key:{key:{Key:val}}}
     storeModel(model, key, val) {
         let arr = key.split("$")
         if (arr.length > 1) {
@@ -260,7 +276,7 @@ export default class BaseDom {
                         break;
                     case "innertext":
                     case "innerhtml":
-                        if (['div', 'button'].includes(tag)) {
+                        if (['div', 'button', 'legend'].includes(tag)) {
                             ele[key] = options[key]
                         } else {
                             ele.setAttribute(key, options[key])
@@ -343,7 +359,7 @@ export default class BaseDom {
         }
         var arr1 = el.className.split(" ").map(t => t.toLocaleLowerCase())
         var arr2 = cls.split(" ").map(t => t.toLocaleLowerCase())
-        el.className = Array.from(new Set([...arr1,...arr2])).join(" ")
+        el.className = Array.from(new Set([...arr1, ...arr2])).join(" ")
         return el;
     }
     _removeClass(el, cls) {
@@ -510,6 +526,7 @@ export default class BaseDom {
     _validate(el) {
         let callback = (el) => {
             let field = this._getField(el)
+            if (!field) return
             this._checkRequired(el, field)
             let validated = field.validated
 
@@ -596,5 +613,12 @@ export default class BaseDom {
             //e.preventDefault();
             e.stopPropagation(); // 其它浏览器下阻止冒泡
         }
+    }
+    _fieldset(name,parent) {
+        let fieldset = this._createEle("fieldset",{},parent)
+        let legend = this._createEle("legend", {
+            innerText: name
+        }, fieldset)
+        return fieldset
     }
 }
