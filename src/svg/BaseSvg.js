@@ -450,11 +450,11 @@ export default class BaseSvg {
         }
     }
     // 颜色
-    _colors(points,colorful){
-       return _.colorCircle(points.length, colorful && colorful.opacity || 1)
+    _colors(points, opt) {
+        return opt.colorful && opt.colorful.use ? _.colorCircle(points.length, opt.colorful && opt.colorful.opacity || 1) : []
     }
-    _colorProps(colors,index,opt){
-        if (colors && opt.colorful &&  opt.colorful.use) {
+    _colorProps(colors, index, opt) {
+        if (colors && opt.colorful && opt.colorful.use) {
             let color = colors[index % colors.length]
             return {
                 color,
