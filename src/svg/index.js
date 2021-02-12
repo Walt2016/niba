@@ -65,7 +65,7 @@ export default class DrawSVG extends BaseSvg {
 
         let props = {}
         let r = options.radius
-        let colors = _.colorCircle(points.length, options.colorfulOpacity || 1)
+        let colors = this._colors(points, options.colorful)
         points.forEach((t, index) => {
             // 动画发光效果辅助
             if (options.animationTwinkle) {
@@ -74,13 +74,7 @@ export default class DrawSVG extends BaseSvg {
                     'transform-origin': `${t[0]}px ${t[1]}px`
                 })
             }
-            // debugger
-            if (options.colorful) {
-                Object.assign(props, {
-                    fill: colors[index],
-                    stroke: colors[index],
-                })
-            }
+            Object.assign(props, this._colorProps(colors, index, options.colorful))
 
             switch (options.shape) {
                 case "rect":
@@ -127,7 +121,7 @@ export default class DrawSVG extends BaseSvg {
 
             // 标注文字
             if (options.text && options.text.show) {
-                this._text(t, index,this._textProps(options), g)
+                this._text(t, index, this._textProps(options), g)
             }
         })
     }
@@ -177,19 +171,7 @@ export default class DrawSVG extends BaseSvg {
                     waveform: t,
                     ...opt
                 }, (e) => {
-                    if (opt.controlPoint) {
-                        e.cps.forEach(t => {
-                            this._circle(t, 5, {
-                                fill: 'red'
-                            }, g)
-                        })
-                    }
-                    if (opt.controlLink) {
-                        this._path(this._d(e.cps, {
-                            closed: false,
-                            broken: true
-                        }), {}, g)
-                    }
+                    this._controller(opt, e.cps, g)
                 })
             }
         })
@@ -233,16 +215,14 @@ export default class DrawSVG extends BaseSvg {
         })
         // 分形
         if (this._show(options, "fractal")) {
-            let colors = _.colorCircle(points.length, options.fractal.colorfulOpacity || 1)
             new Fractal(this._shape.bind(this), Object.assign(options, {
-                _colors: colors
+                _colors: this._colors(points, options.fractal)
             }))
         }
         // 镜像
         if (this._show(options, "mirror")) {
-            let colors = _.colorCircle(points.length, options.fractal.colorfulOpacity || 1)
             new Mirror(this._shape.bind(this), Object.assign(options, {
-                _colors: colors
+                _colors: this._colors(points, options.mirror)
             }))
         }
         // 路径
@@ -252,19 +232,9 @@ export default class DrawSVG extends BaseSvg {
                 ...opt,
                 o: options.o
             })["_" + opt.name]()
-            let colors = _.colorCircle(points.length, opt.colorfulOpacity || 1)
-
-            // debugger
+            let colors = this._colors(points, opt.colorful)
             points.forEach((t, index) => {
-                if (opt.colorful && colors) {
-                    let color = colors[index % colors.length]
-                    Object.assign(options, {
-                        color,
-                        fill: color,
-                        'stroke-color': color
-                    })
-                }
-                this._shape(Object.assign({}, options, {
+                this._shape(Object.assign({}, options, this._colorProps(colors, index, opt.colorful), {
                     id: 'shape_path_' + index,
                     o: t,
                     _points: _.move(options._points, options.o, t, Math.pow(opt.ratio, index)),
@@ -276,6 +246,40 @@ export default class DrawSVG extends BaseSvg {
         }
 
     }
+    // 控制点
+    _controller(options, ps, parent) {
+        if (typeof options.controller === "object") {
+            if (options.controller.show) {
+                ps.forEach(t => {
+                    this._circle(t, options.controller.radius || 5, {
+                        fill: options.controller.color || 'red'
+                    }, parent)
+                })
+            }
+            if (options.controller.link) {
+                this._path(this._d(ps, {
+                    closed: false,
+                    broken: true
+                }), {}, parent)
+            }
+
+        } else {
+            if (options.controlPoint) {
+                ps.forEach(t => {
+                    this._circle(t, 5, {
+                        fill: 'red'
+                    }, parent)
+                })
+            }
+            if (options.controlLink) {
+                this._path(this._d(ps, {
+                    closed: false,
+                    broken: true
+                }), {}, parent)
+            }
+        }
+    }
+
 
     // 半径
     _radius(options, g) {
@@ -293,19 +297,7 @@ export default class DrawSVG extends BaseSvg {
         })
 
         let d = this._d(ps, options, (e) => {
-            if (options.controlPoint) {
-                e.cps.forEach(t => {
-                    this._circle(t, 5, {
-                        fill: 'red'
-                    }, groupRadius)
-                })
-            }
-            if (options.controlLink) {
-                this._path(this._d(e.cps, {
-                    closed: false,
-                    broken: true
-                }), {}, groupRadius)
-            }
+            this._controller(options, e.cps, groupRadius)
         })
         this._path(d, {}, groupRadius)
     }
@@ -331,19 +323,7 @@ export default class DrawSVG extends BaseSvg {
             ...options,
             closed: false
         }, (e) => {
-            if (options.controlPoint) {
-                e.cps.forEach(t => {
-                    this._circle(t, 5, {
-                        fill: 'red'
-                    }, groupRadius)
-                })
-            }
-            if (options.controlLink) {
-                this._path(this._d(e.cps, {
-                    closed: false,
-                    broken: true
-                }), {}, groupRadius)
-            }
+            this._controller(options, e.cps, groupRadius)
         })
         this._path(d, {}, groupRadius)
     }

@@ -3,6 +3,9 @@ import MidSeg from '../points/MidSeg'
 import {
     ArcSeg
 } from '../points'
+import {
+    _timer
+} from './Timer'
 export default class Fractal {
     constructor(draw, options) {
         this.draw = draw
@@ -13,7 +16,6 @@ export default class Fractal {
 
         Object.assign(fractalOptions, {
             offset: 0,
-            timerDelay: 500
         }, {
             ...fractalOptions,
             level: fractalOptions.level - 1
@@ -21,8 +23,6 @@ export default class Fractal {
 
         let {
             level,
-            timerUse,
-            timerDelay = 500,
             colorful,
             type
         } = fractalOptions
@@ -36,12 +36,9 @@ export default class Fractal {
                 'stroke-color': color
             })
         }
-        let fn = this['_' + type]
-        if (fn) {
-            timerUse ? setTimeout(() => {
-                fn.call(this, fractalOptions)
-            }, level * timerDelay) : fn.call(this, fractalOptions)
-        }
+        let fn = this['_' + type].bind(this)
+        fn && _timer(fn, fractalOptions)
+
     }
     // 边镜像
     _edgeMirror(options) {
@@ -199,9 +196,7 @@ export default class Fractal {
         let {
             level,
             offset,
-            timerUse,
-            timerDelay,
-
+            timer
         } = options
 
         this.points.forEach((t, index) => {
@@ -225,7 +220,10 @@ export default class Fractal {
 
                 }))
             }
-            timerUse ? setTimeout(fn, level * timerDelay * (index + 1)) : fn()
+
+            if (typeof timer === "object") {
+                timer.use ? setTimeout(fn, level * (timer.delay || 500) * (index + 1)) : fn()
+            }
         })
 
     }
@@ -233,8 +231,7 @@ export default class Fractal {
         let {
             level,
             offset,
-            timerUse,
-            timerDelay,
+            timer
 
         } = options
         this.points.forEach((t, index) => {
@@ -258,7 +255,9 @@ export default class Fractal {
 
                 }))
             }
-            timerUse ? setTimeout(fn, level * timerDelay * (index + 1)) : fn()
+            if (typeof timer === "object") {
+                timer.use ? setTimeout(fn, level * (timer.delay || 500) * (index + 1)) : fn()
+            }
         })
     }
     // 正玄

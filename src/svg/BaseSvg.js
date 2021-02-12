@@ -20,7 +20,6 @@ export default class BaseSvg {
             width,
             height,
             options
-            // props: 'size,skewX,borderRadius,name,color1,color2,controlLink,controlPoint,closed,broken,markerArrow,waveform,splitNum,recycleIndex,arrow,largeArcFlag,xAxisRotation,sweepFlag,orient,radiusRatio,angleOffset,controller,ratio,sticks,colorfulOpacity,colorful,markerArrow,propA,propB,iterationCount,duration,name,o,r,n,shape,radius,fill,color,text,opacity,lineWidth,lineOpactiy,dashLine,dashArray,dashOffset,textColor,textFontSize,interval,linecap,linejoin,dashAnimation,animationTwinkle,rotate,level,offset,type,use'.split(",")
         });
         ['g', 'marker'].forEach(t => {
             Object.assign(this, {
@@ -413,17 +412,57 @@ export default class BaseSvg {
     }
     // 线条属性
     _lineProps(opt = {}) {
+        if (typeof opt.line === "object") {
+            return {
+                stroke: opt.line.color || opt.color || opt.stroke || 'black',
+                'stroke-opacity': _.isUndefined(opt.line.opacity) ? 1 : opt.line.opacity,
+                'stroke-width': opt.line.lineWidth || opt.strokeWidth || 1,
+                'stroke-linecap': opt.line.linecap ? opt.line.linecap : undefined,
+                'stroke-linejoin': opt.line.linejoin,
+                'marker-end': opt['marker-end'] ? opt['marker-end'] : undefined,
+                ...this._dashLineProps(opt)
+            }
+        }
         return {
             stroke: opt.color || opt.stroke || 'black',
             'stroke-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
             'stroke-width': opt.lineWidth || opt.strokeWidth || 1,
-            'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
-            'stroke-dashoffset': opt.dashOffset ? opt.dashOffset : undefined,
             'stroke-linecap': opt.linecap ? opt.linecap : undefined,
             'stroke-linejoin': opt.linejoin,
-            'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined,
-            'marker-end': opt['marker-end'] ? opt['marker-end'] : undefined
+            'marker-end': opt['marker-end'] ? opt['marker-end'] : undefined,
+            ...this._dashLineProps(opt)
         }
+
+    }
+    // 虚线属性
+    _dashLineProps(opt) {
+        if (typeof opt.dashLine === "object") {
+            return {
+                'stroke-dasharray': opt.dashLine.show ? opt.dashLine.dashArray || [5, 5] : undefined,
+                'stroke-dashoffset': opt.dashLine.dashOffset,
+                'style': opt.dashLine.animation ? 'animation:shift 3s infinite linear' : undefined,
+            }
+        }
+        return {
+            'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
+            'stroke-dashoffset': opt.dashOffset ? opt.dashOffset : undefined,
+            'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined,
+        }
+    }
+    // 颜色
+    _colors(points,colorful){
+       return _.colorCircle(points.length, colorful && colorful.opacity || 1)
+    }
+    _colorProps(colors,index,opt){
+        if (colors && opt.colorful &&  opt.colorful.use) {
+            let color = colors[index % colors.length]
+            return {
+                color,
+                fill: color,
+                'stroke-color': color
+            }
+        }
+        return {}
     }
     // 图形属性
     _shapeProps(opt) {

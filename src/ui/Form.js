@@ -184,10 +184,6 @@ export default class Form extends Panel {
     _fieldItem(fields, options, parent) {
         fields.forEach(t => {
             if (Array.isArray(t.fields)) {
-                // let itemGroup = this._div({
-                //     text: t.label,
-                //     class: "form-item-group"
-                // }, parent)
                 let fieldset = this._fieldset(t.label, parent)
                 this._fieldItem(t.fields, options, fieldset)
             } else {

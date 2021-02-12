@@ -3,6 +3,7 @@ import MidSeg from '../points/MidSeg'
 import {
     ArcSeg
 } from '../points'
+import { _timer } from './Timer'
 export default class mirror {
     constructor(draw, options) {
         this.draw = draw
@@ -12,8 +13,7 @@ export default class mirror {
         let mirrorOptions = options.mirror
 
         Object.assign(mirrorOptions, {
-            offset: 0,
-            timerDelay: 500
+            offset: 0
         }, {
             ...mirrorOptions,
             level: mirrorOptions.level - 1
@@ -22,8 +22,6 @@ export default class mirror {
         let {
             level,
             // offset = 0,
-            timerUse,
-            timerDelay = 500,
             colorful,
             // _points: points,
             // _colors: colors,
@@ -40,12 +38,8 @@ export default class mirror {
                 'stroke-color': color
             })
         }
-        let fn = this['_' + type]
-        if (fn) {
-            timerUse ? setTimeout(() => {
-                fn.call(this, mirrorOptions)
-            }, level * timerDelay) : fn.call(this, mirrorOptions)
-        }
+        let fn = this['_' + type].bind(this)
+        fn && _timer(fn,mirrorOptions)
     }
     // 边镜像
     _edge(options) {
@@ -210,9 +204,7 @@ export default class mirror {
         let {
             level,
             offset,
-            timerUse,
-            timerDelay,
-
+            timer
         } = options
 
         this.points.forEach((t, index) => {
@@ -236,7 +228,9 @@ export default class mirror {
 
                 }))
             }
-            timerUse ? setTimeout(fn, level * timerDelay * (index + 1)) : fn()
+            if (typeof timer === "object") {
+                timer.use ? setTimeout(fn, level * timer.delay * (index + 1)) : fn()
+            }
         })
 
     }
@@ -244,9 +238,7 @@ export default class mirror {
         let {
             level,
             offset,
-            timerUse,
-            timerDelay,
-
+            timer
         } = options
         this.points.forEach((t, index) => {
             let fn = () => {
@@ -269,7 +261,9 @@ export default class mirror {
 
                 }))
             }
-            timerUse ? setTimeout(fn, level * timerDelay * (index + 1)) : fn()
+            if (typeof timer === "object") {
+                timer.use ? setTimeout(fn, level * timer.delay * (index + 1)) : fn()
+            }
         })
     }
     // 正玄

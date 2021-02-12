@@ -11,6 +11,46 @@ let {
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
 import Group from '../svg/group'
+// 虚线
+let dashLine = {
+    show: false,
+    dashArray: [5, 5],
+    animation: false,
+}
+// 文本
+let text = {
+    show: false,
+    color: 'red',
+    fontSize: 12
+}
+// 实线
+let line={
+    color:'red',
+    lineWidth: 1,
+    opacity: 0.5,
+    linejoin: 'arcs',
+}
+let fill={
+    show:false,
+    color:'red',
+    opacity: 1
+}
+// 控制点
+let controller={
+    show:false,
+    link:false,
+    color:'red',
+    radius:5
+}
+// 延迟动画
+let timer ={
+    use: false,
+    delay: 500,
+}
+let colorful={
+    use: false,
+    opacity: 0.5,
+}
 let dataModel = {
     // 图形  全局
     // global: {
@@ -22,9 +62,7 @@ let dataModel = {
     color: "red",
     lineWidth: 1,
     opacity: 0.5,
-    dashLine: false,
-    dashArray: [5, 5],
-    dashAnimation: false,
+    dashLine,
     linejoin: 'arcs',
     sort: 'normal',
     segType: 'equiangular',
@@ -32,19 +70,19 @@ let dataModel = {
     // 半径
     radius: {
         show: false,
-        lineWidth: 1,
+        // lineWidth: 1,
         color: 'red',
         opacity: 1,
-        dashLine: false,
-        dashArray: [5, 5],
-        dashAnimation: false,
-        linecap: 'butt',
+        line,
+        dashLine,
+        // linecap: 'butt',
         closed: true,
         broken: false,
         markerArrow: false,
         waveform: 'line',
         ratio: 1,
-        controller: false,
+        // controller: false,
+        controller,
         angleOffset: 0,
         orient: true,
         recycleIndex: 0,
@@ -53,25 +91,19 @@ let dataModel = {
     // 边
     edge: {
         show: true,
-        lineWidth: 1,
+        // lineWidth: 1,
         color: 'red',
         opacity: 1,
-        dashLine: false,
-        dashArray: [5, 5],
-        linejoin: 'arcs',
-        dashAnimation: false,
+        // linejoin: 'arcs',
+        line,
+        dashLine,
+        text,
         animationTwinkle: false,
-        text: {
-            show: false,
-            color: 'red',
-            fontSize: 12
-        },
         closed: true,
         broken: false,
         waveform: 'line',
         radiusRatio: 1,
-        controlPoint: false,
-        controlLink: false,
+        controller,
         angleOffset: 0,
         orient: true,
         recycleIndex: 0,
@@ -88,9 +120,7 @@ let dataModel = {
         shape: 'circle',
         opacity: 0.5,
         lineWidth: 1,
-        dashLine: false,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine
     },
 
     // 顶点
@@ -101,18 +131,12 @@ let dataModel = {
         radius: 5,
         shape: 'circle',
         opacity: 0.5,
-        lineWidth: 1,
-        dashLine: false,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        // lineWidth: 1,
+        line,
+        dashLine,
         animationTwinkle: false,
-        text: {
-            show: false,
-            color: 'red',
-            fontSize: 12
-        },
-        colorful: false,
-        colorfulOpacity: 0.5,
+        text,
+        colorful
     },
 
     // 旁切圆
@@ -121,9 +145,7 @@ let dataModel = {
         fill: false,
         lineWidth: 1,
         opacity: 0.5,
-        dashLine: false,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine,
         color: 'red'
     },
 
@@ -133,9 +155,7 @@ let dataModel = {
         fill: false,
         lineWidth: 1,
         opacity: 0.5,
-        dashLine: false,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine,
         color: 'red',
     },
 
@@ -145,9 +165,7 @@ let dataModel = {
         show: false,
         lineWidth: 1,
         opacity: 0.5,
-        dashLine: true,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine,
         interval: 100,
         color: 'black',
         rotate: 0,
@@ -158,9 +176,7 @@ let dataModel = {
         show: false,
         lineWidth: 1,
         opacity: 0.5,
-        dashLine: true,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine,
         interval: 100,
         color: 'black',
     },
@@ -173,10 +189,8 @@ let dataModel = {
         level: 3,
         offset: 0.5,
         ratio: 1,
-        timerUse: false,
-        timerDelay: 500,
-        colorful: false,
-        colorfulOpacity: 0.5
+        timer,
+        colorful
         // refraction: 0
     },
     // 镜像
@@ -188,10 +202,8 @@ let dataModel = {
         ratio: 0.5,
         refraction: 0,
         offset: 1,
-        timerUse: false,
-        timerDelay: 500,
-        colorful: false,
-        colorfulOpacity: 0.5,
+        timer,
+        colorful
     },
 
     // 动画
@@ -218,9 +230,7 @@ let dataModel = {
         lineWidth: 1,
         color: 'black',
         opacity: 0.5,
-        dashLine: false,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine,
         sticks: true,
         arrow: true,
     },
@@ -229,9 +239,7 @@ let dataModel = {
         lineWidth: 1,
         color: 'black',
         opacity: 0.5,
-        dashLine: false,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine,
         sticks: true,
         arrow: true,
 
@@ -245,13 +253,12 @@ let dataModel = {
         lineWidth: 1,
         color: 'black',
         opacity: 0.5,
-        dashLine: true,
-        dashArray: [5, 5],
-        dashAnimation: false,
+        dashLine,
         waveform: 'line',
         radiusRatio: 1,
-        controlPoint: false,
-        controlLink: false,
+        // controlPoint: false,
+        // controlLink: false,
+        controller,
         angleOffset: 0,
         orient: true,
         recycleIndex: 0,
@@ -264,8 +271,9 @@ let dataModel = {
     curve: {
         show: false,
         radiusRatio: 1,
-        controlPoint: false,
-        controlLink: false,
+        // controlPoint: false,
+        // controlLink: false,
+        controller,
         angleOffset: 0,
         orient: true,
         recycleIndex: 0,
@@ -276,8 +284,9 @@ let dataModel = {
     wave: {
         show: false,
         radiusRatio: 1,
-        controlPoint: false,
-        controlLink: false,
+        // controlPoint: false,
+        // controlLink: false,
+        controller,
         angleOffset: 0,
         orient: true,
         recycleIndex: 0,
@@ -288,8 +297,9 @@ let dataModel = {
     sawtooth: {
         show: false,
         radiusRatio: 1,
-        controlPoint: false,
-        controlLink: false,
+        // controlPoint: false,
+        // controlLink: false,
+        controller,
         angleOffset: 0,
         orient: true,
         recycleIndex: 0,
@@ -400,8 +410,7 @@ let dataModel = {
         a: 0,
         w: 1,
         ratio: 0.5,
-        colorful: false,
-        colorfulOpacity: 0.5
+        colorful
     }
 
 }
