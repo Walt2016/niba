@@ -108,6 +108,7 @@ export default class BaseSvg {
             ...props
         }, g)
     }
+    // 文本
     _text(p, text, props, g) {
         return this._createEle('text', {
             x: p[0],
@@ -450,10 +451,10 @@ export default class BaseSvg {
         }
     }
     // 颜色
-    _colors(points, opt) {
+    _colors(points, opt = {}) {
         return opt.colorful && opt.colorful.use ? _.colorCircle(points.length, opt.colorful && opt.colorful.opacity || 1) : []
     }
-    _colorProps(colors, index, opt) {
+    _colorProps(colors, index, opt = {}) {
         if (colors && opt.colorful && opt.colorful.use) {
             let color = colors[index % colors.length]
             return {
