@@ -13,7 +13,6 @@ export default class BaseDom {
     )
     this.initEl()
     this.setData(options.data)
-    console.log(this)
   }
   // 初始化el
   initEl() {
@@ -83,7 +82,7 @@ export default class BaseDom {
         // 二级分组
         // this.groupFields(group || "global", field, status)
 
-        this.storeGgroup(this.group, field, status)
+        this.storeGroup(this.group, field, status)
       }
     }
   }
@@ -115,11 +114,17 @@ export default class BaseDom {
     }
   }
   // 分组
-  storeGgroup(group, field, status, groupkey) {
+  storeGroup(group, field, status, groupkey) {
     let arr = (groupkey || field.key).split('$')
     if (!groupkey) {
       groupkey = arr.length > 1 ? arr[0] : 'global'
     }
+    // if (['line', 'dashLine'].includes(groupkey)) {
+    //   groupkey = 'global'
+    //   arr.unshift('global')
+    //   field.key=arr.join('$')
+    // }
+
 
     let item = group.find(t => t.key === groupkey)
     if (item) {
@@ -130,7 +135,7 @@ export default class BaseDom {
         let childKey = arr.slice(0, 2).join('$')
         let childgroup = item.fields
 
-        this.storeGgroup(childgroup, field, status, childKey)
+        this.storeGroup(childgroup, field, status, childKey)
       }
     } else {
       if (Array.isArray(group)) {
@@ -575,7 +580,7 @@ export default class BaseDom {
           this._tips(
             el,
             field,
-            this.inRange(validated.range, +value),
+            !this.inRange(validated.range, +value),
             validated.message
           )
       }

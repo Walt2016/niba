@@ -19,7 +19,6 @@ export default class Panel extends BaseDom {
             footer,
             tools
         } = options || this
-        console.log(this)
 
         let id = this._random()
         let panel = this._div({

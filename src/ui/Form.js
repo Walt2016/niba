@@ -242,7 +242,6 @@ export default class Form extends Panel {
     )
 
     this.tabs.forEach((t, index) => {
-      console.log(t)
       let tabName = t.name
       let actived = index === 0 ? ' actived' : ''
       let tabHeaderItem = this._div(
@@ -270,7 +269,6 @@ export default class Form extends Panel {
         .map(t => {
           return this.group.find(g => g.label === t)
         })
-      console.log(items)
 
       let tabBodyContent = this._div(
         {
