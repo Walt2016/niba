@@ -10,27 +10,27 @@ export default class Form extends Panel {
     let el = this.el
     let form = this._panelWrap()
     el.appendChild(form)
-    let configBtn = this._div(
-      {
-        id: 'configBtn',
-        class: 'btn',
-        // text: '<',
-        click: e => {
-          let el = e.target
-          let wrapper = this._closest(el, '#wrapper')
-          let panel = this._query('.panel', wrapper)
-          this._toggle(panel, 'fadeout')
-          // this._toggle(el, "hide")
-        },
-      },
-      el
-    )
-    this._icon(
-      {
-        class: 'left',
-      },
-      configBtn
-    )
+    // let configBtn = this._div(
+    //   {
+    //     id: 'configBtn',
+    //     class: 'btn',
+    //     // text: '<',
+    //     click: e => {
+    //       let el = e.target
+    //       let wrapper = this._closest(el, '#wrapper')
+    //       let panel = this._query('.panel', wrapper)
+    //       this._toggle(panel, 'fadeout')
+    //       // this._toggle(el, "hide")
+    //     },
+    //   },
+    //   el
+    // )
+    // this._icon(
+    //   {
+    //     class: 'left',
+    //   },
+    //   configBtn
+    // )
   }
 
   _panelWrap(options) {

@@ -1,49 +1,91 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>Niba</title><style>#tools-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 40px;
-            background-color: rgba(0, 0, 0, 0.1);
-        }
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        #svg-container {
-            background-color: rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: 42px;
-            left: 0px;
-            width: calc(100vw - 247px);
-            height: calc(100vh - 42px);
+    #svg-container {
+      background-color: rgba(0, 0, 0, 0.1);
+      position: absolute;
+      top: 42px;
+      left: 0px;
+      width: calc(100vw - 247px);
+      height: calc(100vh - 42px);
+    }
 
-        }
+    #svg-container.hideui {
+      width: 100vw;
+    }
 
-        #params-container {
-            position: absolute;
-            top: 42px;
-            right: 0px;
-            width: 245px;
-            height: calc(100vh - 42px);
-            background-color: rgba(0, 0, 0, 0.1);
-        }
+    #ui-container {
+      position: absolute;
+      top: 42px;
+      right: 0px;
+      width: 245px;
+      height: calc(100vh - 42px);
+      background-color: rgba(0, 0, 0, 0.1);
+    }
 
-        .tools {
-            display: flex;
-            justify-content: flex-start;
-            font-size: 12px;
-        }</style></head><body><div id="tools-container"><div class="tools">zoom <input type="range" class="zoom" max="2.5" min="0.1" step="0.1" value="1"><div class="zoom-value">1</div></div></div><div id="svg-container"></div><div id="params-container"></div><script>// document.querySelector('#svg').innerHTML = [...Array(11)]
-        //     .map((_, i) => Math.pow(Math.sqrt(2), i))
-        //     .map((s, i) => `<rect transform="scale(${s})rotate(${i*45})" 
-        // stroke-width="${2/s}"
-        // stroke="hsl(${i*30},55%,55%)"
-        // width="10" height="10" x="-5" y="-5"></rect>`).join(',');
+    #ui-container.hideui {
+      width: 0;
+    }
 
-        let zoom = document.querySelector(".zoom")
-        zoom.oninput = (e) => {
-            let val = e.target.value
-            let svg = document.querySelector("svg")
-            let container = document.querySelector("#svg-container")
-            let height = container.offsetHeight
-            let width = container.offsetWidth
-            svg.setAttribute("viewBox", [0, 0, width / val, height / val])
-            document.querySelector(".zoom-value").innerText = val
-        }</script><script src="main_bundle.js"></script></body></html>
+    .tools {
+      display: flex;
+      justify-content: flex-start;
+      font-size: 12px;
+    }
+
+    #toggle-ui-button {
+      width: 30px;
+      text-align: center;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #e5eecc;
+      background-image: -webkit-linear-gradient(#fff, #e5eecc 100px);
+      background-image: linear-gradient(#fff, #e5eecc 100px);
+      box-shadow: -1px 1px 1px 0px #888888;
+    }
+
+    #toggle-ui-button:hover {
+      background-color: #b0dd34;
+    }</style></head><body><div id="tools-container"><div class="tools">zoom <input type="range" class="zoom" max="2.5" min="0.1" step="0.1" value="1"><div class="zoom-value">1</div></div><div id="toggle-ui-button">UI</div></div><div id="svg-container"></div><div id="ui-container"></div><script>// document.querySelector('#svg').innerHTML = [...Array(11)]
+    //     .map((_, i) => Math.pow(Math.sqrt(2), i))
+    //     .map((s, i) => `<rect transform="scale(${s})rotate(${i*45})"
+    // stroke-width="${2/s}"
+    // stroke="hsl(${i*30},55%,55%)"
+    // width="10" height="10" x="-5" y="-5"></rect>`).join(',');
+
+    let zoom = document.querySelector('.zoom')
+    zoom.oninput = e => {
+      let val = e.target.value
+      let svg = document.querySelector('svg')
+      let container = document.querySelector('#svg-container')
+      let height = container.offsetHeight
+      let width = container.offsetWidth
+      svg.setAttribute('viewBox', [0, 0, width / val, height / val])
+      document.querySelector('.zoom-value').innerText = val
+    }
+
+    let btn = document.querySelector('#toggle-ui-button')
+    btn.onclick = e => {
+      console.log(e)
+      let el = e.target
+      let ui = document.querySelector('#ui-container')
+      let svg = document
+        .querySelector('#svg-container')
+
+      ;
+      [el, ui, svg].forEach(t => {
+        t.className = t.className === 'hideui' ? '' : 'hideui'
+      })
+
+
+    }</script><script src="main_bundle.js"></script></body></html>
