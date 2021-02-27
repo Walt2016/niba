@@ -329,7 +329,9 @@ export default class DrawSVG extends BaseSvg {
             closed: false,
             broken: true,
           }),
-          {},
+          {
+            fill: options.controller.color || 'red'
+          },
           parent
         )
       }
@@ -352,7 +354,9 @@ export default class DrawSVG extends BaseSvg {
             closed: false,
             broken: true,
           }),
-          {},
+          {
+            fill: 'red'
+          },
           parent
         )
       }

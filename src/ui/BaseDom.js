@@ -2,7 +2,8 @@ import _ from '../utils/index'
 export default class BaseDom {
   constructor(options) {
     Object.assign(
-      this, {
+      this,
+      {
         labels: {
           o: 'center',
           r: 'radius',
@@ -124,7 +125,6 @@ export default class BaseDom {
     //   arr.unshift('global')
     //   field.key=arr.join('$')
     // }
-
 
     let item = group.find(t => t.key === groupkey)
     if (item) {
@@ -283,7 +283,7 @@ export default class BaseDom {
     return el
   }
   // 创建Dom
-  _createEle(tag, options, parent) {
+  _createEle(tag, options, parent, children) {
     let ele = document.createElement(tag)
     for (let key in options) {
       if (options[key] !== undefined) {
@@ -291,7 +291,7 @@ export default class BaseDom {
           case 'class':
             ele.className = options[key]
             break
-            // case "name":
+          // case "name":
           case 'id':
             ele[key] = options[key]
             break
@@ -342,36 +342,70 @@ export default class BaseDom {
           case 'children':
           case 'slot':
             this._appendTo(ele, options[key])
-            // options[key] && ele.appendChild(options[key])
             break
+          case 'style': case "css":
+            this._css(ele,options[key])
+            break;
           default:
-            ele.setAttribute(key, options[key])
+            if(_.isObject(options[key])){
+              console.log(options[key])
+            }else{
+              ele.setAttribute(key, options[key])
+            }
             break
         }
       }
     }
     parent && parent.appendChild(ele)
+    if (children) {
+      deelArray(
+        children,
+        t => {
+          if(this.isDom(t)){
+            ele.appendChild(t)
+          }else{
+           ele.appendChild( this._createEle(t))
+          }
+          
+        }
+      )
+    }
     return ele
   }
 
-  _div(options, parent) {
+  // 处理数组或单项
+  deelArray(arr, fn) {
+    if (Array.isArray(arr)) {
+      arr.forEach(t => {
+        doArray(t, fn)
+      })
+    } else {
+     fn(arr)
+    }
+  }
+
+  _div(options, parent,children) {
     let innerText = options['innerText'] || options['text']
     return this._createEle(
-      'div', {
+      'div',
+      {
         ...options,
         innerText,
       },
-      parent
+      parent,
+      children
     )
   }
 
-  _icon(options, parent) {
+  _icon(options, parent,children) {
     return this._createEle(
-      'i', {
+      'i',
+      {
         ...options,
         class: 'icon ' + options.class,
       },
-      parent
+      parent,
+      children
     )
   }
 
@@ -445,9 +479,6 @@ export default class BaseDom {
   }
   // get value
   _get(field, form) {
-    // if (this.isDom(field)) {
-    //     return this._attr(field, "value")
-    // }
     let formitem = this._getFormItem(field, form)
     if (formitem) {
       let value = formitem.value
@@ -545,12 +576,12 @@ export default class BaseDom {
   // 判断是dom节点
   // "htmldivelement" === _.type(el)
   isDom(el) {
-    return typeof HTMLElement === 'function' ?
-      el instanceof HTMLElement :
-      el &&
-      typeof el === 'object' &&
-      el.nodeType === 1 &&
-      typeof el.nodeName === 'string'
+    return typeof HTMLElement === 'function'
+      ? el instanceof HTMLElement
+      : el &&
+          typeof el === 'object' &&
+          el.nodeType === 1 &&
+          typeof el.nodeName === 'string'
   }
   inRange(range, value) {
     return range[0] <= value && value <= range[1]
@@ -602,7 +633,8 @@ export default class BaseDom {
     let formItem = this._closest(el, '.form-item')
     let tips =
       this._query('.tips', formItem) ||
-      this._div({
+      this._div(
+        {
           class: 'tips',
         },
         formItem
@@ -610,15 +642,9 @@ export default class BaseDom {
     if (condition) {
       this._addClass(el, 'required')
       let style = window.getComputedStyle(el)
-      let {
-        width,
-        height
-      } = style
+      let { width, height } = style
       let offset = parseInt(width) + 40
-      let {
-        offsetLeft,
-        offsetTop
-      } = el
+      let { offsetLeft, offsetTop } = el
       this._show(tips)
       this._css(tips, {
         left: offsetLeft - offset + 'px',
@@ -670,7 +696,8 @@ export default class BaseDom {
   _fieldset(name, parent) {
     let fieldset = this._createEle('fieldset', {}, parent)
     let legend = this._createEle(
-      'legend', {
+      'legend',
+      {
         innerText: name,
       },
       fieldset

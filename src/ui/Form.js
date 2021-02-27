@@ -10,27 +10,6 @@ export default class Form extends Panel {
     let el = this.el
     let form = this._panelWrap()
     el.appendChild(form)
-    // let configBtn = this._div(
-    //   {
-    //     id: 'configBtn',
-    //     class: 'btn',
-    //     // text: '<',
-    //     click: e => {
-    //       let el = e.target
-    //       let wrapper = this._closest(el, '#wrapper')
-    //       let panel = this._query('.panel', wrapper)
-    //       this._toggle(panel, 'fadeout')
-    //       // this._toggle(el, "hide")
-    //     },
-    //   },
-    //   el
-    // )
-    // this._icon(
-    //   {
-    //     class: 'left',
-    //   },
-    //   configBtn
-    // )
   }
 
   _panelWrap(options) {
@@ -494,6 +473,18 @@ export default class Form extends Panel {
       this.dataModelChanged(el)
     }
     let input = this._input(field, parent)
+    let iconColor;
+    if (field.name === 'color') {
+      iconColor = this._div(
+        {
+          class: 'icon-color',
+          style: {
+            background: input.value,
+          },
+        },
+        parent
+      )
+    }
     field.options.forEach(t => {
       let actived = t === field.value ? ' actived' : ''
       this._div(
@@ -506,6 +497,11 @@ export default class Form extends Panel {
             this._actived(el)
             let value = this._attr(el, 'value')
             input.value = value
+            if(iconColor){
+              this._css(iconColor,{
+                background: value
+              })
+            }
             // 通过DOM对象赋值不会触发change事件，手动触发
             input.onchange(input)
             this._hide(dropdown)
@@ -529,7 +525,7 @@ export default class Form extends Panel {
     return this._dropdown(field, parent)
   }
   // 颜色
-  _inputColor(field,parent){
+  _inputColor(field, parent) {
     return this._dropdown(field, parent)
   }
   _inputRange(field, parent) {

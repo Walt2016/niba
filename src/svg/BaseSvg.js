@@ -15,7 +15,6 @@ export default class BaseSvg {
         this._init(options)
     }
     _init(options) {
-
         Object.assign(this, {
             width,
             height,

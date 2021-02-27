@@ -92,8 +92,6 @@ let dataModel = {
   // 边
   edge: {
     show: true,
-    color: 'red',
-    opacity: 1,
     line,
     dashLine,
     text,
