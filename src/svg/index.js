@@ -123,7 +123,7 @@ export default class DrawSVG extends BaseSvg {
       this._createEle(options.shape || 'circle', props, g)
 
       // 标注文字
-      if (options.text && options.text.show) {
+      if (this._show(options,'text')) {
         this._text(t, index, this._textProps(options), g)
       }
     })
@@ -168,7 +168,6 @@ export default class DrawSVG extends BaseSvg {
 
     let points = options._points || []
     let ds = []
-    // let showEdge = false;
     let curveEdges = [
       'edge',
       'semicircle',
@@ -226,7 +225,7 @@ export default class DrawSVG extends BaseSvg {
       )
       this._path(ds.join(' '), params, g)
       // 标注文字
-      if (opt.text && opt.text.show) {
+      if (this._show(opt,'text')) {
         let midseg = new MidSeg({
           points,
         })
@@ -311,13 +310,14 @@ export default class DrawSVG extends BaseSvg {
   // 控制点
   _controller(options, ps, parent) {
     if (_.isObject(options.controller)) {
-      if (options.controller.show) {
+      if (this._show(options,'controller')) {
         ps.forEach(t => {
           this._circle(
             t,
             options.controller.radius || 5,
             {
               fill: options.controller.color || 'red',
+              opacity: options.controller.opacity || 1
             },
             parent
           )
@@ -330,7 +330,9 @@ export default class DrawSVG extends BaseSvg {
             broken: true,
           }),
           {
-            fill: options.controller.color || 'red'
+            stroke: options.controller.lineColor || options.controller.color ||  'red',
+            'stroke-width':options.controller.lineWidth || 1,
+            opacity: options.controller.opacity || 1
           },
           parent
         )

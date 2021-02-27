@@ -40,7 +40,10 @@ let controller = {
   show: false,
   link: false,
   color: 'red',
-  radius: 5
+  lineColor:'red',
+  lineWidth:1,
+  radius: 5,
+  opacity: 1
 }
 // 延迟动画
 let timer = {

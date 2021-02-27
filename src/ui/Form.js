@@ -474,7 +474,7 @@ export default class Form extends Panel {
     }
     let input = this._input(field, parent)
     let iconColor;
-    if (field.name === 'color') {
+    if (['color','lineColor'].includes(field.name)) {
       iconColor = this._div(
         {
           class: 'icon-color',
