@@ -1,12 +1,6 @@
 import config from '../config'
-let {
-  env,
-  center
-} = config
-let {
-  width,
-  height
-} = env
+let { env, center } = config
+let { width, height } = env
 
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
@@ -21,7 +15,9 @@ let dashLine = {
 let text = {
   show: false,
   color: 'red',
-  fontSize: 12
+  fontSize: 12,
+  offsetRadius:0,
+  offsetAngle :0
 }
 // 实线
 let line = {
@@ -33,17 +29,18 @@ let line = {
 let fill = {
   show: false,
   color: 'red',
-  opacity: 1
+  opacity: 1,
 }
 // 控制点
 let controller = {
   show: false,
   link: false,
   color: 'red',
-  lineColor:'red',
-  lineWidth:1,
+  lineColor: 'red',
+  lineWidth: 1,
   radius: 5,
-  opacity: 1
+  opacity: 1,
+  lineOpacity: 1,
 }
 // 延迟动画
 let timer = {
@@ -62,10 +59,10 @@ let dataModel = {
   n: 6,
   angle: 0,
   fill: false,
-  color: "red",
+  color: 'red',
   lineWidth: 1,
   opacity: 0.5,
-  dashLine:false,
+  dashLine: false,
   dashArray: [5, 5],
   dashAnimation: false,
   // line,
@@ -90,7 +87,7 @@ let dataModel = {
     angleOffset: 0,
     orient: true,
     recycleIndex: 0,
-    splitNum: 0
+    splitNum: 0,
   },
   // 边
   edge: {
@@ -110,7 +107,6 @@ let dataModel = {
     splitNum: 0,
   },
 
-
   // 中心点
   center: {
     show: false,
@@ -120,7 +116,7 @@ let dataModel = {
     shape: 'circle',
     opacity: 0.5,
     line,
-    dashLine
+    dashLine,
   },
 
   // 顶点
@@ -135,7 +131,7 @@ let dataModel = {
     dashLine,
     animationTwinkle: false,
     text,
-    colorful
+    colorful,
   },
 
   // 旁切圆
@@ -145,7 +141,7 @@ let dataModel = {
     color: 'red',
     opacity: 0.5,
     line,
-    dashLine
+    dashLine,
   },
 
   // 内切圆
@@ -156,9 +152,8 @@ let dataModel = {
     // lineWidth: 1,
     opacity: 0.5,
     line,
-    dashLine
+    dashLine,
   },
-
 
   // 网格坐标
   grid: {
@@ -181,7 +176,6 @@ let dataModel = {
     color: 'black',
   },
 
-
   // 分形
   fractal: {
     use: false,
@@ -190,7 +184,7 @@ let dataModel = {
     offset: 0.5,
     ratio: 1,
     timer,
-    colorful
+    colorful,
     // refraction: 0
   },
   // 镜像
@@ -203,7 +197,7 @@ let dataModel = {
     refraction: 0,
     offset: 1,
     timer,
-    colorful
+    colorful,
   },
 
   // 动画
@@ -212,7 +206,6 @@ let dataModel = {
     name: 'rotate',
     duration: 1,
     iterationCount: 'infinite',
-
   },
 
   // 变形
@@ -221,7 +214,6 @@ let dataModel = {
     name: 'scale',
     propA: 2,
     propB: 2,
-
   },
 
   // 坐标轴
@@ -242,17 +234,14 @@ let dataModel = {
     dashLine,
     sticks: true,
     arrow: true,
-
   },
-
-
 
   // 连接线
   link: {
     show: false,
     // lineWidth: 1,
-    color: 'black',
-    opacity: 0.5,
+    // color: 'black',
+    // opacity: 0.5,
     line,
     dashLine,
     waveform: 'line',
@@ -263,8 +252,6 @@ let dataModel = {
     recycleIndex: 0,
     splitNum: 0,
   },
-
-
 
   // 曲线
   curve: {
@@ -311,7 +298,6 @@ let dataModel = {
     splitNum: 0,
   },
 
-
   // 椭圆弧
   elliptical: {
     show: false,
@@ -334,9 +320,7 @@ let dataModel = {
     offset: 0,
     skewX: 0,
     opacity: 1,
-
   },
-
 
   // 格子
   chequer: {
@@ -362,14 +346,14 @@ let dataModel = {
     use: false,
     size: 10,
     color1: 'red',
-    offset: 0
+    offset: 0,
   },
   // 渐变
   gradient: {
     use: false,
     type: 'linearGradient',
     color1: 'red',
-    color2: 'blue'
+    color2: 'blue',
   },
   // 正玄
   sin: {
@@ -378,7 +362,7 @@ let dataModel = {
     r: 100,
     k: 0,
     a: 0,
-    w: 1
+    w: 1,
   },
   cos: {
     show: false,
@@ -386,7 +370,7 @@ let dataModel = {
     r: 100,
     k: 0,
     a: 0,
-    w: 1
+    w: 1,
   },
   tan: {
     show: false,
@@ -394,8 +378,7 @@ let dataModel = {
     r: 100,
     k: 0,
     a: 0,
-    w: 1
-
+    w: 1,
   },
   // 路径
   path: {
@@ -407,13 +390,11 @@ let dataModel = {
     a: 0,
     w: 1,
     ratio: 0.5,
-    colorful
-  }
-
+    colorful,
+  },
 }
 
-
-let polygon = new Polygon(dataModel, "svg")
+let polygon = new Polygon(dataModel, 'svg')
 let options = Group._options(polygon)
 let tabs = Group._tabs()
 let validated = Group.validated
@@ -421,16 +402,17 @@ let required = Group.required
 // debugger
 polygon.draw()
 let ui = new UI.Form({
-  el: "#ui-container",
+  el: '#ui-container',
   data: polygon,
   options,
   group: true,
   tabs,
   validated,
   required,
-  btns: [{
-      text: "apply",
-      name: 'submit'
+  btns: [
+    {
+      text: 'apply',
+      name: 'submit',
       // click: (e) => {
       //     console.log(e,this)
       //     debugger
@@ -439,8 +421,8 @@ let ui = new UI.Form({
     },
     {
       text: 'reset',
-      name: 'reset'
-    }
-  ]
+      name: 'reset',
+    },
+  ],
 })
 console.log(ui)

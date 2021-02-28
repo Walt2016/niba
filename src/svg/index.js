@@ -123,10 +123,14 @@ export default class DrawSVG extends BaseSvg {
       this._createEle(options.shape || 'circle', props, g)
 
       // 标注文字
-      if (this._show(options,'text')) {
-        this._text(t, index, this._textProps(options), g)
-      }
+      // if (this._show(options, 'text')) {
+      //   this._text(t, index, this._textProps(options), g)
+      // }
     })
+    // 标注文字
+    if (this._show(options, 'text')) {
+      this._textMark(points, { id: 'vertexText', ...options }, g)
+    }
   }
 
   // 图形
@@ -225,20 +229,11 @@ export default class DrawSVG extends BaseSvg {
       )
       this._path(ds.join(' '), params, g)
       // 标注文字
-      if (this._show(opt,'text')) {
+      if (this._show(opt, 'text')) {
         let midseg = new MidSeg({
           points,
         })
-        let groupEdgeText = this._g(
-          {
-            id: 'edgeText',
-            ...this._textProps(opt),
-          },
-          g
-        )
-        midseg.points.forEach((t, index) => {
-          this._text(t, index, {}, groupEdgeText)
-        })
+        this._textMark(midseg.points, { id: 'edgeText', ...opt }, g)
       }
     }
 
@@ -307,35 +302,61 @@ export default class DrawSVG extends BaseSvg {
       })
     }
   }
+  // 文字标注
+  _textMark(points, options, g) {
+    // 标注文字
+    if (this._show(options, 'text')) {
+      let groupEdgeText = this._g(
+        {
+          id: options.id || 'edgeText',
+          ...this._textProps(options),
+        },
+        g
+      )
+      let { offsetRadius, offsetAngle } = options.text
+      points.forEach((t, index) => {
+        let p = _.polar(t, offsetRadius, offsetAngle)
+        this._text(p, index, {}, groupEdgeText)
+      })
+    }
+  }
+
   // 控制点
   _controller(options, ps, parent) {
-    if (_.isObject(options.controller)) {
-      if (this._show(options,'controller')) {
-        ps.forEach(t => {
-          this._circle(
-            t,
-            options.controller.radius || 5,
-            {
-              fill: options.controller.color || 'red',
-              opacity: options.controller.opacity || 1
-            },
-            parent
-          )
-        })
-      }
-      if (options.controller.link) {
-        this._path(
-          this._d(ps, {
-            closed: false,
-            broken: true,
-          }),
+    let { controller } = options
+    if (_.isObject(controller)) {
+      if (this._show(options, 'controller')) {
+        let g = this._g(
           {
-            stroke: options.controller.lineColor || options.controller.color ||  'red',
-            'stroke-width':options.controller.lineWidth || 1,
-            opacity: options.controller.opacity || 1
+            id: 'controller',
           },
           parent
         )
+        ps.forEach(t => {
+          this._circle(
+            t,
+            controller.radius || 5,
+            {
+              fill: controller.color || 'red',
+              opacity: controller.opacity || 1,
+            },
+            g
+          )
+        })
+        if (controller.link) {
+          this._path(
+            this._d(ps, {
+              closed: false,
+              broken: true,
+            }),
+            {
+              stroke: controller.lineColor || controller.color || 'red',
+              'stroke-width': controller.lineWidth || 1,
+              opacity: controller.lineOpacity || controller.opacity || 1,
+            },
+            g
+          )
+        }
       }
     } else {
       if (options.controlPoint) {
@@ -357,7 +378,7 @@ export default class DrawSVG extends BaseSvg {
             broken: true,
           }),
           {
-            fill: 'red'
+            fill: 'red',
           },
           parent
         )
