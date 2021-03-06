@@ -193,7 +193,8 @@ export default class DrawSVG extends BaseSvg {
       if (this._show(options, t)) {
         showEdge = true
         let opt = this._options(options, t)
-        ds[ds.length] = this._d(
+        // ds[ds.length] = 
+        let d=this._d(
           points,
           {
             waveform: t,
@@ -203,39 +204,40 @@ export default class DrawSVG extends BaseSvg {
             this._controller(opt, e.cps, g)
           }
         )
+        this._edge(t,d,points,options,g)
       }
     })
 
-    if (showEdge) {
-      // 有边
-      let defaultOpt = this._options(options)
-      let opt = this._options(options, 'edge')
-      let edgeShapeProps = this._shapeProps(defaultOpt)
-      let edgeLineProps = this._lineProps(opt)
-      let params = {
-        // fill: options.patternUse ? "url(#shape-pattern)" : options.gradientUse ? "url(#shape-gradient)" : "none",
-        ...edgeShapeProps,
-        ...edgeLineProps,
-        // transform: this._options(options, "transform").name,
-        // 'transform-origin': `${width/2} ${height/2}`
-      }
+    // if (showEdge) {
+    //   // 有边
+    //   let defaultOpt = this._options(options)
+    //   let opt = this._options(options, 'edge')
+    //   let edgeShapeProps = this._shapeProps(defaultOpt)
+    //   let edgeLineProps = this._lineProps(opt)
+    //   let params = {
+    //     // fill: options.patternUse ? "url(#shape-pattern)" : options.gradientUse ? "url(#shape-gradient)" : "none",
+    //     ...edgeShapeProps,
+    //     ...edgeLineProps,
+    //     // transform: this._options(options, "transform").name,
+    //     // 'transform-origin': `${width/2} ${height/2}`
+    //   }
 
-      ;['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(
-        t => {
-          if (this._show(options, t)) {
-            params.fill = `url(#shape-${t})`
-          }
-        }
-      )
-      this._path(ds.join(' '), params, g)
-      // 标注文字
-      if (this._show(opt, 'text')) {
-        let midseg = new MidSeg({
-          points,
-        })
-        this._textMark(midseg.points, { id: 'edgeText', ...opt }, g)
-      }
-    }
+    //   ;['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(
+    //     t => {
+    //       if (this._show(options, t)) {
+    //         params.fill = `url(#shape-${t})`
+    //       }
+    //     }
+    //   )
+    //   this._path(ds.join(' '), params, g)
+    //   // 标注文字
+    //   if (this._show(opt, 'text')) {
+    //     let midseg = new MidSeg({
+    //       points,
+    //     })
+    //     this._textMark(midseg.points, { id: 'edgeText', ...opt }, g)
+    //   }
+    // }
 
     ;[
       'radius',
@@ -301,6 +303,40 @@ export default class DrawSVG extends BaseSvg {
         )
       })
     }
+  }
+  // 边
+  _edge(shape,d,points,options,g){
+
+    // 有边
+    let defaultOpt = this._options(options)
+    let opt = this._options(options, shape||'edge')
+    let edgeShapeProps = this._shapeProps(defaultOpt)
+    let edgeLineProps = this._lineProps(opt)
+    let params = {
+      // fill: options.patternUse ? "url(#shape-pattern)" : options.gradientUse ? "url(#shape-gradient)" : "none",
+      ...edgeShapeProps,
+      ...edgeLineProps,
+      // transform: this._options(options, "transform").name,
+      // 'transform-origin': `${width/2} ${height/2}`
+    }
+
+    ;['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(
+      t => {
+        if (this._show(options, t)) {
+          params.fill = `url(#shape-${t})`
+        }
+      }
+    )
+    // ds.join(' ')
+    this._path(d, params, g)
+    // 标注文字
+    if (this._show(opt, 'text')) {
+      let midseg = new MidSeg({
+        points,
+      })
+      this._textMark(midseg.points, { id: 'edgeText', ...opt }, g)
+    }
+
   }
   // 文字标注
   _textMark(points, options, g) {

@@ -255,6 +255,8 @@ let dataModel = {
   curve: {
     show: false,
     radiusRatio: 1,
+    line,
+    dashLine,
     controller,
     angleOffset: 0,
     orient: true,
@@ -266,6 +268,8 @@ let dataModel = {
   wave: {
     show: false,
     radiusRatio: 1,
+    line,
+    dashLine,
     controller,
     angleOffset: 0,
     orient: true,
@@ -277,6 +281,8 @@ let dataModel = {
   sawtooth: {
     show: false,
     radiusRatio: 1,
+    line,
+    dashLine,
     controller,
     angleOffset: 0,
     orient: true,
@@ -290,6 +296,8 @@ let dataModel = {
     sweepFlag: true,
     recycleIndex: 0,
     splitNum: 0,
+    line,
+    dashLine
   },
 
   // 椭圆弧
@@ -301,6 +309,8 @@ let dataModel = {
     largeArcFlag: false,
     recycleIndex: 0,
     splitNum: 0,
+    line,
+    dashLine
   },
 
   // 背景
