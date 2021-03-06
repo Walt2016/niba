@@ -125,8 +125,6 @@ export default class BaseSvg {
         x: p[0],
         y: p[1],
         textContent: text,
-        // fill: 'black',
-        // 'font-size': 12,
         ...props,
       },
       g
@@ -153,10 +151,6 @@ export default class BaseSvg {
       return wf['_' + waveform]()
     }
     return wf.d()
-    // return wf.d(points, {
-    //     closed,
-    //     broken
-    // })
   }
   _line(p1, p2, props, g) {
     this._createEle(
@@ -447,7 +441,7 @@ export default class BaseSvg {
 
   // 获取对象参数  对象名称
   _options(options, moduleName) {
-    if (_.type(options[moduleName]) === 'object') {
+    if (_.isObject(options[moduleName])) {
       return options[moduleName]
     }
     if (!moduleName && options.global) {
@@ -455,31 +449,15 @@ export default class BaseSvg {
     }
     let opt = {}
     for (let key in options) {
-      if (_.type(options[key]) !== 'object') {
+      if (!_.isObject(options[key])) {
         opt[key] = options[key]
       }
     }
     return opt
-
-    // // flat 格式属性
-    // let opt = {};
-    // this.props.forEach(t => {
-    //     if (moduleName) {
-    //         let name = _.camelCase([moduleName, t])
-    //         if (options[name]) {
-    //             opt[t] = options[name]
-    //         }
-    //     } else {
-    //         if (options[t]) {
-    //             opt[t] = options[t]
-    //         }
-    //     }
-    // })
-    // return opt
   }
   // 判断模块是否显示
   _show(options, moduleName) {
-    if (_.type(options[moduleName]) === 'object') {
+    if (_.isObject(options[moduleName])) {
       return options[moduleName].show || options[moduleName].use
     }
     // flat 格式属性
@@ -562,7 +540,6 @@ export default class BaseSvg {
           'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
         }
       : {
-          // fill: 'transparent',
           fill: 'none',
         }
   }

@@ -5,6 +5,20 @@ let { width, height } = env
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
 import Group from '../svg/group'
+
+// 填充
+let fill ={
+  fill: false,
+  color: 'red',
+  opacity: 0.5,
+}
+// 实线
+let line = {
+  lineWidth: 1,
+  color: 'red',
+  opacity: 0.5,
+  linejoin: 'arcs',
+}
 // 虚线
 let dashLine = {
   show: false,
@@ -19,27 +33,21 @@ let text = {
   offsetRadius:0,
   offsetAngle :0
 }
-// 实线
-let line = {
-  lineWidth: 1,
-  color: 'red',
-  opacity: 0.5,
-  linejoin: 'arcs',
-}
-let fill = {
-  show: false,
-  color: 'red',
-  opacity: 1,
-}
+
+// let fill = {
+//   show: false,
+//   color: 'red',
+//   opacity: 1,
+// }
 // 控制点
 let controller = {
   show: false,
   link: false,
   color: 'red',
-  lineColor: 'red',
-  lineWidth: 1,
   radius: 5,
   opacity: 1,
+  lineColor: 'red',
+  lineWidth: 1,
   lineOpacity: 1,
 }
 // 延迟动画
@@ -74,8 +82,6 @@ let dataModel = {
   // 半径
   radius: {
     show: false,
-    color: 'red',
-    opacity: 1,
     line,
     dashLine,
     closed: true,
@@ -110,11 +116,9 @@ let dataModel = {
   // 中心点
   center: {
     show: false,
-    fill: true,
-    color: 'red',
+    ...fill,
     radius: 8,
     shape: 'circle',
-    opacity: 0.5,
     line,
     dashLine,
   },
@@ -122,11 +126,9 @@ let dataModel = {
   // 顶点
   vertex: {
     show: false,
-    fill: true,
-    color: 'red',
+    ...fill,
     radius: 5,
     shape: 'circle',
-    opacity: 0.5,
     line,
     dashLine,
     animationTwinkle: false,
@@ -149,7 +151,6 @@ let dataModel = {
     show: false,
     fill: false,
     color: 'red',
-    // lineWidth: 1,
     opacity: 0.5,
     line,
     dashLine,
@@ -239,9 +240,6 @@ let dataModel = {
   // 连接线
   link: {
     show: false,
-    // lineWidth: 1,
-    // color: 'black',
-    // opacity: 0.5,
     line,
     dashLine,
     waveform: 'line',
@@ -257,8 +255,6 @@ let dataModel = {
   curve: {
     show: false,
     radiusRatio: 1,
-    // controlPoint: false,
-    // controlLink: false,
     controller,
     angleOffset: 0,
     orient: true,
@@ -270,8 +266,6 @@ let dataModel = {
   wave: {
     show: false,
     radiusRatio: 1,
-    // controlPoint: false,
-    // controlLink: false,
     controller,
     angleOffset: 0,
     orient: true,
@@ -413,11 +407,6 @@ let ui = new UI.Form({
     {
       text: 'apply',
       name: 'submit',
-      // click: (e) => {
-      //     console.log(e,this)
-      //     debugger
-      //     polygon.redraw(e)
-      // }
     },
     {
       text: 'reset',

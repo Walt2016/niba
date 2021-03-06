@@ -320,6 +320,23 @@ export default class DrawSVG extends BaseSvg {
       })
     }
   }
+  // 小球
+  _balls(points, options, g) {
+    points.forEach((t, index) => {
+      this._circle(
+        t,
+        options.radius || 5,
+        {
+          fill: options.color || 'red',
+          opacity: options.opacity || 1,
+        },
+        g
+      )
+      if (options.showText) {
+        this._text(t, index, {}, g)
+      }
+    })
+  }
 
   // 控制点
   _controller(options, ps, parent) {
@@ -332,17 +349,7 @@ export default class DrawSVG extends BaseSvg {
           },
           parent
         )
-        ps.forEach(t => {
-          this._circle(
-            t,
-            controller.radius || 5,
-            {
-              fill: controller.color || 'red',
-              opacity: controller.opacity || 1,
-            },
-            g
-          )
-        })
+        this._balls(ps, controller, g)
         if (controller.link) {
           this._path(
             this._d(ps, {
@@ -357,31 +364,6 @@ export default class DrawSVG extends BaseSvg {
             g
           )
         }
-      }
-    } else {
-      if (options.controlPoint) {
-        ps.forEach(t => {
-          this._circle(
-            t,
-            5,
-            {
-              fill: 'red',
-            },
-            parent
-          )
-        })
-      }
-      if (options.controlLink) {
-        this._path(
-          this._d(ps, {
-            closed: false,
-            broken: true,
-          }),
-          {
-            fill: 'red',
-          },
-          parent
-        )
       }
     }
   }
@@ -403,8 +385,9 @@ export default class DrawSVG extends BaseSvg {
       ps[ps.length] = o
       ps[ps.length] = t
     })
+    // this._balls(ps, {}, g)
 
-    let d = this._d(ps, options, e => {
+    let d = this._d(ps, { ...options, broken: true, closed: false }, e => {
       this._controller(options, e.cps, groupRadius)
     })
     this._path(d, {}, groupRadius)
