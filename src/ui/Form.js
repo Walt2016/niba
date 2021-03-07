@@ -140,15 +140,13 @@ export default class Form extends Panel {
           click: e => {
             let el = e.target
             let groupItem = this._closest(el, '.form-group-item')
-            let checkbox = this._query("input[name='show']", groupItem)
-            console.log(checkbox, checkbox.checked)
-            checkbox.checked = false
-            this.dataModelChanged(checkbox)
-
+            let checkbox = this._query("input[name='show']", groupItem) || this._query("input[name='use']", groupItem)
+            if(checkbox){
+              checkbox.checked = false
+              this.dataModelChanged(checkbox)
+            }
             let groupItemHeader = this._closest(el, '.form-group-item-header')
-
             this._toggle(groupItemHeader, 'show')
-
             this._stopProp(e)
           },
         },

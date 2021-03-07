@@ -58,6 +58,7 @@ let color = [
   'brown',
   'orange',
   'Navy',
+  'white'
 ]
 const optionsConfig = {
   color,

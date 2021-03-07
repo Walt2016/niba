@@ -7,7 +7,7 @@ import UI from '../ui'
 import Group from '../svg/group'
 
 // 填充
-let fill ={
+let fill = {
   fill: false,
   color: 'red',
   opacity: 0.5,
@@ -30,8 +30,8 @@ let text = {
   show: false,
   color: 'red',
   fontSize: 12,
-  offsetRadius:0,
-  offsetAngle :0
+  offsetRadius: 0,
+  offsetAngle: 0,
 }
 
 // let fill = {
@@ -82,35 +82,35 @@ let dataModel = {
   // 半径
   radius: {
     show: false,
-    line,
-    dashLine,
-    closed: true,
-    broken: false,
+    // closed: true,
+    // broken: false,
     markerArrow: false,
     waveform: 'line',
     ratio: 1,
-    controller,
     angleOffset: 0,
     orient: true,
     recycleIndex: 0,
     splitNum: 0,
+    line,
+    dashLine,
+    controller,
   },
   // 边
   edge: {
     show: true,
-    line,
-    dashLine,
-    text,
     animationTwinkle: false,
     closed: true,
     broken: false,
     waveform: 'line',
     radiusRatio: 1,
-    controller,
     angleOffset: 0,
     orient: true,
     recycleIndex: 0,
     splitNum: 0,
+    line,
+    dashLine,
+    text,
+    controller,
   },
 
   // 中心点
@@ -244,50 +244,50 @@ let dataModel = {
     dashLine,
     waveform: 'line',
     radiusRatio: 1,
-    controller,
     angleOffset: 0,
     orient: true,
     recycleIndex: 0,
     splitNum: 0,
+    controller,
   },
 
   // 曲线
   curve: {
     show: false,
     radiusRatio: 1,
-    line,
-    dashLine,
-    controller,
     angleOffset: 0,
     orient: true,
     recycleIndex: 0,
     splitNum: 0,
+    line,
+    dashLine,
+    controller,
   },
 
   // 波浪形
   wave: {
     show: false,
     radiusRatio: 1,
-    line,
-    dashLine,
-    controller,
     angleOffset: 0,
     orient: true,
     recycleIndex: 0,
     splitNum: 0,
+    line,
+    dashLine,
+    controller,
   },
 
   // 锯齿形
   sawtooth: {
     show: false,
     radiusRatio: 1,
-    line,
-    dashLine,
-    controller,
     angleOffset: 0,
     orient: true,
     recycleIndex: 0,
     splitNum: 0,
+    line,
+    dashLine,
+    controller,
   },
 
   // 半圆
@@ -297,7 +297,7 @@ let dataModel = {
     recycleIndex: 0,
     splitNum: 0,
     line,
-    dashLine
+    dashLine,
   },
 
   // 椭圆弧
@@ -310,7 +310,7 @@ let dataModel = {
     recycleIndex: 0,
     splitNum: 0,
     line,
-    dashLine
+    dashLine,
   },
 
   // 背景
