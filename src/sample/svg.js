@@ -39,7 +39,15 @@ let text = {
   offsetRadius: 0,
   offsetAngle: 0,
 }
-
+// 坐标棍子
+let sticks={
+  show:true,
+  step:50,
+  color:'red',
+  lineWidth:1,
+  height:6,
+  opacity: 1
+}
 // let fill = {
 //   show: false,
 //   color: 'red',
@@ -223,17 +231,17 @@ let dataModel = {
   // 坐标轴
   axisX: {
     show: false,
-    sticks: true,
     arrow: true,
     line,
     dashLine,
+    sticks,
   },
   axisY: {
     show: false,
-    sticks: true,
     arrow: true,
     line,
     dashLine,
+    sticks,
   },
 
   // 连接线

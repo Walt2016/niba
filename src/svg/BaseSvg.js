@@ -2,8 +2,14 @@ import config from '../config'
 import _ from '../utils/index'
 import Waveform from './Waveform'
 import Pattern from './Pattern'
-let { env, center } = config
-let { width, height } = env
+let {
+  env,
+  center
+} = config
+let {
+  width,
+  height
+} = env
 export default class BaseSvg {
   constructor(options) {
     this._init(options)
@@ -13,13 +19,12 @@ export default class BaseSvg {
       width,
       height,
       options,
-    })
-    ;['g', 'marker'].forEach(t => {
+    });
+    ['g', 'marker'].forEach(t => {
       Object.assign(this, {
         [`_${t}`]: (props, g) => {
           return this._createEle(
-            t,
-            {
+            t, {
               id: t,
               ...props,
             },
@@ -29,7 +34,7 @@ export default class BaseSvg {
       })
     })
   }
-  _createEle(tag, props, g,children) {
+  _createEle(tag, props, g, children) {
     let ele = document.createElementNS('http://www.w3.org/2000/svg', tag)
     for (let key in props) {
       if (props[key] !== undefined) {
@@ -84,8 +89,7 @@ export default class BaseSvg {
 
   _use(g) {
     return this._createEle(
-      'use',
-      {
+      'use', {
         x: 0,
         y: 0,
         width,
@@ -97,8 +101,7 @@ export default class BaseSvg {
   }
   _symbol(g) {
     return this._createEle(
-      'symbol',
-      {
+      'symbol', {
         id: 'shape',
       },
       g
@@ -106,8 +109,7 @@ export default class BaseSvg {
   }
   _circle(o, r, props, g) {
     return this._createEle(
-      'circle',
-      {
+      'circle', {
         cx: o[0],
         cy: o[1],
         r,
@@ -120,8 +122,7 @@ export default class BaseSvg {
   // 文本
   _text(p, text, props, g) {
     return this._createEle(
-      'text',
-      {
+      'text', {
         x: p[0],
         y: p[1],
         textContent: text,
@@ -132,8 +133,7 @@ export default class BaseSvg {
   }
   _path(d, props, g) {
     return this._createEle(
-      'path',
-      {
+      'path', {
         d,
         id: 'path',
         ...props,
@@ -143,7 +143,11 @@ export default class BaseSvg {
   }
   // 链接点 [p1,p2]  =>[[x,y],[x,y]]
   _d(points, options = {}, callback) {
-    let { closed, broken = false, waveform = 'line' } = options
+    let {
+      closed,
+      broken = false,
+      waveform = 'line'
+    } = options
     closed = closed === undefined ? true : closed
 
     let wf = new Waveform(points, options, callback)
@@ -154,8 +158,7 @@ export default class BaseSvg {
   }
   _line(p1, p2, props, g) {
     this._createEle(
-      'line',
-      {
+      'line', {
         x1: p1[0],
         y1: p1[1],
         x2: p2[0],
@@ -167,8 +170,7 @@ export default class BaseSvg {
   }
   _rect(p1, p2, props, g) {
     this._createEle(
-      'rect',
-      {
+      'rect', {
         x: p1[0],
         y: p1[1],
         width: p2[0] - p1[0],
@@ -182,17 +184,16 @@ export default class BaseSvg {
   _pattern(options, g) {
     let {
       size = 10,
-      name = 'diagonalStripe',
-      color1 = 'red',
-      color2 = 'red',
-      skewX = 0,
-      opacity = 1,
+        name = 'diagonalStripe',
+        color1 = 'red',
+        color2 = 'red',
+        skewX = 0,
+        opacity = 1,
     } = options
 
     let defs = this._defs(g)
     let patternWarper = this._createEle(
-      'pattern',
-      {
+      'pattern', {
         id: 'shape-pattern',
         x: 0,
         y: 0,
@@ -203,9 +204,9 @@ export default class BaseSvg {
       defs
     )
     let pattern = new Pattern(options)
-    let d = pattern['_' + name]
-      ? pattern['_' + name]()
-      : pattern['_diagonalStripe']()
+    let d = pattern['_' + name] ?
+      pattern['_' + name]() :
+      pattern['_diagonalStripe']()
     let params = {}
     if (skewX) {
       params.transform = `skewX(${skewX})`
@@ -217,8 +218,7 @@ export default class BaseSvg {
     if (Array.isArray(d)) {
       d.forEach((t, index) => {
         this._path(
-          t,
-          {
+          t, {
             ...params,
             fill: options['color' + (index + 1)],
           },
@@ -227,8 +227,7 @@ export default class BaseSvg {
       })
     } else {
       this._path(
-        d,
-        {
+        d, {
           ...params,
           fill: color1,
         },
@@ -248,8 +247,7 @@ export default class BaseSvg {
     let r = size
     let defs = this._defs(g)
     let chequer = this._createEle(
-      'pattern',
-      {
+      'pattern', {
         id: 'shape-chequer',
         x: 0,
         y: 0,
@@ -261,8 +259,7 @@ export default class BaseSvg {
     )
     this._rect(
       [0, 0],
-      [r, r],
-      {
+      [r, r], {
         fill: color1,
         rx: borderRadius1,
         ry: borderRadius1,
@@ -271,8 +268,7 @@ export default class BaseSvg {
     )
     this._rect(
       [r, r],
-      [r * 2, r * 2],
-      {
+      [r * 2, r * 2], {
         fill: color2,
         rx: borderRadius2,
         ry: borderRadius2,
@@ -284,18 +280,17 @@ export default class BaseSvg {
   _stripe(options, g) {
     let {
       size = 10,
-      color1 = 'red',
-      color2 = 'green',
-      borderRadius1 = 1,
-      borderRadius2 = 1,
-      radio = 0.2,
-      skewX = 0,
+        color1 = 'red',
+        color2 = 'green',
+        borderRadius1 = 1,
+        borderRadius2 = 1,
+        radio = 0.2,
+        skewX = 0,
     } = options
     let r = size
     let defs = this._defs(g)
     let stripe = this._createEle(
-      'pattern',
-      {
+      'pattern', {
         id: 'shape-stripe',
         x: 0,
         y: 0,
@@ -320,8 +315,7 @@ export default class BaseSvg {
 
     let d = `M0,0 h${r * radio} v${r} h${r * radio * -1} Z`
     this._path(
-      d,
-      {
+      d, {
         fill: color1,
         transform: `skewX(${skewX})`,
       },
@@ -330,8 +324,7 @@ export default class BaseSvg {
 
     let d2 = `M${r},0 h${r * radio} v${r} h${r * radio * -1} Z`
     this._path(
-      d2,
-      {
+      d2, {
         fill: color2,
         transform: `skewX(${skewX})`,
       },
@@ -342,19 +335,18 @@ export default class BaseSvg {
   _diagonalStripe(options, g) {
     let {
       size = 10,
-      color1 = 'red',
-      color2 = 'green',
-      borderRadius1 = 1,
-      borderRadius2 = 1,
-      radio = 0.2,
-      skewX = 0,
-      offset = 0,
+        color1 = 'red',
+        color2 = 'green',
+        borderRadius1 = 1,
+        borderRadius2 = 1,
+        radio = 0.2,
+        skewX = 0,
+        offset = 0,
     } = options
     let r = size
     let defs = this._defs(g)
     let stripe = this._createEle(
-      'pattern',
-      {
+      'pattern', {
         id: 'shape-diagonalStripe',
         x: 0,
         y: 0,
@@ -379,8 +371,7 @@ export default class BaseSvg {
       ],
     ])
     this._path(
-      d,
-      {
+      d, {
         fill: color1,
       },
       stripe
@@ -397,16 +388,14 @@ export default class BaseSvg {
     let grad
     if (options.type === 'radialGradient') {
       grad = this._createEle(
-        'radialGradient',
-        {
+        'radialGradient', {
           id: 'shape-gradient',
         },
         defs
       )
     } else {
       grad = this._createEle(
-        'linearGradient',
-        {
+        'linearGradient', {
           x1: '0',
           x2: '0',
           y1: '0',
@@ -420,8 +409,7 @@ export default class BaseSvg {
       len = list.length
     list.forEach((t, index) => {
       this._createEle(
-        'stop',
-        {
+        'stop', {
           offset: (100 * index) / (len - 1) + '%',
           'stop-color': options['color' + (index + 1)],
         },
@@ -469,14 +457,16 @@ export default class BaseSvg {
   // 线条属性
   _lineProps(opt = {}) {
     if (typeof opt.line === 'object') {
+      let {
+        line
+      } = opt
       return {
-        stroke: opt.line.color || opt.color || opt.stroke || 'black',
-        'stroke-opacity': _.isUndefined(opt.line.opacity)
-          ? 1
-          : opt.line.opacity,
-        'stroke-width': opt.line.lineWidth || opt.strokeWidth || 1,
-        'stroke-linecap': opt.line.linecap ? opt.line.linecap : undefined,
-        'stroke-linejoin': opt.line.linejoin,
+        stroke: line.color || opt.color || opt.stroke || 'black',
+        'stroke-opacity': _.isUndefined(line.opacity) ?
+          1 : line.opacity,
+        'stroke-width': line.lineWidth || opt.strokeWidth || 1,
+        'stroke-linecap': line.linecap ? line.linecap : undefined,
+        'stroke-linejoin': line.linejoin,
         'marker-end': opt['marker-end'] ? opt['marker-end'] : undefined,
         ...this._dashLineProps(opt),
       }
@@ -491,35 +481,55 @@ export default class BaseSvg {
       ...this._dashLineProps(opt),
     }
   }
+
+  // 线条属性
+  _stricksProps(opt = {}) {
+    if (typeof opt.sticks === 'object') {
+      let {
+        sticks
+      } = opt
+      return {
+        stroke: sticks.color || opt.color || opt.stroke || 'black',
+        'stroke-opacity': _.isUndefined(sticks.opacity) ?
+          1 : sticks.opacity,
+        'stroke-width': sticks.lineWidth || opt.strokeWidth || 1,
+        'stroke-linecap': sticks.linecap ? sticks.linecap : undefined,
+        'stroke-linejoin': sticks.linejoin,
+        'marker-end': opt['marker-end'] ? opt['marker-end'] : undefined,
+        ...this._dashLineProps(opt),
+      }
+    }
+  }
   // 虚线属性
   _dashLineProps(opt) {
     if (typeof opt.dashLine === 'object') {
+      let {
+        dashLine
+      } = opt
       return {
-        'stroke-dasharray': opt.dashLine.show
-          ? opt.dashLine.dashArray || [5, 5]
-          : undefined,
-        'stroke-dashoffset': opt.dashLine.dashOffset,
-        style: opt.dashLine.animation
-          ? 'animation:shift 3s infinite linear'
-          : undefined,
+        'stroke-dasharray': dashLine.show ?
+          dashLine.dashArray || [5, 5] : undefined,
+        'stroke-dashoffset': dashLine.dashOffset,
+        style: dashLine.animation ?
+          'animation:shift 3s infinite linear' : undefined,
       }
     }
     return {
       'stroke-dasharray': opt.dashLine ? opt.dashArray || [5, 5] : undefined,
       'stroke-dashoffset': opt.dashOffset ? opt.dashOffset : undefined,
-      style: opt.dashAnimation
-        ? 'animation:shift 3s infinite linear'
-        : undefined,
+      style: opt.dashAnimation ?
+        'animation:shift 3s infinite linear' : undefined,
     }
   }
+
+
   // 颜色
   _colors(points, opt = {}) {
-    return opt.colorful && opt.colorful.use
-      ? _.colorCircle(
-          points.length,
-          (opt.colorful && opt.colorful.opacity) || 1
-        )
-      : []
+    return opt.colorful && opt.colorful.use ?
+      _.colorCircle(
+        points.length,
+        (opt.colorful && opt.colorful.opacity) || 1
+      ) : []
   }
   _colorProps(colors, index, opt = {}) {
     if (colors && opt.colorful && opt.colorful.use) {
@@ -534,14 +544,12 @@ export default class BaseSvg {
   }
   // 图形属性
   _shapeProps(opt) {
-    return opt.fill
-      ? {
-          fill: opt.color || 'red',
-          'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
-        }
-      : {
-          fill: 'none',
-        }
+    return opt.fill ? {
+      fill: opt.color || 'red',
+      'fill-opacity': _.isUndefined(opt.opacity) ? 1 : opt.opacity,
+    } : {
+      fill: 'none',
+    }
   }
   // 文字属性
   _textProps(options) {
@@ -560,15 +568,13 @@ export default class BaseSvg {
   }
   // 动画属性
   _animationProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
-    return opt.use
-      ? {
-          style: `animation:${opt.name} ${opt.duration || 1}s ${
+    return opt.use ? {
+      style: `animation:${opt.name} ${opt.duration || 1}s ${
             opt.iterationCount || 'infinite'
           } linear`,
-          'transform-origin': `${t[0]}px ${t[1]}px`,
-          // 'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined
-        }
-      : {}
+      'transform-origin': `${t[0]}px ${t[1]}px`,
+      // 'style': opt.dashAnimation ? 'animation:shift 3s infinite linear' : undefined
+    } : {}
   }
   // 变形属性
   _transformProps(opt, t = opt.o || [this.width / 2, this.height / 2]) {
