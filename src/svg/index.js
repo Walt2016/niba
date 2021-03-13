@@ -1,7 +1,9 @@
 import MidSeg from '../points/MidSeg'
 import _ from '../utils/index'
 import './index.css'
-import { ArcSeg } from '../points'
+import {
+  ArcSeg
+} from '../points'
 import BaseSvg from './baseSvg'
 import Fractal from './Fractal'
 import Mirror from './Mirror'
@@ -53,13 +55,12 @@ export default class DrawSVG extends BaseSvg {
 
   // 规则图形
   _regularShape(name, points, options, root = this.svg) {
-    // let opt = this._options(options, name)
-    let defaultProps = Object.assign(
-      this._lineProps(options),
-      this._shapeProps(options)
-    )
-    let g = this._g(
-      {
+    let defaultProps = {
+      ...this._lineProps(options),
+      ...this._shapeProps(options)
+    }
+
+    let g = this._g({
         id: name,
         ...defaultProps,
       },
@@ -129,7 +130,10 @@ export default class DrawSVG extends BaseSvg {
     })
     // 标注文字
     if (this._show(options, 'text')) {
-      this._textMark(points, { id: 'vertexText', ...options }, g)
+      this._textMark(points, {
+        id: 'vertexText',
+        ...options
+      }, g)
     }
   }
 
@@ -138,7 +142,8 @@ export default class DrawSVG extends BaseSvg {
     this.options = options
     console.log(options)
     // 背景图案 格子图案 条纹图案  渐变
-    ;['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(
+    ;
+    ['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(
       t => {
         if (this._show(options, t)) {
           this['_' + t] && this['_' + t](this._options(options, t), this.svg)
@@ -156,11 +161,10 @@ export default class DrawSVG extends BaseSvg {
     )
     let id =
       options.id ||
-      (this._show(options, 'fractal')
-        ? `shape${options.fractal.level}`
-        : 'shape')
-    let g = this._g(
-      {
+      (this._show(options, 'fractal') ?
+        `shape${options.fractal.level}` :
+        'shape')
+    let g = this._g({
         id,
         ...shapeProps,
         ...lineProps,
@@ -194,9 +198,8 @@ export default class DrawSVG extends BaseSvg {
         showEdge = true
         let opt = this._options(options, t)
         // ds[ds.length] = 
-        let d=this._d(
-          points,
-          {
+        let d = this._d(
+          points, {
             waveform: t,
             ...opt,
           },
@@ -204,7 +207,7 @@ export default class DrawSVG extends BaseSvg {
             this._controller(opt, e.cps, g)
           }
         )
-        this._edge(t,d,points,options,g)
+        this._edge(t, d, points, options, g)
       }
     })
 
@@ -239,7 +242,8 @@ export default class DrawSVG extends BaseSvg {
     //   }
     // }
 
-    ;[
+    ;
+    [
       'radius',
       'link',
       'vertex',
@@ -282,11 +286,9 @@ export default class DrawSVG extends BaseSvg {
       let colors = this._colors(points, opt.colorful)
       points.forEach((t, index) => {
         this._shape(
-          Object.assign(
-            {},
+          Object.assign({},
             options,
-            this._colorProps(colors, index, opt.colorful),
-            {
+            this._colorProps(colors, index, opt.colorful), {
               id: 'shape_path_' + index,
               o: t,
               _points: _.move(
@@ -305,11 +307,11 @@ export default class DrawSVG extends BaseSvg {
     }
   }
   // 边
-  _edge(shape,d,points,options,g){
+  _edge(shape, d, points, options, g) {
 
     // 有边
     let defaultOpt = this._options(options)
-    let opt = this._options(options, shape||'edge')
+    let opt = this._options(options, shape || 'edge')
     let edgeShapeProps = this._shapeProps(defaultOpt)
     let edgeLineProps = this._lineProps(opt)
     let params = {
@@ -320,7 +322,8 @@ export default class DrawSVG extends BaseSvg {
       // 'transform-origin': `${width/2} ${height/2}`
     }
 
-    ;['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(
+    ;
+    ['pattern', 'chequer', 'stripe', 'diagonalStripe', 'gradient'].forEach(
       t => {
         if (this._show(options, t)) {
           params.fill = `url(#shape-${t})`
@@ -334,7 +337,10 @@ export default class DrawSVG extends BaseSvg {
       let midseg = new MidSeg({
         points,
       })
-      this._textMark(midseg.points, { id: 'edgeText', ...opt }, g)
+      this._textMark(midseg.points, {
+        id: 'edgeText',
+        ...opt
+      }, g)
     }
 
   }
@@ -342,14 +348,16 @@ export default class DrawSVG extends BaseSvg {
   _textMark(points, options, g) {
     // 标注文字
     if (this._show(options, 'text')) {
-      let groupEdgeText = this._g(
-        {
+      let groupEdgeText = this._g({
           id: options.id || 'edgeText',
           ...this._textProps(options),
         },
         g
       )
-      let { offsetRadius, offsetAngle } = options.text
+      let {
+        offsetRadius,
+        offsetAngle
+      } = options.text
       points.forEach((t, index) => {
         let p = _.polar(t, offsetRadius, offsetAngle)
         this._text(p, index, {}, groupEdgeText)
@@ -361,8 +369,7 @@ export default class DrawSVG extends BaseSvg {
     points.forEach((t, index) => {
       this._circle(
         t,
-        options.radius || 5,
-        {
+        options.radius || 5, {
           fill: options.color || 'red',
           opacity: options.opacity || 1,
         },
@@ -376,11 +383,12 @@ export default class DrawSVG extends BaseSvg {
 
   // 控制点
   _controller(options, ps, parent) {
-    let { controller } = options
+    let {
+      controller
+    } = options
     if (_.isObject(controller)) {
       if (this._show(options, 'controller')) {
-        let g = this._g(
-          {
+        let g = this._g({
             id: 'controller',
           },
           parent
@@ -391,8 +399,7 @@ export default class DrawSVG extends BaseSvg {
             this._d(ps, {
               closed: false,
               broken: true,
-            }),
-            {
+            }), {
               stroke: controller.lineColor || controller.color || 'red',
               'stroke-width': controller.lineWidth || 1,
               opacity: controller.lineOpacity || controller.opacity || 1,
@@ -408,8 +415,7 @@ export default class DrawSVG extends BaseSvg {
   _radius(options, g) {
     let points = this.options._points || []
     let props = this._lineProps(options)
-    let groupRadius = this._g(
-      {
+    let groupRadius = this._g({
         id: 'radius',
         ...props,
       },
@@ -423,7 +429,11 @@ export default class DrawSVG extends BaseSvg {
     })
     // this._balls(ps, {}, g)
 
-    let d = this._d(ps, { ...options, broken: true, closed: false }, e => {
+    let d = this._d(ps, {
+      ...options,
+      broken: true,
+      closed: false
+    }, e => {
       this._controller(options, e.cps, groupRadius)
     })
     this._path(d, {}, groupRadius)
@@ -442,16 +452,14 @@ export default class DrawSVG extends BaseSvg {
       }
     })
     let props = this._lineProps(options)
-    let groupRadius = this._g(
-      {
+    let groupRadius = this._g({
         id: 'link',
         ...props,
       },
       g
     )
     let d = this._d(
-      links,
-      {
+      links, {
         ...options,
         closed: false,
       },
@@ -477,8 +485,7 @@ export default class DrawSVG extends BaseSvg {
     let r = this.options.r
     this._regularShape(
       'excircle',
-      [o],
-      {
+      [o], {
         ...options,
         radius: r,
       },
@@ -493,8 +500,7 @@ export default class DrawSVG extends BaseSvg {
 
     this._regularShape(
       'incircle',
-      [o],
-      {
+      [o], {
         ...options,
         radius: r,
       },
@@ -507,14 +513,13 @@ export default class DrawSVG extends BaseSvg {
   _sin(options, g = this.svg) {
     let o = this.options.o || [0, 0]
     let points = new PointPath({
-      ...options,
-      o,
-    })
+        ...options,
+        o,
+      })
       ._sin()
       .join(' ')
     this._createEle(
-      'polyline',
-      {
+      'polyline', {
         id: 'sin',
         points,
       },
@@ -525,14 +530,13 @@ export default class DrawSVG extends BaseSvg {
   _cos(options, g = this.svg) {
     let o = this.options.o || [0, 0]
     let points = new PointPath({
-      ...options,
-      o,
-    })
+        ...options,
+        o,
+      })
       ._cos()
       .join(' ')
     this._createEle(
-      'polyline',
-      {
+      'polyline', {
         id: 'cos',
         points,
       },
@@ -543,14 +547,13 @@ export default class DrawSVG extends BaseSvg {
   _tan(options, g = this.svg) {
     let o = this.options.o || [0, 0]
     let points = new PointPath({
-      ...options,
-      o,
-    })
+        ...options,
+        o,
+      })
       ._tan()
       .join(' ')
     this._createEle(
-      'polyline',
-      {
+      'polyline', {
         id: 'tan',
         points,
       },
