@@ -1,6 +1,12 @@
 import config from '../config'
-let { env, center } = config
-let { width, height } = env
+let {
+  env,
+  center
+} = config
+let {
+  width,
+  height
+} = env
 
 import Polygon from '../entity/Polygon'
 import UI from '../ui'
@@ -159,22 +165,19 @@ let dataModel = {
   // 网格坐标
   grid: {
     show: false,
-    lineWidth: 1,
-    opacity: 0.5,
-    dashLine,
     interval: 100,
-    color: 'black',
     rotate: 0,
+    line,
+    dashLine,
   },
 
   // 极坐标
   polar: {
     show: false,
-    lineWidth: 1,
-    opacity: 0.5,
-    dashLine,
     interval: 100,
-    color: 'black',
+    rotate: 0,
+    line,
+    dashLine,
   },
 
   // 分形
@@ -220,21 +223,17 @@ let dataModel = {
   // 坐标轴
   axisX: {
     show: false,
-    lineWidth: 1,
-    color: 'black',
-    opacity: 0.5,
-    dashLine,
     sticks: true,
     arrow: true,
+    line,
+    dashLine,
   },
   axisY: {
     show: false,
-    lineWidth: 1,
-    color: 'black',
-    opacity: 0.5,
-    dashLine,
     sticks: true,
     arrow: true,
+    line,
+    dashLine,
   },
 
   // 连接线
@@ -414,8 +413,7 @@ let ui = new UI.Form({
   tabs,
   validated,
   required,
-  btns: [
-    {
+  btns: [{
       text: 'apply',
       name: 'submit',
     },

@@ -175,6 +175,7 @@ export default class Axis extends BaseSvg {
         let interval = opt.interval || 100
         let o = [width / 2, height / 2]
         let n = Math.ceil((width > height ? width : height) / interval / 2)
+        let a=  opt.rotate || 0
 
         for (let i = 0; i <= n; i++) {
             this._circle(o, interval * i, {}, g)
@@ -184,6 +185,7 @@ export default class Axis extends BaseSvg {
             o,
             r: 100 * n,
             n: 12,
+            a,
             sort: 'diagonal' //对角点
         })
         //false, true
