@@ -1,4 +1,5 @@
 function getObjXy(obj) {
+  if(!obj) return {}
     var xy = obj.getBoundingClientRect();
     var top = xy.top - document.documentElement.clientTop + document.documentElement.scrollTop, //document.documentElement.clientTop 在IE67中始终为2，其他高级点的浏览器为0
         bottom = xy.bottom,

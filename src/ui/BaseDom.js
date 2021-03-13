@@ -297,7 +297,7 @@ export default class BaseDom {
             break
           case 'innertext':
           case 'innerhtml':
-            if (['div', 'button', 'legend'].includes(tag)) {
+            if (['div', 'button', 'legend','span'].includes(tag)) {
               ele[key] = options[key]
             } else {
               ele.setAttribute(key, options[key])
@@ -358,13 +358,13 @@ export default class BaseDom {
     }
     parent && parent.appendChild(ele)
     if (children) {
-      deelArray(
+      this.deelArray(
         children,
         t => {
           if(this.isDom(t)){
             ele.appendChild(t)
           }else{
-           ele.appendChild( this._createEle(t))
+           ele.appendChild( this._createEle(t.tag, {...t.props,...t.on}))
           }
           
         }
@@ -377,7 +377,7 @@ export default class BaseDom {
   deelArray(arr, fn) {
     if (Array.isArray(arr)) {
       arr.forEach(t => {
-        doArray(t, fn)
+        this.deelArray(t, fn)
       })
     } else {
      fn(arr)

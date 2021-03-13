@@ -1,6 +1,6 @@
 // 几何数学计算
 // Two decimal places
-const twoDecimal = (n) => +n.toFixed(2)
+const twoDecimal = (n) => Number(n).toFixed(2)
 // matrix ( a2-D array),
 const isMatrix = (p) => Array.isArray(p[0])
 // 角度转弧度

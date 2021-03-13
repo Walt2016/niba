@@ -148,7 +148,7 @@ function splitWords(t) {
 }
 
 //首字母大写
-function firstCapital(t) {
+function capitalize(t) {
     return t.slice(0, 1).toUpperCase() + t.slice(1)
 }
 

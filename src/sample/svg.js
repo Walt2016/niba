@@ -405,6 +405,7 @@ let validated = Group.validated
 let required = Group.required
 // debugger
 polygon.draw()
+// new UI.Layout({})
 let ui = new UI.Form({
   el: '#ui-container',
   data: polygon,

@@ -1,12 +1,12 @@
 //首字母大写
-const firstCapital = (t) => {
+const capitalize = (t) => {
     return t.slice(0, 1).toUpperCase() + t.slice(1)
 }
 //小驼峰
 const camelCase = (arr) => {
     return arr.map((t, index) => {
-        return index === 0 ? t : firstCapital(t)
-        // return index === 0 ? t.toLowerCase() : firstCapital(t)
+        return index === 0 ? t : capitalize(t)
+        // return index === 0 ? t.toLowerCase() : capitalize(t)
     }).join("")
 }
 
@@ -49,7 +49,7 @@ const getParamsUrl = (str = location.href, separator = '&') => {
 
 
 export default {
-    firstCapital,
+    capitalize,
     camelCase,
     getParamsUrl
 }
